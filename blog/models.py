@@ -11,7 +11,7 @@ class Post(models.Model):
   title = models.CharField(max_length=50)
   description = models.TextField()
   likes = models.PositiveIntegerField(blank=True, null=True, default=0)
-  posted_date = models.DateField(blank=True, null=True, default=timezone.now().date())
+  posted_date = models.DateField(blank=True, null=True)
   posted_hour_server = models.TimeField(blank=True, null=True)
   posted_hour_client = models.TimeField(blank=True, null=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
