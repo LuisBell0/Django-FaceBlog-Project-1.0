@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Post</title>
+  </head>
+  <body>
+    <h1>Create new Post</h1>
+    <form method="POST" action="">
+      {% csrf_token %}
+      {{form.as_p}}
+      <input type="hidden" name="timezone" id="user-timezone" value="">
+      <button type="submit">Create Post</button>
+    </form>
+    <script>
+      // Get the user's timezone
+      var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Set the value of the hidden input field
+      document.getElementById('user-timezone').value = userTimezone;
+    </script>
+  </body>
+</html>
