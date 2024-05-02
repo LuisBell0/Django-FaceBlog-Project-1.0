@@ -4,3 +4,7 @@
   {{form.as_p}}
   <button type="submit">Save</button>
 </form>
+<form action="{% url 'dashboard' %}" method="get">
+  {% csrf_token %}
+  <button type="submit">Cancel</button>
+</form>

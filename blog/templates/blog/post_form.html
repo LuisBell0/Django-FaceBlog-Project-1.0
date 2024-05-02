@@ -11,6 +11,10 @@
       <input type="hidden" name="timezone" id="user-timezone" value="">
       <button type="submit">Create Post</button>
     </form>
+    <form action="{% url 'dashboard' %}" method="get">
+      {% csrf_token %}
+      <button type="submit">Cancel</button>
+    </form>
     <script>
       // Get the user's timezone
       var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
