@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.utils import timezone
+import os
 
 # Create your models here.
 
@@ -18,4 +18,32 @@ class Post(models.Model):
 
   def __str__(self):
     return f'{self.title}'
-    
+
+
+  def delete(self, *args, **kwargs):
+  # Delete the associated image file from the filesystem
+    if self.img:
+      if os.path.isfile(self.img.path):
+        os.remove(self.img.path)
+    super().delete(*args, **kwargs)
+
+
+  def delete_image_file(self):
+    # Delete the associated image file from the filesystem
+    if self.img:
+      if os.path.isfile(self.img.path):
+        os.remove(self.img.path)
+  
+
+  def save(self, *args, **kwargs):
+  # Check if the post object is being updated
+    if self.pk is not None:
+      # Retrieve the existing post object from the database
+      existing_post = Post.objects.get(pk=self.pk)
+      # Check if the image has been changed
+      if existing_post.img != self.img:
+        # Delete the old image file if it exists
+        existing_post.delete_image_file()
+    super().save(*args, **kwargs)
+
+

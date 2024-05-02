@@ -22,7 +22,7 @@ def dashboard(request):
 
 class PostCreateView(CreateView):
   model = Post
-  fields = ['title', 'description']
+  fields = ['title', 'description', 'img']
   success_url = reverse_lazy('dashboard')  
   
 
@@ -44,7 +44,7 @@ class PostCreateView(CreateView):
 
 class PostUpdateView(UpdateView):
   model = Post
-  fields = ['title', 'description']
+  fields = ['title', 'description', 'img']
   success_url = reverse_lazy("dashboard")
   template_name = "blog/post_update_form.html"
 

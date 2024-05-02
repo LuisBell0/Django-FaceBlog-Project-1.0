@@ -149,5 +149,5 @@ EMAIL_HOST_USER = 'eadluisbello2023@gmail.com'  # Replace with your email addres
 EMAIL_HOST_PASSWORD = 'pjjolaajescikagu'  # Replace with your email password
 
 # Image handling
-MEDIA_URL = 'media/'    # www.mysite.com/media/img-1
+MEDIA_URL = '/media/'    # www.mysite.com/media/img-1
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')   # documents/file-xyz.png
