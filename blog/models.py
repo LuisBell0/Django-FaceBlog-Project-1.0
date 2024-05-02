@@ -7,14 +7,15 @@ import os
 User = get_user_model()
 
 class Post(models.Model):
-  owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts", default=1)
+  owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="posts", default=1)
   title = models.CharField(max_length=50)
   description = models.TextField()
-  likes = models.PositiveIntegerField(blank=True, null=True, default=0)
+  likes = models.PositiveIntegerField(blank=True, null=True, default=0) # Interaction in development
   posted_date = models.DateField(blank=True, null=True)
   posted_hour_server = models.TimeField(blank=True, null=True)
   posted_hour_client = models.TimeField(blank=True, null=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
+  # comments field waiting for development
 
   def __str__(self):
     return f'{self.title}'
@@ -47,3 +48,9 @@ class Post(models.Model):
     super().save(*args, **kwargs)
 
 
+class Profile(models.Model):
+  first_name = models.CharField(max_length=50)
+  last_name = models.CharField(max_length=50)
+  profile_picture = models.ImageField(upload_to="profile_pictures", blank=True, null=True)
+  email = models.EmailField(max_length=100)
+  user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profiles")
