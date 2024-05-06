@@ -10,7 +10,8 @@ class Post(models.Model):
   owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts", default=1)
   title = models.CharField(max_length=50)
   description = models.TextField()
-  likes = models.PositiveIntegerField(blank=True, null=True, default=0) # Interaction in development
+  likes = models.PositiveIntegerField(blank=True, null=True, default=0) 
+  # Like Interaction in development
   posted_date = models.DateField(blank=True, null=True)
   posted_hour_server = models.TimeField(blank=True, null=True)
   posted_hour_client = models.TimeField(blank=True, null=True)
@@ -50,8 +51,8 @@ class Post(models.Model):
 
 class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-  profile_picture = models.ImageField(upload_to="profile_pictures",
-                                      blank=True, null=True)
+  profile_picture = models.ImageField(
+    upload_to="profile_pictures/",blank=True, null=True)
   bio = models.TextField(max_length=255, blank=True, null=True)
   
 

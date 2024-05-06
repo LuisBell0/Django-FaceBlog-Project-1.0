@@ -1,4 +1,14 @@
+{% load static %}
+
 <h2>Welcome {{user.username}}!</h2>
+{% if user.profile.profile_picture %}
+    <img src="{{ user.profile.profile_picture.url }}"
+      alt="{{ user.username }}">
+{% else %}
+    <img src="{% static 'blog/default.jpg' %}"
+      alt="{{ user.username }}">
+{% endif %}
+<br>
 <a href="{% url 'post-create' %}">Add New Post</a>
 <br>
 <br>
