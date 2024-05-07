@@ -1,38 +1,43 @@
 {% load static %}
 
-<h2>Welcome {{user.username}}!</h2>
-{% if user.profile.profile_picture %}
-    <img src="{{ user.profile.profile_picture.url }}"
-      alt="{{ user.username }}">
+{% if not user.profile %}
+  <meta http-equiv="refresh" content="0; URL={% url 'profile-create' %}">
 {% else %}
-    <img src="{% static 'blog/default.jpg' %}"
-      alt="{{ user.username }}">
-{% endif %}
-<br>
-<a href="{% url 'post-create' %}">Add New Post</a>
-<br>
-<br>
-<form action="{% url 'logout' %}" method="POST">
-  {% csrf_token %}
-  <button type="submit" value="Logout">Log Out</button>
-</form>
-<p>These are your posts</p>
-<ul>
-  {% for post in posts %}
-  <hr>
-  <li>Title: {{post.title}} </li>
-  {% if post.img %}
-    <img src="{{post.img.url}}" alt="{{post.title}}">
+  <h2>Welcome {{user.username}}!</h2>
+  {% if user.profile.profile_picture %}
+      <img src="{{ user.profile.profile_picture.url }}"
+        alt="{{ user.username }}">
   {% else %}
-    <li>No Image Available</li>
+      <img src="{% static 'blog/default.jpg' %}"
+        alt="{{ user.username }}">
   {% endif %}
-  <li>Likes: {{post.likes}}</li>
-  <li>Posted: {{post.posted_date}}</li>
-  <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
-  <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
-  <li>Description: {{post.description}}</li>
-  <a href="{% url 'post-update' post.pk %}">Edit</a>
-  <a href="{% url 'post-delete' post.pk %}">Delete</a>
-  <hr>
-  {% endfor %}
-</ul>
+  <p>Bio: {{user.profile.bio}}</p>
+  <br>
+  <a href="{% url 'post-create' %}">Add New Post</a>
+  <br>
+  <br>
+  <form action="{% url 'logout' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" value="Logout">Log Out</button>
+  </form>
+  <p>These are your posts</p>
+  <ul>
+    {% for post in posts %}
+    <hr>
+    <li>Title: {{post.title}} </li>
+    {% if post.img %}
+      <img src="{{post.img.url}}" alt="{{post.title}}">
+    {% else %}
+      <li>No Image Available</li>
+    {% endif %}
+    <li>Likes: {{post.likes}}</li>
+    <li>Posted: {{post.posted_date}}</li>
+    <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
+    <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
+    <li>Description: {{post.description}}</li>
+    <a href="{% url 'post-update' post.pk %}">Edit</a>
+    <a href="{% url 'post-delete' post.pk %}">Delete</a>
+    <hr>
+    {% endfor %}
+  </ul>
+{% endif %}

@@ -1,5 +1,6 @@
+from django.db.models import fields
 from django.shortcuts import render
-from .models import Post
+from .models import Post, Profile
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -25,7 +26,8 @@ class PostCreateView(CreateView):
   fields = ['title', 'description', 'img']
   success_url = reverse_lazy('dashboard')  
   
-
+  # Override form_valid to link the post to the user
+  # And save the date and time the post is being created
   def form_valid(self, form):
     form.instance.owner = self.request.user
     form.instance.posted_hour_server = datetime.now().time()
@@ -52,4 +54,15 @@ class PostUpdateView(UpdateView):
 class PostDeleteView(DeleteView):
   model = Post
   success_url = reverse_lazy('dashboard')
-  
+
+
+class ProfileCreateView(CreateView):
+  model = Profile
+  fields = ['gender', 'date_of_birth', 'bio', 'profile_picture']
+  success_url = reverse_lazy("dashboard")
+
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    form.instance.date_joined = datetime.now().date()
+    
+    return super().form_valid(form)
