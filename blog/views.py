@@ -1,12 +1,15 @@
 from django.db.models import fields
 from django.shortcuts import render
 from .models import Post, Profile
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
+
 # Create your views here.
+
 
 def home(request):
   return render(request, 'blog/home.html', {})
@@ -15,17 +18,15 @@ def home(request):
 @login_required
 def dashboard(request):
   posts = Post.objects.filter(owner=request.user)
-  context = {
-    'posts': posts
-  }
+  context = {'posts': posts}
   return render(request, 'blog/dashboard.html', context)
 
 
 class PostCreateView(CreateView):
   model = Post
   fields = ['title', 'description', 'img']
-  success_url = reverse_lazy('dashboard')  
-  
+  success_url = reverse_lazy('dashboard')
+
   # Override form_valid to link the post to the user
   # And save the date and time the post is being created
   def form_valid(self, form):
@@ -40,9 +41,9 @@ class PostCreateView(CreateView):
       user_date = datetime.now(pytz.timezone(user_timezone)).date()
       form.instance.posted_hour_client = user_time
       form.instance.posted_date = user_date
-      
+
     return super().form_valid(form)
- 
+
 
 class PostUpdateView(UpdateView):
   model = Post
@@ -64,5 +65,12 @@ class ProfileCreateView(CreateView):
   def form_valid(self, form):
     form.instance.user = self.request.user
     form.instance.date_joined = datetime.now().date()
-    
+
     return super().form_valid(form)
+
+
+class ProfileUpdateView(UpdateView):
+  model = Profile
+  fields = ['bio', 'gender', 'date_of_birth', 'profile_picture']
+  success_url = reverse_lazy("dashboard")
+  template_name = "blog/profile_update_form.html"

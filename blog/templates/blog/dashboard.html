@@ -4,6 +4,9 @@
   <meta http-equiv="refresh" content="0; URL={% url 'profile-create' %}">
 {% else %}
   <h2>Welcome {{user.username}}!</h2>
+<form action="{% url 'profile-update' user.profile.pk %}" method="GET">
+  <button type="submit">Edit Profile</button>
+</form>
   {% if user.profile.profile_picture %}
       <img src="{{ user.profile.profile_picture.url }}"
         alt="{{ user.username }}" width="200px" height="200px">
@@ -12,7 +15,6 @@
         alt="{{ user.username }}">
   {% endif %}
   <p>Bio: {{user.profile.bio}}</p>
-  <br>
   <a href="{% url 'post-create' %}">Add New Post</a>
   <br>
   <br>
