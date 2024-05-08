@@ -6,7 +6,7 @@
   <h2>Welcome {{user.username}}!</h2>
   {% if user.profile.profile_picture %}
       <img src="{{ user.profile.profile_picture.url }}"
-        alt="{{ user.username }}">
+        alt="{{ user.username }}" width="200px" height="200px">
   {% else %}
       <img src="{% static 'blog/default.jpg' %}"
         alt="{{ user.username }}">

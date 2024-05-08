@@ -64,7 +64,7 @@ class Profile(models.Model):
                                       null=True)
   bio = models.TextField(max_length=255, blank=True, null=True)
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, null=True)
-  date_of_birth = models.DateTimeField(null=True)
+  date_of_birth = models.DateField(null=True)
   date_joined = models.DateField(blank=True, null=True)
 
   def __str__(self):
