@@ -1,5 +1,4 @@
-from django.db.models import fields
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect, reverse
 from .models import Post, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -7,6 +6,7 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
+from .forms import ProfileUpdateForm, UserUpdateForm
 
 # Create your views here.
 
@@ -69,8 +69,24 @@ class ProfileCreateView(CreateView):
     return super().form_valid(form)
 
 
-class ProfileUpdateView(UpdateView):
-  model = Profile
-  fields = ['bio', 'gender', 'date_of_birth', 'profile_picture']
-  success_url = reverse_lazy("dashboard")
-  template_name = "blog/profile_update_form.html"
+def ProfileUpdateFunction(request, pk):
+  
+  if request.method == 'POST':
+    user = User.objects.get(pk=request.user.pk)
+    profile = Profile.objects.get(pk=request.user.profile.pk)
+    user_form = UserUpdateForm(instance=user, data=request.POST)
+    profile_form = ProfileUpdateForm(instance=profile, data=request.POST)
+    if user_form.is_valid() and profile_form.is_valid():
+      user_form.save()
+      profile_form.save()
+    return HttpResponseRedirect(reverse("dashboard"))
+  else:
+    user = User.objects.get(pk=request.user.pk)
+    profile = Profile.objects.get(pk=request.user.profile.pk)
+    user_form = UserUpdateForm(instance=user)
+    profile_form = ProfileUpdateForm(instance=profile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+    return render(request, 'blog/profile_update.html', context)

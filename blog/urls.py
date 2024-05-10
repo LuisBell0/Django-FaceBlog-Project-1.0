@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import home, dashboard, PostCreateView, PostUpdateView, PostDeleteView, ProfileCreateView, ProfileUpdateView
-from django.contrib.auth import views as auth_views
+from .views import ProfileUpdateFunction, home, dashboard, PostCreateView, PostUpdateView, PostDeleteView, ProfileCreateView
 
 urlpatterns = [
     path('', home, name="home"),
@@ -17,6 +16,6 @@ urlpatterns = [
     path('create_profile/', ProfileCreateView.as_view(),
          name='profile-create'),
     path('dashboard/edit_profile/<int:pk>/',
-         ProfileUpdateView.as_view(),
+         ProfileUpdateFunction,
          name="profile-update")
 ]
