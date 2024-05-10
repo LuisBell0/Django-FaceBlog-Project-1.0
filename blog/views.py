@@ -75,8 +75,15 @@ def ProfileUpdateFunction(request, pk):
     user = User.objects.get(pk=request.user.pk)
     profile = Profile.objects.get(pk=request.user.profile.pk)
     user_form = UserUpdateForm(instance=user, data=request.POST)
-    profile_form = ProfileUpdateForm(instance=profile, data=request.POST)
+    profile_form = ProfileUpdateForm(instance=profile, 
+                                     data=request.POST, files=request.FILES)
     if user_form.is_valid() and profile_form.is_valid():
+      if "profile_picture-clear" in request.POST:
+        user.profile.profile_picture.delete()
+        user.profile.profile_picture = None
+      if request.FILES.get("profile_picture"):
+        if user.profile.profile_picture:
+          user.profile.profile_picture.delete()
       user_form.save()
       profile_form.save()
     return HttpResponseRedirect(reverse("dashboard"))

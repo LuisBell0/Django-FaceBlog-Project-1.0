@@ -21,11 +21,14 @@ class UserUpdateForm(forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'email', 'username'
         ]
-
-
+        help_texts = {
+            'username': (""),
+        }
+        
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
             'bio', 'gender', 'date_of_birth', 'profile_picture'
         ]
+        
