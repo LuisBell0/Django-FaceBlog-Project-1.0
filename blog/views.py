@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.contrib import messages
 from .models import Post, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -70,26 +71,39 @@ class ProfileCreateView(CreateView):
 
 
 def ProfileUpdateFunction(request, pk):
-  
+  user = User.objects.get(pk=request.user.pk)
+  profile = Profile.objects.get(pk=request.user.profile.pk)
+
   if request.method == 'POST':
-    user = User.objects.get(pk=request.user.pk)
-    profile = Profile.objects.get(pk=request.user.profile.pk)
     user_form = UserUpdateForm(instance=user, data=request.POST)
-    profile_form = ProfileUpdateForm(instance=profile, 
-                                     data=request.POST, files=request.FILES)
+    profile_form = ProfileUpdateForm(instance=profile,
+                                     data=request.POST,
+                                     files=request.FILES)
     if user_form.is_valid() and profile_form.is_valid():
-      if "profile_picture-clear" in request.POST:
-        user.profile.profile_picture.delete()
-        user.profile.profile_picture = None
-      if request.FILES.get("profile_picture"):
-        if user.profile.profile_picture:
+      new_username = request.POST.get("username")
+      # Check if the username is being changed and if it already exists
+      if new_username != user.username and User.objects.filter(
+          username=new_username).exists():
+        messages.error(request,
+                       'Username already taken. Please choose another one.')
+      else:
+        if "profile_picture-clear" in request.POST:
           user.profile.profile_picture.delete()
-      user_form.save()
-      profile_form.save()
-    return HttpResponseRedirect(reverse("dashboard"))
+          user.profile.profile_picture = None
+        if request.FILES.get("profile_picture"):
+          if user.profile.profile_picture:
+            user.profile.profile_picture.delete()
+
+        user_form.save()
+        profile_form.save()
+        return HttpResponseRedirect(reverse("dashboard"))
+    else:
+      # Form is not valid, reload the page
+      return render(request, 'blog/profile_update.html', {
+          'user_form': user_form,
+          'profile_form': profile_form
+      })
   else:
-    user = User.objects.get(pk=request.user.pk)
-    profile = Profile.objects.get(pk=request.user.profile.pk)
     user_form = UserUpdateForm(instance=user)
     profile_form = ProfileUpdateForm(instance=profile)
     context = {
