@@ -1,7 +1,7 @@
 <h1>Please login</h1>
 <form action="" method="post">
   {% csrf_token %}
-  {{form.as_p}}
+    {{ login_form.as_p }}
   <input type="submit" value="Log In"></input>
   <p>Forgot Password? <a href="{% url 'password_reset' %}">Click here</a></p>
   <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>

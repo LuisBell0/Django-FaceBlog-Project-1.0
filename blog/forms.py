@@ -31,4 +31,8 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = [
             'bio', 'gender', 'date_of_birth', 'profile_picture'
         ]
-        
+
+
+class LoginForm(forms.Form):
+    username_or_email = forms.CharField(label='Username or Email', max_length=254)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)

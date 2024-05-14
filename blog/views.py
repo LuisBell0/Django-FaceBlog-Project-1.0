@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -7,7 +8,7 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
-from .forms import ProfileUpdateForm, UserUpdateForm
+from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm
 
 # Create your views here.
 
@@ -111,3 +112,23 @@ def ProfileUpdateFunction(request, pk):
         'profile_form': profile_form,
     }
     return render(request, 'blog/profile_update.html', context)
+
+
+def login_view(request):
+  if request.method == 'POST':
+    form = LoginForm(data=request.POST)
+    if form.is_valid():
+      username_or_email = form.cleaned_data['username_or_email']
+      password = form.cleaned_data['password']
+      user = authenticate(request, username=username_or_email, password=password)
+      if user is not None:
+        login(request, user)
+        return HttpResponseRedirect(reverse("dashboard")) # If successful redirect to homepage
+  else:
+    form = LoginForm()
+  return render(request, 'registration/login.html', {'login_form': form})
+
+
+def logout_view(request):
+  logout(request)
+  return HttpResponseRedirect(reverse("new_login"))
