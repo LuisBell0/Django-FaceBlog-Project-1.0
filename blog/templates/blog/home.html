@@ -9,6 +9,11 @@
     <div>
       <h1>FaceBlog</h1>
       <p>This is a new blog page</p>
+        {% for message in messages %}
+            <div class="message {{ message.tag }}">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
       <a href="{% url 'dashboard' %}">Dashboard</a>
       <br>
       <br>
@@ -16,7 +21,7 @@
         <button type="submit" value="Log in">Log In</button>
       </form>
       <form action="{% url 'signup' %}">
-        <button type="sumit" value="Register">Register</button>
+        <button type="submit" value="Register">Register</button>
       </form>
     </div>
   </body>

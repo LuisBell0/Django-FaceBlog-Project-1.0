@@ -7,13 +7,13 @@ class EmailOrUsernameModelBackend(ModelBackend):
     """
     This authentication backend allows users to log in using either their username or email address.
     """
-    def authenticate(self, request, username=None, password=None, **kwargs):
+    def authenticate(self, request, username=None, password=None, backend='blog.backends.EmailOrUsernameModelBackend', **kwargs):
         try:
             # Try to fetch the user by username
             user = UserModel.objects.get(username=username)
         except UserModel.DoesNotExist:
             try:
-                # If user is not found by username, try to fetch by email\
+                # If user is not found by username, try to fetch by email
                 user = UserModel.objects.get(email=username)
             except UserModel.DoesNotExist:
                 # Neither username nor email matched, return None

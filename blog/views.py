@@ -122,8 +122,14 @@ def login_view(request):
       password = form.cleaned_data['password']
       user = authenticate(request, username=username_or_email, password=password)
       if user is not None:
-        login(request, user)
-        return HttpResponseRedirect(reverse("dashboard")) # If successful redirect to homepage
+        if user.is_active:
+          login(request, user)
+          return HttpResponseRedirect(reverse("dashboard")) # If successful redirect to homepage
+        else:
+          messages.error(request, "Your account hasn't been activated.")
+      else:
+        # Authentication failed
+        form.add_error(None, "Incorrect username or password. Please try again.")
   else:
     form = LoginForm()
   return render(request, 'registration/login.html', {'login_form': form})

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import SignUpView
+from .views import sign_up_function, activate
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,8 +24,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
+    path('accounts/signup/', sign_up_function, name="signup"),
+    path('activate/<str:uidb64>/<str:token>/', activate, name='activate-account'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup', SignUpView.as_view(), name="signup"),
 ]
 
 if settings.DEBUG:

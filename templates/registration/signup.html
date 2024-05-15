@@ -1,7 +1,12 @@
 <h1>Sign Up!</h1>
+{% for message in messages %}
+    <div class="message {{ message.tag }}">
+        {{ message }}
+    </div>
+{% endfor %}
 <form action="{% url 'signup' %}" method="POST">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit" value="Signup">Sign Up</button>
-  <p>Aleready have an account? Log in <a href="{% url 'login' %}">Here</a></p>
+  <p>Already have an account? Log in <a href="{% url 'login' %}">Here</a></p>
 </form>
