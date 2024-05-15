@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>FaceBlog</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <div>
-      <h1>FaceBlog</h1>
-      <p>This is a new blog page</p>
-        {% for message in messages %}
-            <div class="message {{ message.tag }}">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endfor %}
-      <a href="{% url 'dashboard' %}">Dashboard</a>
-      <br>
-      <br>
-      <form action="{% url 'login' %}">
-        <button type="submit" value="Log in">Log In</button>
-      </form>
-      <form action="{% url 'signup' %}">
-        <button type="submit" value="Register">Register</button>
-      </form>
-    </div>
-  </body>
-</html>
-
+{% extends 'blog/_base.html' %}
+{%block content %}
+<h1>FaceBlog</h1>
+<p>This is a new blog page</p>
+{% for message in messages %}
+  <div class="message {{ message.tag }}">
+    <strong>{{ message }}</strong>
+  </div>
+{% endfor %}
+<a href="{% url 'dashboard' %}">Dashboard</a>
+<br>
+<br>
+<form action="{% url 'login' %}">
+  <button type="submit" value="Log in">Log In</button>
+</form>
+<form action="{% url 'signup' %}">
+  <button type="submit" value="Register">Register</button>
+</form>
+{% endblock %}
