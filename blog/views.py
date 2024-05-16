@@ -138,3 +138,12 @@ def login_view(request):
 def logout_view(request):
   logout(request)
   return HttpResponseRedirect(reverse("new_login"))
+
+
+def search_profile(request):
+  if request.method == 'POST':
+    search = request.POST['search-profile']
+    profiles = Profile.objects.filter(user__username__startswith=search)
+    return render(request, 'blog/search_profile.html', {'search': search, 'profiles': profiles})
+  else:
+    return render(request, 'blog/search_profile.html', {})

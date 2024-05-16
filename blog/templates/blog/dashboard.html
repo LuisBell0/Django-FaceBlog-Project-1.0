@@ -6,8 +6,10 @@
   <meta http-equiv="refresh" content="0; URL={% url 'profile-create' %}">
 {% else %}
   <h2>Welcome {{user.username}}!</h2>
-<form action="" method="GET">
-  <input type="text" placeholder="Search">
+<form action="{% url 'search_profile' %}" method="POST">
+{% csrf_token %}
+  <input type="text" placeholder="Search Profile" name="search-profile">
+    <button type="submit">Search</button>
 </form>
 <form action="{% url 'profile-update' user.profile.pk %}" method="GET">
   <button type="submit">Edit Profile</button>

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProfileUpdateFunction, home, dashboard, PostCreateView, PostUpdateView, PostDeleteView, ProfileCreateView, login_view
+from .views import *
 
 urlpatterns = [
     path('', home, name="home"),
@@ -21,4 +21,7 @@ urlpatterns = [
     path('accounts/login/',
          login_view,
          name='new_login'),
+    path('search_profile/',
+         search_profile,
+         name='search_profile'),
 ]

@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.contrib.auth import get_user_model, login, authenticate
+from django.contrib.auth import get_user_model, login
 from django.urls import reverse
 
 def sign_up_function(request):
