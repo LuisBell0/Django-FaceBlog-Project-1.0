@@ -102,7 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+AUTHENTICATION_BACKENDS = [
+    'blog.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -145,8 +148,7 @@ EMAIL_USE_TLS = True
 # Email address used for sending emails
 EMAIL_HOST_USER = 'eadluisbello2023@gmail.com'  # Replace with your email address
 
-# Email password (usually stored in a secure way, like environment variables)
-EMAIL_HOST_PASSWORD = 'pjjolaajescikagu'  # Replace with your email password
+EMAIL_HOST_PASSWORD = 'pjjolaajescikagu'
 
 # Image handling
 MEDIA_URL = '/media/'    # www.mysite.com/media/img-1

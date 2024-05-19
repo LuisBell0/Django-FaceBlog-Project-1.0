@@ -1,0 +1,18 @@
+<h1>Edit Profile</h1>
+<form action="" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{user_form}}
+  {{profile_form}}
+  <button type="submit">Save</button>
+</form>
+<form action="{% url 'dashboard' %}" method="get">
+  {% csrf_token %}
+  <button type="submit">Cancel</button>
+</form>
+{% if messages %}
+  <ul class="messages">
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
