@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile
@@ -19,6 +19,10 @@ def home(request):
 
 @login_required
 def dashboard(request):
+  if request.method == "POST":
+    search_input = request.POST.get('search-profile')
+    return redirect('search-profile', search_input=search_input)
+
   posts = Post.objects.filter(owner=request.user)
   context = {'posts': posts}
   return render(request, 'blog/dashboard.html', context)
@@ -120,16 +124,20 @@ def login_view(request):
     if form.is_valid():
       username_or_email = form.cleaned_data['username_or_email']
       password = form.cleaned_data['password']
-      user = authenticate(request, username=username_or_email, password=password)
+      user = authenticate(request,
+                          username=username_or_email,
+                          password=password)
       if user is not None:
         if user.is_active:
           login(request, user)
-          return HttpResponseRedirect(reverse("dashboard")) # If successful redirect to homepage
+          return HttpResponseRedirect(
+              reverse("dashboard"))  # If successful redirect to homepage
         else:
           messages.error(request, "Your account hasn't been activated.")
       else:
         # Authentication failed
-        form.add_error(None, "Incorrect username or password. Please try again.")
+        form.add_error(None,
+                       "Incorrect username or password. Please try again.")
   else:
     form = LoginForm()
   return render(request, 'registration/login.html', {'login_form': form})
@@ -140,10 +148,15 @@ def logout_view(request):
   return HttpResponseRedirect(reverse("new_login"))
 
 
-def search_profile(request):
-  if request.method == 'POST':
-    search = request.POST['search-profile']
-    profiles = Profile.objects.filter(user__username__startswith=search)
-    return render(request, 'blog/search_profile.html', {'search': search, 'profiles': profiles})
-  else:
-    return render(request, 'blog/search_profile.html', {})
+def search_profile(request, search_input):
+  profiles = Profile.objects.filter(user__username__startswith=search_input)
+  return render(request, 'blog/search_profile.html', {
+      'profiles': profiles,
+      'search': search_input
+  })
+
+
+def external_user_profile_view(request, user_username):
+
+  return render(request, 'blog/external_user_profile.html',
+                {'external_user': user_username})

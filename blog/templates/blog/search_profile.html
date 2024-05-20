@@ -2,11 +2,13 @@
 {% block content %}
     {% if search %}
     	<h2>These are your matches for "{{ search }}"</h2>
+        <ul>
         {% for profile in profiles %}
-            <ul>
-            <li>{{ profile }}</li>
-            </ul>
+            <a href="{% url 'external-user-profile' profile %}">{{ profile }}</a>
+        {% empty %}
+            No profiles found
         {% endfor %}
+        </ul>
     {% else %}
         <h2>You can't search for nothing</h2>
     {% endif %} 
