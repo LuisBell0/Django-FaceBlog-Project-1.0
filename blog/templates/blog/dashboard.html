@@ -23,7 +23,7 @@
         alt="{{ user.username }}" width="200px" height="200px">
   {% else %}
       <img src="{% static 'blog/default.jpg' %}"
-        alt="{{ user.username }}">
+        alt="{{ user.username }}" width="200px" height="200px">
   {% endif %}
   <p><strong>{{user.first_name}} {{user.last_name}}</strong></p>
   <p>Bio: {{user.profile.bio}}</p>
@@ -38,7 +38,7 @@
     {% for post in posts %}
     <li>Title: {{post.title}} </li>
     {% if post.img %}
-      <img src="{{post.img.url}}" alt="{{post.title}}">
+      <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
     {% else %}
       <li>No Image Available</li>
     {% endif %}

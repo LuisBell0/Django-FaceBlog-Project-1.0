@@ -157,6 +157,11 @@ def search_profile(request, search_input):
 
 
 def external_user_profile_view(request, user_username):
-
-  return render(request, 'blog/external_user_profile.html',
-                {'external_user': user_username})
+  external_user = User.objects.filter(username=user_username).first()
+  posts = Post.objects.filter(owner=external_user)
+  context = {
+    'external_user' : external_user,
+    'user_input' : user_username,
+    'posts' : posts,
+  }
+  return render(request, 'blog/external_user_profile.html', context)

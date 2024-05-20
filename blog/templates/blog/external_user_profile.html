@@ -1,7 +1,33 @@
 {% extends 'blog/_base.html'%}
+{% block content%}
 
-{% if external_user %}
-  <h1>User {{external_user}} does not exist</h1>
+{% if not external_user %}
+  <h2>The page or user "{{user_input}}" does not exist</h2>
 {% else %}
-
+  <p><strong>{{external_user.username}}</strong></p>
+  <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
+  <p><strong>{{external_user.first_name}} {{external_user.last_name}}</strong></p>
+  <p>Bio: {{external_user.profile.bio}}</p>
+  {% if posts %}
+    <p><strong>These are {{external_user.username}}'s posts</strong></p><hr>
+  {% else %}
+    <p><strong>{{external_user.username}} has not post anything yet</strong></p>
+{% endif %}
+  <ul>
+    {% for post in posts %}
+    <li>Title: {{post.title}} </li>
+    {% if post.img %}
+      <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
+    {% else %}
+      <li>No Image Available</li>
+    {% endif %}
+    <li>Likes: {{post.likes}}</li>
+    <li>Posted: {{post.posted_date}}</li>
+    <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
+    <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
+    <li>Description: {{post.description}}</li>
+    <hr>
+    {% endfor %}
+  </ul>
 {% endif%}
+{% endblock %}
