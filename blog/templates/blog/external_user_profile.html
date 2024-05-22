@@ -1,11 +1,18 @@
 {% extends 'blog/_base.html'%}
+{% load static %}
 {% block content%}
-
+{% if user.is_authenticated and user.username == external_user.username %}
+      <meta http-equiv="refresh" content="0; URL={% url 'dashboard' %}">
+{% else %}
 {% if not external_user %}
   <h2>The page or user "{{user_input}}" does not exist</h2>
 {% else %}
   <p><strong>{{external_user.username}}</strong></p>
-  <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
+  {% if external_user.profile.profile_picture %}
+      <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
+  {% else %}
+      <img src="{% static 'blog/default.jpg' %}" alt="{{ user.username }}" width="200px" height="200px">
+  {% endif %}
   <p><strong>{{external_user.first_name}} {{external_user.last_name}}</strong></p>
   <p>Bio: {{external_user.profile.bio}}</p>
   {% if posts %}
@@ -30,4 +37,5 @@
     {% endfor %}
   </ul>
 {% endif%}
+{% endif %}
 {% endblock %}
