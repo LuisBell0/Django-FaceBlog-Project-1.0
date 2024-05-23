@@ -8,6 +8,11 @@
   <h2>Welcome {{user.username}}!</h2>
 <form action="{% url 'dashboard' %}" method="POST">
 {% csrf_token %}
+    {% for message in messages %}
+        <div class="message {{ message.tag }}">
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
   <input type="text" placeholder="Search for Profiles" name="search-profile">
     <button type="submit">Search</button>
 </form>

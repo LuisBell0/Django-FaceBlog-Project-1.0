@@ -21,7 +21,10 @@ def home(request):
 def dashboard(request):
   if request.method == "POST":
     search_input = request.POST.get('search-profile')
-    return redirect('search-profile', search_input=search_input)
+    if "/" in search_input:
+      messages.error(request, "You cannot search for '/'.")
+    else:
+      return redirect('search-profile', search_input=search_input)
 
   posts = Post.objects.filter(owner=request.user)
   context = {'posts': posts}
