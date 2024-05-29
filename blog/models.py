@@ -15,8 +15,7 @@ class Post(models.Model):
                             default=1)
   title = models.CharField(max_length=50)
   description = models.TextField()
-  likes = models.PositiveIntegerField(blank=True, null=True, default=0)
-  # Like Interaction in development
+  likes = models.ManyToManyField(User, related_name="likes")
   posted_date = models.DateField(blank=True, null=True)
   posted_hour_server = models.TimeField(blank=True, null=True)
   posted_hour_client = models.TimeField(blank=True, null=True)
@@ -27,6 +26,11 @@ class Post(models.Model):
   def __str__(self):
     return f'{self.title}'
 
+  
+  def total_likes(self):
+    return self.likes.count()
+
+  
   def delete(self, *args, **kwargs):
     # Delete the associated image file from the filesystem
     if self.img:

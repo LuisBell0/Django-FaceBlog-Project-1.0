@@ -7,6 +7,7 @@ urlpatterns = [
     path('dashboard/create_post/',
          PostCreateView.as_view(),
          name="post-create"),
+    path('post_like/<int:pk>/', like_view, name="post-like"),
     path('dashboard/update_post/<int:pk>/',
          PostUpdateView.as_view(),
          name="post-update"),

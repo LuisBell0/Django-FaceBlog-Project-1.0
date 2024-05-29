@@ -47,11 +47,15 @@
     {% else %}
       <li>No Image Available</li>
     {% endif %}
-    <li>Likes: {{post.likes}}</li>
+    <li>Likes: {{ post.total_likes }}</li>
     <li>Posted: {{post.posted_date}}</li>
     <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
     <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
     <li>Description: {{post.description}}</li>
+    <form action="{% url 'post-like' post.pk%}" method="POST">
+      {% csrf_token %}
+      <button type="submit" name="button-like" value=" {{ post.id }}">Like</button>
+    </form>
     <a href="{% url 'post-update' post.pk %}">Edit</a>
     <a href="{% url 'post-delete' post.pk %}">Delete</a>
     <hr>

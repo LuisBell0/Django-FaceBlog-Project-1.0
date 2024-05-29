@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
+from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile
@@ -25,7 +25,7 @@ def dashboard(request):
       messages.error(request, "You cannot search for '/'.")
     else:
       return redirect('search-profile', search_input=search_input)
-
+  
   posts = Post.objects.filter(owner=request.user)
   context = {'posts': posts}
   return render(request, 'blog/dashboard.html', context)
@@ -76,6 +76,11 @@ class ProfileCreateView(CreateView):
     form.instance.date_joined = datetime.now().date()
 
     return super().form_valid(form)
+
+def like_view(request, pk):
+  post = get_object_or_404(Post, id=request.POST.get('button-like'))
+  post.likes.add(request.user)
+  return HttpResponseRedirect(reverse('dashboard'))
 
 
 def ProfileUpdateFunction(request, pk):
