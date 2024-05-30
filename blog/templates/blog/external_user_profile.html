@@ -35,11 +35,15 @@
     <li>Description: {{post.description}}</li>
     <form action="{% url 'post-like' post.pk%}" method="POST">
       {% csrf_token %}
-      <button type="submit" name="button-like" value=" {{ post.id }}">Like</button>
+      {% if user in post.likes.all %}
+      <button type="submit">Unlike</button>
+      {% else %}
+      <button type="submit">Like</button>
+      {% endif %}
     </form>
     <hr>
     {% endfor %}
   </ul>
 {% endif%}
 {% endif %}
-{% endblock %}
+{% endblock %} 

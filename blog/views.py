@@ -77,10 +77,15 @@ class ProfileCreateView(CreateView):
 
     return super().form_valid(form)
 
+
+@login_required
 def like_view(request, pk):
-  post = get_object_or_404(Post, id=request.POST.get('button-like'))
-  post.likes.add(request.user)
-  return HttpResponseRedirect(reverse('dashboard'))
+  post = get_object_or_404(Post, id=pk)
+  if post.likes.filter(id=request.user.id):
+    post.likes.remove(request.user)
+  else:
+    post.likes.add(request.user)
+  return redirect(request.META.get('HTTP_REFERER'))
 
 
 def ProfileUpdateFunction(request, pk):
