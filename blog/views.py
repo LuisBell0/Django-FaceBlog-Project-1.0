@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Post, Profile
+from .models import Post, Profile, LikesModel
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DeleteView, UpdateView
@@ -80,11 +80,16 @@ class ProfileCreateView(CreateView):
 
 @login_required
 def like_view(request, pk):
-  post = get_object_or_404(Post, id=pk)
-  if post.likes.filter(id=request.user.id):
-    post.likes.remove(request.user)
+  post = Post.objects.get(id=pk)
+  liked = LikesModel.objects.filter(post=post, user=request.user).first()
+  if not liked:
+    liked = LikesModel.objects.create(post=post, user=request.user)
+    post.likes = post.likes + 1
+    post.save()
   else:
-    post.likes.add(request.user)
+    liked.delete()
+    post.likes = post.likes - 1
+    post.save()
   return redirect(request.META.get('HTTP_REFERER'))
 
 
