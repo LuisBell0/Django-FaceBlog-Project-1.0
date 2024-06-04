@@ -27,7 +27,8 @@ def dashboard(request):
       return redirect('search-profile', search_input=search_input)
   
   posts = Post.objects.filter(owner=request.user)
-  context = {'posts': posts}
+  liked_post = LikesModel.objects.filter(user=request.user, post__in=posts).values_list('post_id', flat=True)
+  context = {'posts': posts, 'liked': liked_post}
   return render(request, 'blog/dashboard.html', context)
 
 
@@ -177,9 +178,11 @@ def search_profile(request, search_input):
 def external_user_profile_view(request, user_username):
   external_user = User.objects.filter(username=user_username).first()
   posts = Post.objects.filter(owner=external_user)
+  liked_post = LikesModel.objects.filter(user=request.user, post__in=posts).values_list('post_id', flat=True)
   context = {
     'external_user' : external_user,
     'user_input' : user_username,
     'posts' : posts,
+    'liked': liked_post
   }
   return render(request, 'blog/external_user_profile.html', context)

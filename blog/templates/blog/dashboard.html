@@ -54,11 +54,13 @@
     <li>Description: {{post.description}}</li>
     <form action="{% url 'post-like' post.pk%}" method="POST">
       {% csrf_token %}
-      {% if like %}
-      <button type="submit">Unlike</button>
-      {% else %}
-      <button type="submit">Like</button>
-      {% endif%}
+      <button type="submit">
+        {% if post.id in liked %}
+          Unlike
+        {% else %}
+          Like
+        {% endif%}
+      </button>
     </form>
     <a href="{% url 'post-update' post.pk %}">Edit</a>
     <a href="{% url 'post-delete' post.pk %}">Delete</a>

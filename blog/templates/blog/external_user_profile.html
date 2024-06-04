@@ -28,19 +28,21 @@
     {% else %}
       <li>No Image Available</li>
     {% endif %}
-    <li>Likes: {{post.total_likes}}</li>
+    <li>Likes: {{post.likes}}</li>
     <li>Posted: {{post.posted_date}}</li>
     <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
     <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
     <li>Description: {{post.description}}</li>
-    <!-- <form action="{% url 'post-like' post.pk%}" method="POST">
+    <form action="{% url 'post-like' post.pk%}" method="POST">
       {% csrf_token %}
-      {% if user in post.likes.all %}
-      <button type="submit">Unlike</button>
-      {% else %}
-      <button type="submit">Like</button>
-      {% endif %}
-    </form> -->
+      <button type="submit">
+        {% if post.id in liked %}
+          Unlike
+        {% else %}
+          Like
+        {% endif%}
+      </button>
+    </form>
     <hr>
     {% endfor %}
   </ul>
