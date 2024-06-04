@@ -41,6 +41,7 @@
   {% endif %}
   <ul>
     {% for post in posts %}
+    <li>Author: <a href="{% url 'dashboard' %}">{{user.username}}</a></li>
     <li>Title: {{post.title}} </li>
     {% if post.img %}
       <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
