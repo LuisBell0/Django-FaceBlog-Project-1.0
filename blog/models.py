@@ -15,7 +15,7 @@ class Post(models.Model):
                             default=1)
   title = models.CharField(max_length=50)
   description = models.TextField()
-  likes = models.PositiveIntegerField(default=0)
+  likes_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateField(blank=True, null=True)
   posted_hour_server = models.TimeField(blank=True, null=True)
   posted_hour_client = models.TimeField(blank=True, null=True)
@@ -51,7 +51,7 @@ class Post(models.Model):
     super().save(*args, **kwargs)
 
 
-class LikesModel(models.Model):
+class LikePost(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
   post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post")
 
@@ -76,3 +76,22 @@ class Profile(models.Model):
 
   def __str__(self):
     return str(self.user)
+
+
+class Comment(models.Model):
+  text = models.TextField()
+  likes_count = models.PositiveIntegerField(default=0)
+  posted_date = models.DateField(auto_now_add=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+
+  def __str__(self):
+    return f'{self.user} | {self.post} | {self.posted_date}'
+
+
+class LikeComment(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+  def __str__(self):
+    return f'{self.user} | {self.comment}'

@@ -1,0 +1,45 @@
+{% extends 'blog/_base.html' %}
+
+{% block content %}
+<h2>Comments</h2>
+{% if post.img %}
+  <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
+{% else %}
+  No Image Available
+{% endif %}
+<li>Author: <a href="{% url 'external-user-profile' post.owner %}">{{post.owner}}</a></li>
+<li>Likes: {{ post.likes_count }}</li>
+<li>Posted: {{post.posted_date}}</li>
+<li>Description: {{post.description}}</li>
+<form action="{% url 'post-like' post.pk %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if post.id in liked_post %}
+      Unlike
+    {% else %}
+      Like
+    {% endif%}
+  </button>
+</form>
+<hr>
+{% for comment in comments%}
+  <li><a href="{% url 'external-user-profile' comment.user %}">{{comment.user.username}}</a>: {{comment.text}}</li>
+  <li>Posted on: {{comment.posted_date}}</li>
+  <li>Likes: {{comment.likes_count}}</li>
+<form action="{% url 'comment-like' comment.id %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if comment.id in liked_comment %}
+      Unlike
+    {% else %}
+      Like
+    {% endif%}
+  </button>
+</form>
+<form action="" method="post">
+  {% csrf_token %}
+  <button type="submit">Reply</button>
+</form>
+<br>
+{% endfor %}
+{% endblock %}

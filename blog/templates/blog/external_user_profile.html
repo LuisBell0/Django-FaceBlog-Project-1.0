@@ -29,7 +29,7 @@
     {% else %}
       <li>No Image Available</li>
     {% endif %}
-    <li>Likes: {{post.likes}}</li>
+    <li>Likes: {{post.likes_count}}</li>
     <li>Posted: {{post.posted_date}}</li>
     <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
     <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
@@ -43,6 +43,10 @@
           Like
         {% endif%}
       </button>
+    </form>
+    <form action="{% url 'comments' post.id %}" method="GET">
+      {% csrf_token %}
+      <button type="submit">Comments</button>
     </form>
     <hr>
     {% endfor %}

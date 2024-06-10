@@ -4,7 +4,7 @@
     	<h2>These are your matches for "{{ search }}"</h2>
         <ul>
         {% for profile in profiles %}
-            <a href="{% url 'external-user-profile' profile %}">{{ profile }}</a>
+            <a href="{% url 'external-user-profile' profile %}">{{ profile }}</a><br>
         {% empty %}
             No profiles found
         {% endfor %}

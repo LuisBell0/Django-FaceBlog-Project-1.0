@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Post, Profile, LikesModel
+from .models import Post, Profile, LikePost, Comment, LikeComment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DeleteView, UpdateView
@@ -25,9 +25,11 @@ def dashboard(request):
       messages.error(request, "You cannot search for '/'.")
     else:
       return redirect('search-profile', search_input=search_input)
-  
+
   posts = Post.objects.filter(owner=request.user)
-  liked_post = LikesModel.objects.filter(user=request.user, post__in=posts).values_list('post_id', flat=True)
+  liked_post = LikePost.objects.filter(user=request.user,
+                                       post__in=posts).values_list('post_id',
+                                                                   flat=True)
   context = {'posts': posts, 'liked': liked_post}
   return render(request, 'blog/dashboard.html', context)
 
@@ -80,17 +82,51 @@ class ProfileCreateView(CreateView):
 
 
 @login_required
-def like_view(request, pk):
-  post = Post.objects.get(id=pk)
-  liked = LikesModel.objects.filter(post=post, user=request.user).first()
-  if not liked:
-    liked = LikesModel.objects.create(post=post, user=request.user)
-    post.likes = post.likes + 1
-    post.save()
+def post_comments_list(request, post_id):
+  post = Post.objects.filter(id=post_id).first()
+  comments = Comment.objects.filter(post=post)
+  liked_post = LikePost.objects.filter(user=request.user,
+                                       post=post).values_list('post_id',
+                                                              flat=True)
+  liked_comment = LikeComment.objects.filter(user=request.user,
+                                             comment__in=comments).values_list(
+                                                 'comment_id', flat=True)
+  context = {
+      'post': post,
+      'comments': comments,
+      'liked_post': liked_post,
+      'liked_comment': liked_comment
+  }
+  return render(request, 'blog/post_comments_view.html', context)
+
+
+@login_required
+def like_post_view(request, pk):
+  post = get_object_or_404(Post, id=pk)
+  liked_post = LikePost.objects.filter(post=post, user=request.user).first()
+  if not liked_post:
+    liked_post = LikePost.objects.create(post=post, user=request.user)
+    post.likes_count = post.likes_count + 1
   else:
-    liked.delete()
-    post.likes = post.likes - 1
-    post.save()
+    liked_post.delete()
+    post.likes_count = post.likes_count - 1
+  post.save()
+  return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def like_comment_view(request, comment_id):
+  comment = get_object_or_404(Comment, id=comment_id)
+  liked_comment = LikeComment.objects.filter(comment=comment,
+                                             user=request.user).first()
+  if not liked_comment:
+    liked_comment = LikeComment.objects.create(comment=comment,
+                                               user=request.user)
+    comment.likes_count = comment.likes_count + 1
+  else:
+    liked_comment.delete()
+    comment.likes_count = comment.likes_count - 1
+  comment.save()
   return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -178,11 +214,13 @@ def search_profile(request, search_input):
 def external_user_profile_view(request, user_username):
   external_user = User.objects.filter(username=user_username).first()
   posts = Post.objects.filter(owner=external_user)
-  liked_post = LikesModel.objects.filter(user=request.user, post__in=posts).values_list('post_id', flat=True)
+  liked_post = LikePost.objects.filter(user=request.user,
+                                       post__in=posts).values_list('post_id',
+                                                                   flat=True)
   context = {
-    'external_user' : external_user,
-    'user_input' : user_username,
-    'posts' : posts,
-    'liked': liked_post
+      'external_user': external_user,
+      'user_input': user_username,
+      'posts': posts,
+      'liked': liked_post
   }
   return render(request, 'blog/external_user_profile.html', context)
