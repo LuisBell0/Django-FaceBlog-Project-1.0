@@ -8,7 +8,7 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
-from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm
+from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm
 
 # Create your views here.
 
@@ -91,11 +91,23 @@ def post_comments_list(request, post_id):
   liked_comment = LikeComment.objects.filter(user=request.user,
                                              comment__in=comments).values_list(
                                                  'comment_id', flat=True)
+  # Add Comment code block
+  if request.method == 'POST':
+    add_comment_form = AddCommentForm(request.POST)
+    if add_comment_form.is_valid():
+      comment = add_comment_form.save(commit=False)
+      comment.user = request.user
+      comment.post = post
+      comment.save()
+    return redirect('comments', post_id)
+  else:
+    add_comment_form = AddCommentForm()
   context = {
-      'post': post,
-      'comments': comments,
-      'liked_post': liked_post,
-      'liked_comment': liked_comment
+    'post': post,
+    'comments': comments,
+    'liked_post': liked_post,
+    'liked_comment': liked_comment,
+    'comment_form': add_comment_form,
   }
   return render(request, 'blog/post_comments_view.html', context)
 
@@ -129,7 +141,7 @@ def like_comment_view(request, comment_id):
   comment.save()
   return redirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required
 def ProfileUpdateFunction(request, pk):
   user = User.objects.get(pk=request.user.pk)
   profile = Profile.objects.get(pk=request.user.profile.pk)
@@ -147,6 +159,7 @@ def ProfileUpdateFunction(request, pk):
         messages.error(request,
                        'Username already taken. Please choose another one.')
       else:
+        # Check if the profile picture is being changed or deleted
         if "profile_picture-clear" in request.POST:
           user.profile.profile_picture.delete()
           user.profile.profile_picture = None

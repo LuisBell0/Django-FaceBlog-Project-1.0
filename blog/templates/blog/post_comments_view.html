@@ -22,6 +22,12 @@
   </button>
 </form>
 <hr>
+<form action="{% url 'comments' post.id %}" method="POST">
+  {% csrf_token %}
+  <p>{{request.user.username}}: {{comment_form.as_p}}</p>
+  <button type="submit">Post Comment</button>
+</form>
+<hr>
 {% for comment in comments%}
   <li><a href="{% url 'external-user-profile' comment.user %}">{{comment.user.username}}</a>: {{comment.text}}</li>
   <li>Posted on: {{comment.posted_date}}</li>

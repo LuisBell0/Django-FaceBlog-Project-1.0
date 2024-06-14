@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from blog.models import Profile
+from django.forms import widgets
+from blog.models import Profile, Comment
 
 
 class SignUpForm(UserCreationForm):
@@ -36,3 +37,12 @@ class ProfileUpdateForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username_or_email = forms.CharField(label='Username or Email', max_length=254)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+
+class AddCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows':4}),
+        }
