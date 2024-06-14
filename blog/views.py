@@ -84,7 +84,7 @@ class ProfileCreateView(CreateView):
 @login_required
 def post_comments_list(request, post_id):
   post = Post.objects.filter(id=post_id).first()
-  comments = Comment.objects.filter(post=post)
+  comments = Comment.objects.filter(post=post).order_by('-posted_date')
   liked_post = LikePost.objects.filter(user=request.user,
                                        post=post).values_list('post_id',
                                                               flat=True)

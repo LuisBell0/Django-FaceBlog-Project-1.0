@@ -17,11 +17,10 @@ class Post(models.Model):
   description = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateField(blank=True, null=True)
-  posted_hour_server = models.TimeField(blank=True, null=True)
-  posted_hour_client = models.TimeField(blank=True, null=True)
+  posted_hour_server = models.TimeField(blank=True, null=True, auto_now_add=True)
+  posted_hour_client = models.TimeField(blank=True, null=True, auto_now_add=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
 
-  # comments field waiting for development
 
   def __str__(self):
     return f'{self.title}'
@@ -81,7 +80,7 @@ class Profile(models.Model):
 class Comment(models.Model):
   text = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
-  posted_date = models.DateField(auto_now_add=True)
+  posted_date = models.DateTimeField(auto_now_add=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
