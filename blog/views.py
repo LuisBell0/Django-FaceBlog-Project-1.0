@@ -74,6 +74,19 @@ class ProfileCreateView(CreateView):
   fields = ['gender', 'date_of_birth', 'bio', 'profile_picture']
   success_url = reverse_lazy("dashboard")
 
+
+class CommentDeleteView(DeleteView):
+  model = Comment
+  success_url = reverse_lazy("dashboard")
+
+
+class CommentUpdateView(UpdateView):
+  model = Comment
+  fields = ['text']
+  success_url = reverse_lazy("dashboard")
+  template_name = 'blog/comment_update_view.html'
+
+
   def form_valid(self, form):
     form.instance.user = self.request.user
     form.instance.date_joined = datetime.now().date()
@@ -237,3 +250,5 @@ def external_user_profile_view(request, user_username):
       'liked': liked_post
   }
   return render(request, 'blog/external_user_profile.html', context)
+
+# Next feature to work on is the Edit/Delete comment and reply to a comment

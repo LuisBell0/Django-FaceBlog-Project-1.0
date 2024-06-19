@@ -46,6 +46,8 @@
   {% csrf_token %}
   <button type="submit">Reply</button>
 </form>
+    <a href="{% url 'comment-update' %}">Edit</a>
+    <a href="">Delete</a>
 <br>
 {% endfor %}
 {% endblock %}
