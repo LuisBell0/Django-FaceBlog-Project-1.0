@@ -28,7 +28,7 @@
   <button type="submit">Post Comment</button>
 </form>
 <hr>
-{% for comment in comments%}
+{% for comment in comments %}
   <li><a href="{% url 'external-user-profile' comment.user %}">{{comment.user.username}}</a>: {{comment.text}}</li>
   <li>Posted on: {{comment.posted_date|date:"Y-m-d H:i:s"}}</li>
   <li>Likes: {{comment.likes_count}}</li>
@@ -46,7 +46,7 @@
   {% csrf_token %}
   <button type="submit">Reply</button>
 </form>
-    <a href="{% url 'comment-update' %}">Edit</a>
+    <a href="{% url 'comment-update' post.id comment.id %}">Edit</a>
     <a href="">Delete</a>
 <br>
 {% endfor %}

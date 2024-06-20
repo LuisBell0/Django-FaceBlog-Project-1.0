@@ -74,6 +74,11 @@ class ProfileCreateView(CreateView):
   fields = ['gender', 'date_of_birth', 'bio', 'profile_picture']
   success_url = reverse_lazy("dashboard")
 
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    form.instance.date_joined = datetime.now().date()
+  
+    return super().form_valid(form)
 
 class CommentDeleteView(DeleteView):
   model = Comment
@@ -86,13 +91,30 @@ class CommentUpdateView(UpdateView):
   success_url = reverse_lazy("dashboard")
   template_name = 'blog/comment_update_view.html'
 
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['pk'] = self.object.pk  # add the pk to the context
+    return context
 
-  def form_valid(self, form):
-    form.instance.user = self.request.user
-    form.instance.date_joined = datetime.now().date()
 
-    return super().form_valid(form)
-
+@login_required
+def comment_update_function(request, post_id, comment_id):
+  post = get_object_or_404(Post, id=post_id)
+  comment = get_object_or_404(Comment, id=comment_id, post=post)
+  if request.method == 'POST':
+    comment_form = AddCommentForm(instance=comment, data=request.POST)
+    if comment_form.is_valid():
+      comment_form.save()
+    return redirect('comments', post_id)
+  else:
+    comment_form = AddCommentForm(instance=comment)
+    context = {
+      'comment': comment,
+      'comment_form': comment_form,
+      'post': post,
+    }
+    return render(request, 'blog/comment_update_view.html', context)
+    
 
 @login_required
 def post_comments_list(request, post_id):
@@ -115,13 +137,13 @@ def post_comments_list(request, post_id):
     return redirect('comments', post_id)
   else:
     add_comment_form = AddCommentForm()
-  context = {
-    'post': post,
-    'comments': comments,
-    'liked_post': liked_post,
-    'liked_comment': liked_comment,
-    'comment_form': add_comment_form,
-  }
+    context = {
+      'post': post,
+      'comments': comments,
+      'liked_post': liked_post,
+      'liked_comment': liked_comment,
+      'comment_form': add_comment_form,
+    }
   return render(request, 'blog/post_comments_view.html', context)
 
 

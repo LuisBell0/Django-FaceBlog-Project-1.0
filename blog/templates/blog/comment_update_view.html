@@ -1,7 +1,10 @@
 {% extends 'blog/_base.html' %}
 
 {% block content %}
-    <form action="{% url 'comment-update' %}" method="post"></form>
-    {{ form.as_p }}
-    <button type="submit">Update</button>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+    <a href="{% url 'comments' post.id %}">Cancel</a>
 {% endblock %}
