@@ -80,21 +80,20 @@ class ProfileCreateView(CreateView):
   
     return super().form_valid(form)
 
-class CommentDeleteView(DeleteView):
-  model = Comment
-  success_url = reverse_lazy("dashboard")
 
-
-class CommentUpdateView(UpdateView):
-  model = Comment
-  fields = ['text']
-  success_url = reverse_lazy("dashboard")
-  template_name = 'blog/comment_update_view.html'
-
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['pk'] = self.object.pk  # add the pk to the context
-    return context
+@login_required
+def comment_delete_function(request, post_id, comment_id):
+  post = get_object_or_404(Post, id=post_id)
+  comment = get_object_or_404(Comment, post=post, id=comment_id)
+  if request.method == 'POST':
+    comment.delete()
+    return redirect('comments', post_id)
+  else:
+    context = {
+      'post': post,
+      'comment': comment
+    }
+    return render(request, 'blog/comment_delete_view.html', context)
 
 
 @login_required
