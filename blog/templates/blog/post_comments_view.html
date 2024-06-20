@@ -24,7 +24,7 @@
 <hr>
 <form action="{% url 'comments' post.id %}" method="POST">
   {% csrf_token %}
-  <p>{{request.user.username}}: {{comment_form.as_p}}</p>
+  <p>{{request.user.username}} {{comment_form.as_p}}</p>
   <button type="submit">Post Comment</button>
 </form>
 <hr>
@@ -46,8 +46,10 @@
   {% csrf_token %}
   <button type="submit">Reply</button>
 </form>
-    <a href="{% url 'comment-update' post.id comment.id %}">Edit</a>
-    <a href="{% url 'comment-delete' post.id comment.id %}">Delete</a>
+{% if request.user == comment.user %}
+  <a href="{% url 'comment-update' post.id comment.id %}">Edit</a>
+  <a href="{% url 'comment-delete' post.id comment.id %}">Delete</a>
+{% endif %}
 <hr>
 {% endfor %}
 {% endblock %}
