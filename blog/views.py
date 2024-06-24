@@ -146,6 +146,27 @@ def post_comments_list(request, post_id):
   return render(request, 'blog/post_comments_view.html', context)
 
 
+def add_comment_reply(request, post_id, comment_id):
+  comment = get_object_or_404(Comment, id=comment_id)
+  post = get_object_or_404(Post, id=post_id)
+  if request.method == 'POST':
+    reply_form = AddCommentForm(request.POST)
+    if reply_form.is_valid():
+      reply = reply_form.save(commit=False)
+      reply.user = request.user
+      reply.post = post
+      reply.parent_comment = comment
+      reply.save()
+    return redirect('comments', post_id)
+  else:
+    reply_form = AddCommentForm()
+    context = {
+      'post': post,
+      'comment': comment,
+      'reply_form': reply_form,
+    }
+  return render(request, 'blog/add_reply_form.html', context)
+
 @login_required
 def like_post_view(request, pk):
   post = get_object_or_404(Post, id=pk)
@@ -271,5 +292,3 @@ def external_user_profile_view(request, user_username):
       'liked': liked_post
   }
   return render(request, 'blog/external_user_profile.html', context)
-
-# Next feature to work on is the Edit/Delete comment and reply to a comment

@@ -42,13 +42,26 @@
     {% endif%}
   </button>
 </form>
-<form action="" method="post">
+<form action="{% url 'reply' post.id comment.id%}" method="GET">
   {% csrf_token %}
   <button type="submit">Reply</button>
 </form>
 {% if request.user == comment.user %}
   <a href="{% url 'comment-update' post.id comment.id %}">Edit</a>
   <a href="{% url 'comment-delete' post.id comment.id %}">Delete</a>
+{% endif %}
+<br>
+{% if comment.get_replies %}
+  <b>Replies:</b>
+{% for reply in comment.get_replies %}
+    <div style="margin-left: 2em;">
+      <p><a href="{% url 'external-user-profile' comment.user %}">{{reply.user.username}}</a>: {{reply.text}}</p>
+      {% if request.user == reply.user %}
+        <a href="{% url 'comment-update' post.id reply.id %}">Edit</a>
+        <a href="{% url 'comment-delete' post.id reply.id %}">Delete</a>
+      {% endif %}
+    </div>
+{% endfor %}
 {% endif %}
 <hr>
 {% endfor %}

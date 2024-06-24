@@ -1,0 +1,11 @@
+{% extends 'blog/_base.html' %}
+{% block content %}
+  <h2>Replying to:</h2>
+  <b>{{comment.user.username}}: {{comment.text}}</b>
+  <form action="{% url 'reply' post.id comment.id %}" method="POST">
+    {% csrf_token %}
+    {{reply_form.as_p}}
+    <button type="submit">Reply</button>
+  </form>
+  <a href="{% url 'comments' post.id %}">Cancel</a>
+{% endblock %}

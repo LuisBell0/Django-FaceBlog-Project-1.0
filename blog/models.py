@@ -17,14 +17,17 @@ class Post(models.Model):
   description = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateField(blank=True, null=True)
-  posted_hour_server = models.TimeField(blank=True, null=True, auto_now_add=True)
-  posted_hour_client = models.TimeField(blank=True, null=True, auto_now_add=True)
+  posted_hour_server = models.TimeField(blank=True,
+                                        null=True,
+                                        auto_now_add=True)
+  posted_hour_client = models.TimeField(blank=True,
+                                        null=True,
+                                        auto_now_add=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
-
 
   def __str__(self):
     return f'{self.title}'
-  
+
   def delete(self, *args, **kwargs):
     # Delete the associated image file from the filesystem
     if self.img:
@@ -83,9 +86,17 @@ class Comment(models.Model):
   posted_date = models.DateTimeField(auto_now_add=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+  parent_comment = models.ForeignKey('self',
+                                     on_delete=models.CASCADE,
+                                     null=True,
+                                     blank=True,
+                                     related_name='replies')
 
   def __str__(self):
     return f'{self.user} | {self.post} | {self.posted_date}'
+
+  def get_replies(self):
+    return Comment.objects.filter(parent_comment=self)
 
 
 class LikeComment(models.Model):
