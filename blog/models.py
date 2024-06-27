@@ -16,13 +16,7 @@ class Post(models.Model):
   title = models.CharField(max_length=50)
   description = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
-  posted_date = models.DateField(blank=True, null=True)
-  posted_hour_server = models.TimeField(blank=True,
-                                        null=True,
-                                        auto_now_add=True)
-  posted_hour_client = models.TimeField(blank=True,
-                                        null=True,
-                                        auto_now_add=True)
+  posted_date = models.DateTimeField(auto_now_add=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
 
   def __str__(self):
@@ -96,7 +90,7 @@ class Comment(models.Model):
     return f'{self.user} | {self.post} | {self.posted_date}'
 
   def get_replies(self):
-    return Comment.objects.filter(parent_comment=self)
+    return Comment.objects.filter(parent_comment=self).order_by('-posted_date')
 
 
 class LikeComment(models.Model):

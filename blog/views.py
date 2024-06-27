@@ -77,7 +77,7 @@ class ProfileCreateView(CreateView):
   def form_valid(self, form):
     form.instance.user = self.request.user
     form.instance.date_joined = datetime.now().date()
-  
+
     return super().form_valid(form)
 
 
@@ -89,10 +89,7 @@ def comment_delete_function(request, post_id, comment_id):
     comment.delete()
     return redirect('comments', post_id)
   else:
-    context = {
-      'post': post,
-      'comment': comment
-    }
+    context = {'post': post, 'comment': comment}
     return render(request, 'blog/comment_delete_view.html', context)
 
 
@@ -108,23 +105,26 @@ def comment_update_function(request, post_id, comment_id):
   else:
     comment_form = AddCommentForm(instance=comment)
     context = {
-      'comment': comment,
-      'comment_form': comment_form,
-      'post': post,
+        'comment': comment,
+        'comment_form': comment_form,
+        'post': post,
     }
     return render(request, 'blog/comment_update_view.html', context)
-    
+
 
 @login_required
 def post_comments_list(request, post_id):
   post = Post.objects.filter(id=post_id).first()
-  comments = Comment.objects.filter(post=post).order_by('-posted_date')
+  comments = Comment.objects.filter(
+      post=post, parent_comment__isnull=True).order_by('-posted_date')
+  replies = Comment.objects.filter(post=post, parent_comment__isnull=False)
+  combined_comments = list(comments) + list(replies)
   liked_post = LikePost.objects.filter(user=request.user,
                                        post=post).values_list('post_id',
                                                               flat=True)
-  liked_comment = LikeComment.objects.filter(user=request.user,
-                                             comment__in=comments).values_list(
-                                                 'comment_id', flat=True)
+  liked_comment = LikeComment.objects.filter(
+      user=request.user,
+      comment__in=combined_comments).values_list('comment_id', flat=True)
   # Add Comment code block
   if request.method == 'POST':
     add_comment_form = AddCommentForm(request.POST)
@@ -137,11 +137,11 @@ def post_comments_list(request, post_id):
   else:
     add_comment_form = AddCommentForm()
     context = {
-      'post': post,
-      'comments': comments,
-      'liked_post': liked_post,
-      'liked_comment': liked_comment,
-      'comment_form': add_comment_form,
+        'post': post,
+        'comments': comments,
+        'liked_post': liked_post,
+        'liked_comment': liked_comment,
+        'comment_form': add_comment_form,
     }
   return render(request, 'blog/post_comments_view.html', context)
 
@@ -161,11 +161,12 @@ def add_comment_reply(request, post_id, comment_id):
   else:
     reply_form = AddCommentForm()
     context = {
-      'post': post,
-      'comment': comment,
-      'reply_form': reply_form,
+        'post': post,
+        'comment': comment,
+        'reply_form': reply_form,
     }
   return render(request, 'blog/add_reply_form.html', context)
+
 
 @login_required
 def like_post_view(request, pk):
@@ -195,6 +196,7 @@ def like_comment_view(request, comment_id):
     comment.likes_count = comment.likes_count - 1
   comment.save()
   return redirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required
 def ProfileUpdateFunction(request, pk):

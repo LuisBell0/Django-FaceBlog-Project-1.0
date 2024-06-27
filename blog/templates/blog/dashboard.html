@@ -49,9 +49,7 @@
       <li>No Image Available</li>
     {% endif %}
     <li>Likes: {{ post.likes_count }}</li>
-    <li>Posted: {{post.posted_date}}</li>
-    <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
-    <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
+    <li>{{post.posted_date|timesince}} ago</li>
     <li>Description: {{post.description}}</li>
     <form action="{% url 'post-like' post.pk%}" method="POST">
       {% csrf_token %}
