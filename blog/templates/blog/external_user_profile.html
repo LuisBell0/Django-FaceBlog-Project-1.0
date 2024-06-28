@@ -7,14 +7,21 @@
 {% if not external_user %}
   <h2>The page or user "{{user_input}}" does not exist</h2>
 {% else %}
-  <p><strong>{{external_user.username}}</strong></p>
+<h2><strong>{{external_user.username}}</strong></h2>
+<a href="">Followers</a>: {{followers.count}}<br>
+<a href="">Following</a>: {{following.count}}<br>
+Posts: {{posts.count}}</p>
+<form action="" method="">
+  <button type="submit">Follow</button>
+</form>
   {% if external_user.profile.profile_picture %}
       <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
   {% else %}
       <img src="{% static 'blog/default.jpg' %}" alt="{{ user.username }}" width="200px" height="200px">
   {% endif %}
   <p><strong>{{external_user.first_name}} {{external_user.last_name}}</strong></p>
-  <p>Bio: {{external_user.profile.bio}}</p>
+  <p>Bio: {{external_user.profile.bio}}<br>
+
   {% if posts %}
     <p><strong>These are {{external_user.username}}'s posts</strong></p><hr>
   {% else %}

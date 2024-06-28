@@ -19,18 +19,25 @@ def home(request):
 
 @login_required
 def dashboard(request):
+  try:
+    user_profile = Profile.objects.get(user=request.user)
+  except Profile.DoesNotExist:
+    return redirect("profile-create")
+  followers = user_profile.followed_by.exclude(pk=user_profile.pk)
+  following = user_profile.follows.exclude(pk=user_profile.pk)
+  posts = Post.objects.filter(owner=request.user)
+  liked_post = LikePost.objects.filter(user=request.user,
+                                       post__in=posts).values_list('post_id', flat=True)
   if request.method == "POST":
     search_input = request.POST.get('search-profile')
     if "/" in search_input:
       messages.error(request, "You cannot search for '/'.")
     else:
       return redirect('search-profile', search_input=search_input)
-
-  posts = Post.objects.filter(owner=request.user)
-  liked_post = LikePost.objects.filter(user=request.user,
-                                       post__in=posts).values_list('post_id',
-                                                                   flat=True)
-  context = {'posts': posts, 'liked': liked_post}
+  context = {'posts': posts,
+             'liked': liked_post,
+             'followers':followers,
+             'following': following}
   return render(request, 'blog/dashboard.html', context)
 
 
@@ -77,8 +84,9 @@ class ProfileCreateView(CreateView):
   def form_valid(self, form):
     form.instance.user = self.request.user
     form.instance.date_joined = datetime.now().date()
-
-    return super().form_valid(form)
+    response = super().form_valid(form)
+    self.object.follows.add(self.object)
+    return response
 
 
 @login_required
@@ -283,14 +291,24 @@ def search_profile(request, search_input):
 
 def external_user_profile_view(request, user_username):
   external_user = User.objects.filter(username=user_username).first()
+  profile = get_object_or_404(Profile, user=external_user)
+  followers = profile.followed_by.exclude(pk=profile.pk)
+  following = profile.follows.exclude(pk=profile.pk)
   posts = Post.objects.filter(owner=external_user)
   liked_post = LikePost.objects.filter(user=request.user,
                                        post__in=posts).values_list('post_id',
                                                                    flat=True)
   context = {
-      'external_user': external_user,
-      'user_input': user_username,
-      'posts': posts,
-      'liked': liked_post
+    'external_user': external_user,
+    'user_input': user_username,
+    'posts': posts,
+    'liked': liked_post,
+    'profile': profile,
+    'followers':followers,
+    'following': following
   }
   return render(request, 'blog/external_user_profile.html', context)
+
+
+def follow_unfollow_profile(request, profile_id):
+  pass

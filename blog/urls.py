@@ -38,5 +38,8 @@ urlpatterns = [
          name='search-profile'),
     path('<str:user_username>/',
          external_user_profile_view,
-         name="external-user-profile")
+         name="external-user-profile"),
+    path('follow/unfollow/<str:profile_id>/',
+         follow_unfollow_profile,
+         name='follow-unfollow')
 ]

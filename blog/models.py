@@ -62,9 +62,10 @@ class Profile(models.Model):
       ('other', 'Other'),
   )
   user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+  follows = models.ManyToManyField('self',
+    related_name='followed_by', symmetrical=False, blank=True)
   profile_picture = models.ImageField(upload_to="profile_pictures/",
-                                      blank=True,
-                                      null=True)
+                                      blank=True,null=True)
   bio = models.TextField(max_length=255, blank=True, null=True)
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, null=True)
   date_of_birth = models.DateField(null=True)
