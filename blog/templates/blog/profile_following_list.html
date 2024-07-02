@@ -1,0 +1,7 @@
+{% extends 'blog/_base.html' %}
+{% block content %}
+<h2><strong>{{user.username}}'s Following:</strong></h2>
+{% for follower in following %}
+<a href="{% url 'external-user-profile' follower %}">{{follower}}</a>
+{% endfor %}
+{% endblock %}

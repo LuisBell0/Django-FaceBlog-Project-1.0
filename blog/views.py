@@ -1,10 +1,11 @@
+from django.db.models import fields
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile, LikePost, Comment, LikeComment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, DeleteView, UpdateView
+from django.views.generic import CreateView, DeleteView, UpdateView, ListView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
@@ -290,10 +291,11 @@ def search_profile(request, search_input):
 
 
 def external_user_profile_view(request, user_username):
-  external_user = User.objects.filter(username=user_username).first()
+  external_user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=external_user)
   followers = profile.followed_by.exclude(pk=profile.pk)
   following = profile.follows.exclude(pk=profile.pk)
+  is_follower = request.user.profile.follows.filter(id=profile.id).exists()
   posts = Post.objects.filter(owner=external_user)
   liked_post = LikePost.objects.filter(user=request.user,
                                        post__in=posts).values_list('post_id',
@@ -305,10 +307,41 @@ def external_user_profile_view(request, user_username):
     'liked': liked_post,
     'profile': profile,
     'followers':followers,
-    'following': following
+    'following': following,
+    'is_follower': is_follower
   }
   return render(request, 'blog/external_user_profile.html', context)
 
 
+@login_required
 def follow_unfollow_profile(request, profile_id):
-  pass
+  profile = get_object_or_404(Profile, id=profile_id)
+  if request.user.profile.follows.filter(id=profile.id).exists():
+    request.user.profile.follows.remove(profile)
+  else:
+    request.user.profile.follows.add(profile)
+  return redirect(request.META.get('HTTP_REFERER'))
+
+
+def followers_list_view(request, user_username):
+  user = get_object_or_404(User, username=user_username)
+  profile = get_object_or_404(Profile, user=user)
+  followers = profile.follows.exclude(pk=profile.id)
+  context = {
+    'user':user,
+    'profile':profile,
+    'followers':followers
+  }
+  return render(request, 'blog/profile_followers_list.html', context)
+
+
+def following_list_view(request, user_username):
+  user = get_object_or_404(User, username=user_username)
+  profile = get_object_or_404(Profile, user=user)
+  following = profile.followed_by.exclude(pk=profile.id)
+  context = {
+    'user':user,
+    'profile':profile,
+    'following':following
+  }
+  return render(request, 'blog/profile_following_list.html', context)

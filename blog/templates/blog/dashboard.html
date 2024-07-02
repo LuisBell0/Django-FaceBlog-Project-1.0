@@ -13,8 +13,8 @@
   <input type="text" placeholder="Search for Profiles" name="search-profile">
     <button type="submit">Search</button>
 </form>
-<a href="">Followers</a>: {{followers.count}}<br>
-<a href="">Following</a>: {{following.count}}<br>
+<a href="{% url 'profile-followers' user.username %}">Followers</a>: {{followers.count}}<br>
+<a href="{% url 'profile-following' user.username %}">Following</a>: {{following.count}}<br>
 Posts: {{posts.count}}
 <form action="{% url 'profile-update' user.profile.pk %}" method="GET">
   <button type="submit">Edit Profile</button>

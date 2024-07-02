@@ -8,11 +8,18 @@
   <h2>The page or user "{{user_input}}" does not exist</h2>
 {% else %}
 <h2><strong>{{external_user.username}}</strong></h2>
-<a href="">Followers</a>: {{followers.count}}<br>
-<a href="">Following</a>: {{following.count}}<br>
+<a href="{% url 'profile-followers' external_user.username %}">Followers</a>: {{followers.count}}<br>
+<a href="{% url 'profile-following' external_user.username %}">Following</a>: {{following.count}}<br>
 Posts: {{posts.count}}</p>
-<form action="" method="">
-  <button type="submit">Follow</button>
+<form action="{% url 'follow-unfollow' profile.id %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if is_follower %}
+      Unfollow
+    {% else %}
+      Follow
+    {% endif %}
+  </button>
 </form>
   {% if external_user.profile.profile_picture %}
       <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
