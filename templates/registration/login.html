@@ -1,4 +1,14 @@
-<h1>Please login</h1>
+{% extends 'blog/_base.html'%}
+{% block title %}
+FaceBlog log in or sign up
+{% endblock %}
+{% block content%}
+<style>
+  .navbar {
+    display: none;
+  }
+</style>
+<h1>FaceBlog</h1>
 {% for message in messages %}
     <div class="message {{ message.tag }}">
         <strong>{{ message }}</strong>
@@ -11,3 +21,4 @@
   <p>Forgot Password? <a href="{% url 'password_reset' %}">Click here</a></p>
   <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
 </form>
+{% endblock %}

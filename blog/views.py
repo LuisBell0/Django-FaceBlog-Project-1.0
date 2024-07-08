@@ -1,11 +1,10 @@
-from django.db.models import fields
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile, LikePost, Comment, LikeComment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, DeleteView, UpdateView, ListView
+from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
@@ -14,8 +13,58 @@ from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm
 # Create your views here.
 
 
+def login_view(request):
+  if request.method == 'POST':
+    form = LoginForm(data=request.POST)
+    if form.is_valid():
+      username_or_email = form.cleaned_data['username_or_email']
+      password = form.cleaned_data['password']
+      user = authenticate(request,
+                          username=username_or_email,
+                          password=password)
+      if user is not None:
+        if user.is_active:
+          login(request, user)
+          return HttpResponseRedirect(
+              reverse("home"))  # If successful redirect to homepage
+        else:
+          messages.error(request, "Your account hasn't been activated.")
+      else:
+        # Authentication failed
+        form.add_error(None,
+                       "Incorrect username or password. Please try again.")
+  else:
+    form = LoginForm()
+  return render(request, 'registration/login.html', {'login_form': form})
+
+
+def logout_view(request):
+  logout(request)
+  return HttpResponseRedirect(reverse("new_login"))
+
+
 def home(request):
-  return render(request, 'blog/home.html', {})
+  current_user = request.user
+  if current_user.is_authenticated:
+    current_user_profile = Profile.objects.filter(user=current_user)
+    followed_users = current_user.profile.follows.all()
+    all_users = followed_users | current_user_profile
+    posts = Post.objects.filter(owner__profile__in=all_users).order_by('-posted_date')
+    liked_post = LikePost.objects.filter(user=request.user,
+                                         post__in=posts).values_list('post_id', flat=True)
+    if request.method == "POST":
+      search_input = request.POST.get('search-profile')
+      if "/" in search_input:
+        messages.error(request, "You cannot search for '/'.")
+      else:
+        return redirect('search-profile', search_input=search_input)
+    context = {'posts': posts,
+               'liked': liked_post
+              }
+    return render(request, 'blog/home.html', context)
+  else:
+    return login_view(request)
+  # return render(request, 'blog/home.html', {})
 
 
 @login_required
@@ -252,34 +301,7 @@ def ProfileUpdateFunction(request, pk):
     return render(request, 'blog/profile_update.html', context)
 
 
-def login_view(request):
-  if request.method == 'POST':
-    form = LoginForm(data=request.POST)
-    if form.is_valid():
-      username_or_email = form.cleaned_data['username_or_email']
-      password = form.cleaned_data['password']
-      user = authenticate(request,
-                          username=username_or_email,
-                          password=password)
-      if user is not None:
-        if user.is_active:
-          login(request, user)
-          return HttpResponseRedirect(
-              reverse("dashboard"))  # If successful redirect to homepage
-        else:
-          messages.error(request, "Your account hasn't been activated.")
-      else:
-        # Authentication failed
-        form.add_error(None,
-                       "Incorrect username or password. Please try again.")
-  else:
-    form = LoginForm()
-  return render(request, 'registration/login.html', {'login_form': form})
 
-
-def logout_view(request):
-  logout(request)
-  return HttpResponseRedirect(reverse("new_login"))
 
 
 def search_profile(request, search_input):
@@ -345,3 +367,4 @@ def following_list_view(request, user_username):
     'following':following
   }
   return render(request, 'blog/profile_following_list.html', context)
+  
