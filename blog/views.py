@@ -56,6 +56,8 @@ def home(request):
       search_input = request.POST.get('search-profile')
       if "/" in search_input:
         messages.error(request, "You cannot search for '/'.")
+      elif not search_input:
+        messages.error(request, "You cannot search for nothing.")
       else:
         return redirect('search-profile', search_input=search_input)
     context = {'posts': posts,
@@ -64,7 +66,6 @@ def home(request):
     return render(request, 'blog/home.html', context)
   else:
     return login_view(request)
-  # return render(request, 'blog/home.html', {})
 
 
 @login_required
@@ -79,9 +80,11 @@ def dashboard(request):
   liked_post = LikePost.objects.filter(user=request.user,
                                        post__in=posts).values_list('post_id', flat=True)
   if request.method == "POST":
-    search_input = request.POST.get('search-profile')
+    search_input = request.POST.get('search-profile').strip()
     if "/" in search_input:
       messages.error(request, "You cannot search for '/'.")
+    elif not search_input:
+      messages.error(request, "You cannot search for nothing.")
     else:
       return redirect('search-profile', search_input=search_input)
   context = {'posts': posts,
@@ -315,13 +318,17 @@ def search_profile(request, search_input):
 def external_user_profile_view(request, user_username):
   external_user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=external_user)
+  posts = Post.objects.filter(owner=external_user)
   followers = profile.followed_by.exclude(pk=profile.pk)
   following = profile.follows.exclude(pk=profile.pk)
-  is_follower = request.user.profile.follows.filter(id=profile.id).exists()
-  posts = Post.objects.filter(owner=external_user)
-  liked_post = LikePost.objects.filter(user=request.user,
-                                       post__in=posts).values_list('post_id',
-                                                                   flat=True)
+  if request.user.is_authenticated:
+    is_follower = request.user.profile.follows.filter(id=profile.id).exists()
+    liked_post = LikePost.objects.filter(user=request.user,
+       post__in=posts).values_list('post_id',
+                                   flat=True)
+  else:
+    is_follower = None
+    liked_post = None
   context = {
     'external_user': external_user,
     'user_input': user_username,

@@ -1,10 +1,85 @@
+body {
+  background-color: #f7fffb;
+}
+
 .form-container {
   display: inline-block;
 }
 
-.navbar {
-  background-color: lightblue;
+/* Navbar */
 
-.body {
-  background-color: gray;
+.nav-btn {
+  color: #198754;
+  padding: 1px;
+  margin: 5px 11px 5px 11px;
+}
+
+.btn-logout {
+  padding: 1px;
+  margin: 5px 11px 5px 1px;
+}
+
+.line {
+  color: #198754;
+}
+
+/* Login Page */
+
+.login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  background-color: white;
+  padding: 100px
+}
+
+.big-logo, .form-control {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.form-control-margin {
+  margin-bottom: 5px;
+}
+
+/* Sign Up Card */
+
+.signup-card {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  background-color: white;
+  padding: 100px
+}
+
+.form-row {
+  display: flex;
+  width: 600px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-row .form-control {
+  width: 48%; /* Adjust the width to fit two fields per row */
+}
+
+/* Brand Logo/Name */
+
+.big-logo {
+  font-size: 45px;
+  margin-bottom: 30px;
+  font-family: "Playwrite AR", cursive;
 }

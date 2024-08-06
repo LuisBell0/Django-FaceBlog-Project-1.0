@@ -2,23 +2,31 @@
 {% block title %}
 FaceBlog log in or sign up
 {% endblock %}
-{% block content%}
+{% block content %}
 <style>
   .navbar {
     display: none;
   }
 </style>
-<h1>FaceBlog</h1>
-{% for message in messages %}
-    <div class="message {{ message.tag }}">
-        <strong>{{ message }}</strong>
-    </div>
-{% endfor %}
-<form action="" method="post">
-  {% csrf_token %}
-    {{ login_form.as_p }}
-  <input type="submit" value="Log In">
-  <p>Forgot Password? <a href="{% url 'password_reset' %}">Click here</a></p>
-  <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
-</form>
+<div class="container login-container">
+  <div class="login-card">
+
+    {% for message in messages %}
+        <div class="message {{ message.tag }}">
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
+    <form action="" method="post">
+      <div class="form-header">
+        <h1 class="big-logo">FaceBlog</h1>
+      </div>
+      {% csrf_token %}
+      {{ login_form.username_or_email }}
+      {{ login_form.password }}
+      <input class="btn btn-success form-control form-control-margin" type="submit" value="Log In">
+      <p>Forgot Password? <a href="{% url 'password_reset' %}" style=text-decoration:none>Click here</a></p>
+      <p>Don't have an account? <a href="{% url 'signup' %}" style=text-decoration:none>Sign up</a></p>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -15,6 +15,17 @@ class SignUpForm(UserCreationForm):
         fields = ('first_name', 'last_name', 'email', 'username', 'password1',
                   'password2')
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'placeholder': 'First Name', 'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'placeholder': 'Last Name', 'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Email', 'class': 'form-control'})
+        self.fields['username'].widget.attrs.update({'placeholder': 'Username', 'class': 'form-control'})
+        self.fields['password1'].widget.attrs.update({'placeholder': 'Password', 'class': 'form-control'})
+        self.fields['password2'].widget.attrs.update({'placeholder': 'Confirm Password', 'class': 'form-control'})
+
+        for field_name in self.fields:
+            self.fields[field_name].label = ""
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -35,14 +46,27 @@ class ProfileUpdateForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    username_or_email = forms.CharField(label='Username or Email', max_length=254)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    username_or_email = forms.CharField(
+        label='Username or Email',
+        max_length=254,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Username or Email', 
+            'class': 'form-control form-control-margin'
+        })
+    )
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Password', 
+            'class': 'form-control form-control-margin'
+        })
+    )
 
 
 class AddCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
-        widgets = {
+        widget = {
             'text': forms.Textarea(attrs={'rows':4}),
         }
