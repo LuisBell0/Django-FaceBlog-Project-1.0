@@ -10,23 +10,27 @@ FaceBlog log in or sign up
 </style>
 <div class="container login-container">
   <div class="login-card">
-
-    {% for message in messages %}
-        <div class="message {{ message.tag }}">
-            <strong>{{ message }}</strong>
+    <div class="login-form">
+      <h1 class="big-logo">FaceBlog</h1>
+      {% for message in messages %}
+          <div class="message {{ message.tag }}">
+              <strong>{{ message }}</strong>
+          </div>
+      {% endfor %}
+      {% for error in login_form.non_field_errors %}
+        <div class="message">
+          <strong>{{ error }}</strong>
         </div>
-    {% endfor %}
-    <form action="" method="post">
-      <div class="form-header">
-        <h1 class="big-logo">FaceBlog</h1>
-      </div>
-      {% csrf_token %}
-      {{ login_form.username_or_email }}
-      {{ login_form.password }}
-      <input class="btn btn-success form-control form-control-margin" type="submit" value="Log In">
-      <p>Forgot Password? <a href="{% url 'password_reset' %}" style=text-decoration:none>Click here</a></p>
-      <p>Don't have an account? <a href="{% url 'signup' %}" style=text-decoration:none>Sign up</a></p>
-    </form>
+      {% endfor %}
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ login_form.username_or_email }}
+        {{ login_form.password }}
+        <input class="btn btn-success form-control form-control-margin" type="submit" value="Log In">
+        <p>Forgot Password? <a class="no-underline" href="{% url 'password_reset' %}">Click here</a></p>
+        <p>Don't have an account? <a class="no-underline" href="{% url 'signup' %}">Sign up</a></p>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -34,6 +34,8 @@ def sign_up_function(request):
             email.send()
             messages.success(request, "Please check your email to complete the registration.")
             return redirect("home")
+        else:
+            form.add_error(None, 'Username is already in used')
     return render(request, 'registration/signup.html', {'form': form})
 
 

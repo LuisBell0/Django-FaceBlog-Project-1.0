@@ -10,29 +10,42 @@ FaceBlog log in or sign up
 </style>
 <div class="container login-container">
   <div class="signup-card">
-    <h1 class="big-logo">Faceblog | Sign Up!</h1>
-    {% for message in messages %}
-        <div class="message {{ message.tag }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-    <form action="{% url 'signup' %}" method="POST">
-        {% csrf_token %}
-        <div class="form-row">
-            {{ form.first_name }}
-            {{ form.last_name }}
-        </div>
-        <div class="form-row">
-            {{ form.email }}
-            {{ form.username }}
-        </div>
-        <div class="form-row">
-            {{ form.password1 }}
-            {{ form.password2 }}
-        </div>
-        <input class="btn btn-success form-control form-control-margin" type="submit" value="Sign Up">
-        <p>Already have an account? Log in <a href="{% url 'login' %}">Here</a></p>
-    </form>
+      <div class="signup-form">
+        <h1 class="big-logo">Faceblog | Sign Up!</h1>
+        <form action="{% url 'signup' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                {{ form.first_name }}
+                {{ form.last_name }}
+            </div>
+            <div class="form-row">
+                {{ form.email }}
+                {{ form.username }}
+            </div>
+            <div class="error-message-row">
+            {% for error in form.email.errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+            {% for error in form.username.errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+            </div>
+            <div class="form-row">
+                {{ form.password1 }}
+                {{ form.password2 }}
+            </div>
+            <div class="error-message-row">
+              {% for error in form.password1.errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+              {% for error in form.password2.errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+            <input class="btn btn-success form-control form-control-margin" type="submit" value="Sign Up">
+            <p>Already have an account? Log in <a href="{% url 'login' %}">Here</a></p>
+        </form>
+    </div>
   </div>
 </div>
 {% endblock %}
