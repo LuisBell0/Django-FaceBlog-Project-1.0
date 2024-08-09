@@ -15,17 +15,6 @@ class SignUpForm(UserCreationForm):
         fields = ('first_name', 'last_name', 'email', 'username', 'password1',
                   'password2')
 
-    def __init__(self, *args, **kwargs):
-        super(SignUpForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update({'placeholder': 'First Name', 'class': 'form-control'})
-        self.fields['last_name'].widget.attrs.update({'placeholder': 'Last Name', 'class': 'form-control'})
-        self.fields['email'].widget.attrs.update({'placeholder': 'Email', 'class': 'form-control'})
-        self.fields['username'].widget.attrs.update({'placeholder': 'Username', 'class': 'form-control'})
-        self.fields['password1'].widget.attrs.update({'placeholder': 'Password', 'class': 'form-control'})
-        self.fields['password2'].widget.attrs.update({'placeholder': 'Confirm Password', 'class': 'form-control'})
-
-        for field_name in self.fields:
-            self.fields[field_name].label = ""
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

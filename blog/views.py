@@ -4,11 +4,13 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Post, Profile, LikePost, Comment, LikeComment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
 from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm
+from .decorators import profile_required
 
 # Create your views here.
 
@@ -43,6 +45,7 @@ def logout_view(request):
   return HttpResponseRedirect(reverse("new_login"))
 
 
+@profile_required
 def home(request):
   current_user = request.user
   if current_user.is_authenticated:
@@ -68,6 +71,8 @@ def home(request):
     return login_view(request)
 
 
+
+@profile_required
 @login_required
 def dashboard(request):
   try:
@@ -94,6 +99,7 @@ def dashboard(request):
   return render(request, 'blog/dashboard.html', context)
 
 
+@method_decorator(profile_required, name='dispatch')
 class PostCreateView(CreateView):
   model = Post
   fields = ['title', 'description', 'img']
@@ -117,6 +123,7 @@ class PostCreateView(CreateView):
     return super().form_valid(form)
 
 
+@method_decorator(profile_required, name='dispatch')
 class PostUpdateView(UpdateView):
   model = Post
   fields = ['title', 'description', 'img']
@@ -124,6 +131,7 @@ class PostUpdateView(UpdateView):
   template_name = "blog/post_update_form.html"
 
 
+@method_decorator(profile_required, name='dispatch')
 class PostDeleteView(DeleteView):
   model = Post
   success_url = reverse_lazy('dashboard')
@@ -142,6 +150,7 @@ class ProfileCreateView(CreateView):
     return response
 
 
+@profile_required
 @login_required
 def comment_delete_function(request, post_id, comment_id):
   post = get_object_or_404(Post, id=post_id)
@@ -154,6 +163,7 @@ def comment_delete_function(request, post_id, comment_id):
     return render(request, 'blog/comment_delete_view.html', context)
 
 
+@profile_required
 @login_required
 def comment_update_function(request, post_id, comment_id):
   post = get_object_or_404(Post, id=post_id)
@@ -173,6 +183,7 @@ def comment_update_function(request, post_id, comment_id):
     return render(request, 'blog/comment_update_view.html', context)
 
 
+@profile_required
 @login_required
 def post_comments_list(request, post_id):
   post = Post.objects.filter(id=post_id).first()
@@ -207,6 +218,8 @@ def post_comments_list(request, post_id):
   return render(request, 'blog/post_comments_view.html', context)
 
 
+@profile_required
+@login_required
 def add_comment_reply(request, post_id, comment_id):
   comment = get_object_or_404(Comment, id=comment_id)
   post = get_object_or_404(Post, id=post_id)
@@ -228,7 +241,8 @@ def add_comment_reply(request, post_id, comment_id):
     }
   return render(request, 'blog/add_reply_form.html', context)
 
-
+  
+@profile_required
 @login_required
 def like_post_view(request, pk):
   post = get_object_or_404(Post, id=pk)
@@ -243,6 +257,7 @@ def like_post_view(request, pk):
   return redirect(request.META.get('HTTP_REFERER'))
 
 
+@profile_required
 @login_required
 def like_comment_view(request, comment_id):
   comment = get_object_or_404(Comment, id=comment_id)
@@ -259,6 +274,7 @@ def like_comment_view(request, comment_id):
   return redirect(request.META.get('HTTP_REFERER'))
 
 
+@profile_required
 @login_required
 def ProfileUpdateFunction(request, pk):
   user = User.objects.get(pk=request.user.pk)
@@ -304,9 +320,8 @@ def ProfileUpdateFunction(request, pk):
     return render(request, 'blog/profile_update.html', context)
 
 
-
-
-
+@profile_required
+@login_required
 def search_profile(request, search_input):
   profiles = Profile.objects.filter(user__username__startswith=search_input)
   return render(request, 'blog/search_profile.html', {
@@ -315,6 +330,7 @@ def search_profile(request, search_input):
   })
 
 
+@profile_required
 def external_user_profile_view(request, user_username):
   external_user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=external_user)
@@ -342,6 +358,7 @@ def external_user_profile_view(request, user_username):
   return render(request, 'blog/external_user_profile.html', context)
 
 
+@profile_required
 @login_required
 def follow_unfollow_profile(request, profile_id):
   profile = get_object_or_404(Profile, id=profile_id)
@@ -352,6 +369,8 @@ def follow_unfollow_profile(request, profile_id):
   return redirect(request.META.get('HTTP_REFERER'))
 
 
+@profile_required
+@login_required
 def followers_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)
@@ -364,6 +383,8 @@ def followers_list_view(request, user_username):
   return render(request, 'blog/profile_followers_list.html', context)
 
 
+@profile_required
+@login_required
 def following_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)

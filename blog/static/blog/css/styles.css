@@ -2,13 +2,16 @@ body {
   background-color: #f7fffb;
 }
 
-.form-container {
-  display: inline-block;
+.form-control-margin {
+  margin-bottom: 5px;
 }
 
-/* no_underline */
 .no-underline {
   text-decoration: none;
+}
+
+.p-10 {
+  padding: 8rem;
 }
 
 /* Navbar */
@@ -22,93 +25,7 @@ body {
   margin: 5px 11px 5px 1px;
 }
 
-/* Login Page */
-
-.login-container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.login-container {
-  height: 100vh;
-  align-items: center;
-}
-
-.login-card, .login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.login-card {
-  justify-content: center;
-  max-height: 500px;
-  max-width: 440px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  background-color: white;
-  padding: 100px
-}
-
-.big-logo, .form-control {
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-}
-
-.form-control-margin {
-  margin-bottom: 5px;
-}
-
-/* Sign Up Card */
-
-.signup-card, .signup-form{
-  display: flex;
-  flex-direction: column;
-}
-
-.signup-card {
-  justify-content: center;
-  max-width: 800px;
-  max-height: 560px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  background-color: white;
-  padding: 100px
-}
-
-.form-row {
-  display: flex;
-  width: 600px;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.form-row .form-control {
-  width: 48%;
-}
-
-/* Brand Logo/Name */
-
 .big-logo {
   font-size: 45px;
-  margin-bottom: 30px;
   font-family: "Playwrite AR", cursive;
-}
-
-/* Errors/Message */
-
-.message {
-  word-wrap: break-word;
-  margin-bottom: 15px;
-}
-
-.error-message-row {
-  display: flex;
-  width: 600px;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  margin-top: -15px;
 }

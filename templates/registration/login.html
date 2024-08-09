@@ -8,27 +8,35 @@ FaceBlog log in or sign up
     display: none;
   }
 </style>
-<div class="container login-container">
-  <div class="login-card">
-    <div class="login-form">
-      <h1 class="big-logo">FaceBlog</h1>
+<div class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6" style="max-width:500px;">
+    <div class="card justify-content-center p-5 shadow-lg border-0 rounded">
+      <div class="text-center mb-4">
+        <h1 class="display-4 big-logo">FaceBlog</h1>
+      </div>
       {% for message in messages %}
-          <div class="message {{ message.tag }}">
-              <strong>{{ message }}</strong>
-          </div>
+        <div class="alert alert-warning mb-3">
+          <strong>{{ message }}</strong>
+        </div>
       {% endfor %}
       {% for error in login_form.non_field_errors %}
-        <div class="message">
+        <div class="alert alert-danger mb-3">
           <strong>{{ error }}</strong>
         </div>
       {% endfor %}
       <form action="" method="post">
         {% csrf_token %}
-        {{ login_form.username_or_email }}
-        {{ login_form.password }}
-        <input class="btn btn-success form-control form-control-margin" type="submit" value="Log In">
-        <p>Forgot Password? <a class="no-underline" href="{% url 'password_reset' %}">Click here</a></p>
-        <p>Don't have an account? <a class="no-underline" href="{% url 'signup' %}">Sign up</a></p>
+        <div class="mb-3">
+          {{ login_form.username_or_email }}
+        </div>
+        <div class="mb-3">
+          {{ login_form.password }}
+        </div>
+        <div class="mb-3">
+          <input class="btn btn-success w-100" type="submit" value="Log In">
+        </div>
+        <p class="text-center">Forgot Password? <a href="{% url 'password_reset' %}" class="text-decoration-none">Click here</a></p>
+        <p class="text-center">Don't have an account? <a href="{% url 'signup' %}" class="text-decoration-none">Sign up</a></p>
       </form>
     </div>
   </div>

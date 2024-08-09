@@ -21,35 +21,35 @@
   <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
 </form>
 {% else%}
-<div class="body">
-<h1>FaceBlog</h1>
-{% for post in posts %}
-<li>Author: <a href="{% url 'dashboard' %}">{{post.owner}}</a></li>
-<li>Title: {{post.title}} </li>
-{% if post.img %}
-  <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
-{% else %}
-  <li>No Image Available</li>
-{% endif %}
-<li>Likes: {{ post.likes_count }}</li>
-<li>{{post.posted_date|timesince}} ago</li>
-<li>Description: {{post.description}}</li>
-<form class="form-container" action="{% url 'post-like' post.pk%}" method="POST">
-  {% csrf_token %}
-  <button type="submit">
-    {% if post.id in liked %}
-      Unlike
-    {% else %}
-      Like
-    {% endif%}
-  </button>
-</form>
-<form class="form-container" action="{% url 'comments' post.id %}" method="GET">
-  {% csrf_token %}
-  <button type="submit">Comments</button>
-</form>
-<hr>
-</div>
+<div class="container">
+  <h1>FaceBlog</h1>
+  {% for post in posts %}
+  <li>Author: <a href="{% url 'dashboard' %}">{{post.owner}}</a></li>
+  <li>Title: {{post.title}} </li>
+  {% if post.img %}
+    <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
+  {% else %}
+    <li>No Image Available</li>
+  {% endif %}
+  <li>Likes: {{ post.likes_count }}</li>
+  <li>{{post.posted_date|timesince}} ago</li>
+  <li>Description: {{post.description}}</li>
+  <form class="form-container" action="{% url 'post-like' post.pk%}" method="POST">
+    {% csrf_token %}
+    <button type="submit">
+      {% if post.id in liked %}
+        Unlike
+      {% else %}
+        Like
+      {% endif%}
+    </button>
+  </form>
+  <form class="form-container" action="{% url 'comments' post.id %}" method="GET">
+    {% csrf_token %}
+    <button type="submit">Comments</button>
+  </form>
+  <hr>
 {% endfor %}
+</div>
 {% endif %}
 {% endblock %}
