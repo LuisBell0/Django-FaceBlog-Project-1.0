@@ -1,0 +1,80 @@
+{% extends 'blog/_base.html' %}
+
+{% block content %}
+<h2>Comments</h2>
+{% if post.img %}
+  <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
+{% else %}
+  No Image Available
+{% endif %}
+<li>Author: <a href="{% url 'external-user-profile' post.owner %}">{{post.owner}}</a></li>
+<li>Likes: {{ post.likes_count }}</li>
+<li>Posted: {{post.posted_date|timesince}} ago</li>
+<li>Description: {{post.description}}</li>
+<form action="{% url 'post-like' post.pk %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if post.id in liked_post %}
+      Unlike
+    {% else %}
+      Like
+    {% endif%}
+  </button>
+</form>
+<hr>
+<form action="{% url 'comments' post.id %}" method="POST">
+  {% csrf_token %}
+  <p>{{request.user.username}} {{comment_form.as_p}}</p>
+  <button type="submit">Post Comment</button>
+</form>
+<hr>
+{% for comment in comments %}
+{% if not comment.parent_comment %}
+  <li><a href="{% url 'external-user-profile' comment.user %}">{{comment.user.username}}</a>: {{comment.text}}</li>
+  <li>{{comment.posted_date|timesince}} ago</li>
+  <li>Likes: {{comment.likes_count}}</li>
+<form action="{% url 'comment-like' comment.id %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if comment.id in liked_comment %}
+      Unlike
+    {% else %}
+      Like
+    {% endif%}
+  </button>
+</form>
+<form action="{% url 'reply' post.id comment.id%}" method="GET">
+  {% csrf_token %}
+  <button type="submit">Reply</button>
+</form>
+{% if request.user == comment.user %}
+  <a href="{% url 'comment-update' post.id comment.id %}">Edit</a>
+  <a href="{% url 'comment-delete' post.id comment.id %}">Delete</a>
+{% endif %}
+{% endif %}
+<br>
+{% if comment.get_replies %}
+  <b>Replies:</b>
+{% for reply in comment.get_replies %}
+    <div style="margin-left: 2em;">
+      <p><a href="{% url 'external-user-profile' comment.user %}">{{reply.user.username}}</a>: {{reply.text}}<br>
+      <a href="{% url 'comment-like' reply.id%}">
+        {% if reply.id in liked_comment %}
+          Unlike
+        {% else %}
+          Like
+        {% endif%}
+      </a> - Likes: {{reply.likes_count}}<br>
+      {{reply.posted_date|timesince}} ago
+      {% if request.user == reply.user %}
+        <a href="{% url 'comment-update' post.id reply.id %}">Edit</a>
+        <a href="{% url 'comment-delete' post.id reply.id %}">Delete</a>
+      {% endif %}
+      
+      </p>
+    </div>
+{% endfor %}
+{% endif %}
+<hr>
+{% endfor %}
+{% endblock %}

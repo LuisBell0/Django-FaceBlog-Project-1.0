@@ -7,14 +7,35 @@
 {% if not external_user %}
   <h2>The page or user "{{user_input}}" does not exist</h2>
 {% else %}
-  <p><strong>{{external_user.username}}</strong></p>
+<h2><strong>{{external_user.username}}</strong></h2>
+<a href="{% url 'profile-followers' external_user.username %}">Followers</a>: {{followers.count}}<br>
+<a href="{% url 'profile-following' external_user.username %}">Following</a>: {{following.count}}<br>
+Posts: {{posts.count}}</p>
+{% if request.user.is_authenticated%}
+<form action="{% url 'follow-unfollow' profile.id %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">
+    {% if is_follower %}
+      Unfollow
+    {% else %}
+      Follow
+    {% endif %}
+  </button>
+</form>
+{% else %}
+  <form action="{% url 'follow-unfollow' profile.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Follow</button>
+  </form>
+{% endif %}
   {% if external_user.profile.profile_picture %}
       <img src="{{external_user.profile.profile_picture.url}}" alt="{{external_user.username}} profile picture" width="200px" height="200px">
   {% else %}
       <img src="{% static 'blog/default.jpg' %}" alt="{{ user.username }}" width="200px" height="200px">
   {% endif %}
   <p><strong>{{external_user.first_name}} {{external_user.last_name}}</strong></p>
-  <p>Bio: {{external_user.profile.bio}}</p>
+  <p>Bio: {{external_user.profile.bio}}<br>
+
   {% if posts %}
     <p><strong>These are {{external_user.username}}'s posts</strong></p><hr>
   {% else %}
@@ -29,10 +50,8 @@
     {% else %}
       <li>No Image Available</li>
     {% endif %}
-    <li>Likes: {{post.likes}}</li>
+    <li>Likes: {{post.likes_count}}</li>
     <li>Posted: {{post.posted_date}}</li>
-    <li>Posted Hour(Server Time): {{post.posted_hour_server}}</li>
-    <li>Posted Hour(Client Time): {{post.posted_hour_client}}</li>
     <li>Description: {{post.description}}</li>
     <form action="{% url 'post-like' post.pk%}" method="POST">
       {% csrf_token %}
@@ -43,6 +62,10 @@
           Like
         {% endif%}
       </button>
+    </form>
+    <form action="{% url 'comments' post.id %}" method="GET">
+      {% csrf_token %}
+      <button type="submit">Comments</button>
     </form>
     <hr>
     {% endfor %}

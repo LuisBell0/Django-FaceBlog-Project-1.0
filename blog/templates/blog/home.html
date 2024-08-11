@@ -1,19 +1,55 @@
 {% extends 'blog/_base.html' %}
+{% load static %}
 {%block content %}
+{% if not request.user.is_authenticated %}
+<style>
+  .navbar {
+    display: none;
+  }
+</style>
 <h1>FaceBlog</h1>
-<p>This is a new blog page</p>
 {% for message in messages %}
-  <div class="message {{ message.tag }}">
-    <strong>{{ message }}</strong>
-  </div>
+    <div class="message {{ message.tag }}">
+        <strong>{{ message }}</strong>
+    </div>
 {% endfor %}
-<a href="{% url 'dashboard' %}">Dashboard</a>
-<br>
-<br>
-<form action="{% url 'login' %}">
-  <button type="submit" value="Log in">Log In</button>
+<form action="" method="post">
+  {% csrf_token %}
+    {{ login_form.as_p }}
+  <input type="submit" value="Log In">
+  <p>Forgot Password? <a href="{% url 'password_reset' %}">Click here</a></p>
+  <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
 </form>
-<form action="{% url 'signup' %}">
-  <button type="submit" value="Register">Register</button>
-</form>
+{% else%}
+<div class="container">
+  <h1>FaceBlog</h1>
+  {% for post in posts %}
+  <li>Author: <a href="{% url 'dashboard' %}">{{post.owner}}</a></li>
+  <li>Title: {{post.title}} </li>
+  {% if post.img %}
+    <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
+  {% else %}
+    <li>No Image Available</li>
+  {% endif %}
+  <li>Likes: {{ post.likes_count }}</li>
+  <li>{{post.posted_date|timesince}} ago</li>
+  <li>Description: {{post.description}}</li>
+  <form class="form-container" action="{% url 'post-like' post.pk%}" method="POST">
+    {% csrf_token %}
+    <button type="submit">
+      {% if post.id in liked %}
+        Unlike
+      {% else %}
+        Like
+      {% endif%}
+    </button>
+  </form>
+  <form class="form-container" action="{% url 'comments' post.id %}" method="GET">
+    {% csrf_token %}
+    <button type="submit">Comments</button>
+  </form>
+  <hr>
+{% endfor %}
+</div>
+{% endif %}
 {% endblock %}
