@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{% block title %}Faceblog{% endblock %}</title>
+    <title>{% block title %}FaceBlog{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
@@ -12,38 +12,59 @@
   </head>
   <body>
     <header class="sticky-top">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <div class="d-flex align-items-center">
-            <a class="btn nav-btn" href="{% url 'home' %}">FaceBlog</a>
-            <div class="line">|</div>
-            <a class="btn nav-btn" href="{% url 'home' %}">Home</a>
-            <div class="line">|</div>
-            <a class="btn nav-btn" href="{% url 'dashboard' %}">Profile</a>
-            <form class="d-flex form-container" action="{% url 'dashboard' %}" method="POST">
-              {% csrf_token %}
-              {% for message in messages %}
-                <div class="message {{ message.tag }}">
-                  <strong>{{ message }}</strong>
+            <a class="navbar-brand" href="{% url 'home' %}">FaceBlog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarText" aria-controls="navbarText" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <form class="d-flex form-container" action="{% url 'dashboard' %}" method="POST">
+                      {% csrf_token %}
+                      {% for message in messages %}
+                        <div class="message {{ message.tag }}">
+                          <strong>{{ message }}</strong>
+                        </div>
+                      {% endfor %}
+                      <input class="form-control me-2" type="search" placeholder="Search for Profiles" name="search-profile" aria-label="Search">
+                      <button class="nav-link" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+</svg></button>
+                    </form>
                 </div>
-              {% endfor %}
-              <input class="form-control me-2" type="search" placeholder="Search for Profiles" name="search-profile" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-          <div>
-            {% if request.user.is_authenticated %}
-            <form class="form-container" action="{% url 'logout' %}" method="POST">
-              {% csrf_token %}
-              <button class="btn btn-logout" type="submit" value="Logout">Log Out</button>
-            </form>
-            {% else %}
-            <form class="form-container" action="{% url 'new_login' %}" method="POST">
-              {% csrf_token %}
-              <button class="btn btn-login" type="submit" value="Login">Log In</button>
-            </form>
-          </div>
-          {% endif %}
+                <div>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                              {% if user.profile.profile_picture %}
+                                  <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }} Profile Picture" width="30" height="30">
+                              {% else %}
+                                  <img src="{% static 'blog/default.jpg' %}" alt="{{ user.username }}" width="30px" height="30px">
+                              {% endif %}
+                                <a class="btn" href="{% url 'dashboard' %}">{{ user.username }}</a></li>
+                            <li class="btn nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+      <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+    </svg></li>
+                            <li class="btn nav-item"><a href="{% url 'post-create' %}"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                            </svg></a></li>
+                            <form class="d-flex form-container" action="{% url 'logout' %}" method="POST">
+                              {% csrf_token %}
+
+                              <li class="nav-item"><button class="btn " type="submit" value="Logout">Log Out</button></li>
+                            </form>
+                            {% else %}
+                            <form class="form-container" action="{% url 'new_login' %}" method="POST">
+                              {% csrf_token %}
+                              <button class="btn btn-login" type="submit" value="Login">Log In</button>
+                            </form>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         </div>
       </nav>
     </header>
