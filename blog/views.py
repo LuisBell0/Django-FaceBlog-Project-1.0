@@ -71,7 +71,6 @@ def home(request):
     return login_view(request)
 
 
-
 @profile_required
 @login_required
 def dashboard(request):

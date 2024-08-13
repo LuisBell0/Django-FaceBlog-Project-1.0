@@ -33,7 +33,7 @@ urlpatterns = [
          ProfileUpdateFunction,
          name="profile-update"),
     path('accounts/login/', login_view, name='new_login'),
-    path('dashboard/search_profile/<str:search_input>/',
+    path('search_profile/<str:search_input>/',
          search_profile,
          name='search-profile'),
     path('<str:user_username>/',

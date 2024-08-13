@@ -10,18 +10,3 @@ body {
   text-decoration: none;
 }
 
-/* Navbar */
-
-.nav-btn, line {
-  color: #198754;
-}
-
-.btn-logout, .nav-btn {
-  padding: 1px;
-  margin: 5px 11px 5px 1px;
-}
-
-.big-logo {
-  font-size: 45px;
-  font-family: "Playwrite AR", cursive;
-}

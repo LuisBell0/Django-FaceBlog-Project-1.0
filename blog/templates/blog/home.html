@@ -24,7 +24,7 @@
 <div class="container">
   <h1>FaceBlog</h1>
   {% for post in posts %}
-  <li>Author: <a href="{% url 'dashboard' %}">{{post.owner}}</a></li>
+  <li>Author: <a href="{% url 'external-user-profile' post.owner.username %}">{{post.owner}}</a></li>
   <li>Title: {{post.title}} </li>
   {% if post.img %}
     <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
