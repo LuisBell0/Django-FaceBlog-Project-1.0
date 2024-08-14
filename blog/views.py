@@ -45,6 +45,19 @@ def logout_view(request):
   return HttpResponseRedirect(reverse("new_login"))
 
 
+def handle_search(request):
+  search_input = request.POST.get('search-profile', '').strip()
+  redirect_url = request.POST.get('redirect_url', 'dashboard/')
+
+  if request.method == 'POST':
+    if "/" in search_input:
+      messages.error(request, "You cannot search for '/'.")
+    elif not search_input:
+      messages.error(request, "You cannot search for nothing.")
+    else:
+      return redirect(f'{reverse("search-profile")}?q={search_input}')
+    return redirect(redirect_url)
+
 @profile_required
 def home(request):
   current_user = request.user
@@ -55,14 +68,7 @@ def home(request):
     posts = Post.objects.filter(owner__profile__in=all_users).order_by('-posted_date')
     liked_post = LikePost.objects.filter(user=request.user,
                                          post__in=posts).values_list('post_id', flat=True)
-    if request.method == "POST":
-      search_input = request.POST.get('search-profile')
-      if "/" in search_input:
-        messages.error(request, "You cannot search for '/'.")
-      elif not search_input:
-        messages.error(request, "You cannot search for nothing.")
-      else:
-        return redirect('search-profile', search_input=search_input)
+
     context = {'posts': posts,
                'liked': liked_post
               }
@@ -83,17 +89,10 @@ def dashboard(request):
   posts = Post.objects.filter(owner=request.user)
   liked_post = LikePost.objects.filter(user=request.user,
                                        post__in=posts).values_list('post_id', flat=True)
-  if request.method == "POST":
-    search_input = request.POST.get('search-profile').strip()
-    if "/" in search_input:
-      messages.error(request, "You cannot search for '/'.")
-    elif not search_input:
-      messages.error(request, "You cannot search for nothing.")
-    else:
-      return redirect('search-profile', search_input=search_input)
+
   context = {'posts': posts,
              'liked': liked_post,
-             'followers':followers,
+             'followers': followers,
              'following': following}
   return render(request, 'blog/dashboard.html', context)
 
@@ -240,7 +239,7 @@ def add_comment_reply(request, post_id, comment_id):
     }
   return render(request, 'blog/add_reply_form.html', context)
 
-  
+
 @profile_required
 @login_required
 def like_post_view(request, pk):
@@ -321,7 +320,8 @@ def ProfileUpdateFunction(request, pk):
 
 @profile_required
 @login_required
-def search_profile(request, search_input):
+def search_profile(request):
+  search_input = request.GET.get('q', '').strip()
   profiles = Profile.objects.filter(user__username__startswith=search_input)
   return render(request, 'blog/search_profile.html', {
       'profiles': profiles,
@@ -331,8 +331,11 @@ def search_profile(request, search_input):
 
 @profile_required
 def external_user_profile_view(request, user_username):
-  external_user = get_object_or_404(User, username=user_username)
-  profile = get_object_or_404(Profile, user=external_user)
+  try:
+    external_user = User.objects.get(username=user_username)
+    profile = Profile.objects.get(user=external_user)
+  except (User.DoesNotExist, Profile.DoesNotExist):
+    return render(request, 'blog/non_existent_user_or_page.html', {})
   posts = Post.objects.filter(owner=external_user)
   followers = profile.followed_by.exclude(pk=profile.pk)
   following = profile.follows.exclude(pk=profile.pk)
@@ -350,7 +353,7 @@ def external_user_profile_view(request, user_username):
     'posts': posts,
     'liked': liked_post,
     'profile': profile,
-    'followers':followers,
+    'followers': followers,
     'following': following,
     'is_follower': is_follower
   }
@@ -394,4 +397,3 @@ def following_list_view(request, user_username):
     'following':following
   }
   return render(request, 'blog/profile_following_list.html', context)
-  

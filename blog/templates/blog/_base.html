@@ -16,8 +16,9 @@
         <div class="container d-flex justify-content-between align-items-center">
           <div class="navbar-header col-9 col-sm-8 col-md-8 col-lg-6 d-flex flex-row">
             <a class="navbar-brand" href="{% url 'home' %}">FaceBlog</a>
-            <form class="w-75" action="{% url 'dashboard' %}" method="POST">
+            <form class="w-75" action="{% url 'search' %}" method="POST">
               {% csrf_token %}
+                <input type="hidden" name="redirect_url" value="{{ request.path }}">
               {% for message in messages %}
                 <div class="message {{ message.tag }}">
                   <strong>{{ message }}</strong>
