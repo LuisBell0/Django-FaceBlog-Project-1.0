@@ -6,6 +6,77 @@ body {
   margin-bottom: 5px;
 }
 
-.no-underline {
+a {
   text-decoration: none;
+}
+
+span:hover {
+  color: #198754;
+}
+
+.img-45 {
+  width: 45px;
+  height: 45px;
+}
+
+.fw-500 {
+    font-weight: 500 !important;
+}
+
+.fw-600 {
+    font-weight: 600 !important;
+}
+
+.fw-700 {
+  font-weight: 700 !important;
+}
+
+.text-grey-500 {
+    color: #adb5bd !important;
+}
+
+.text-grey-900 {
+  color: #212529 !important;
+}
+
+.font-xss {
+  font-size: 16px !important;
+}
+
+.font-xssss {
+  font-size: 12px !important;
+}
+
+.font-lg {
+    font-size: 25px !important;
+}
+
+.lh-3 {
+    line-height: 1.4;
+}
+
+.lh-26 {
+    line-height: 26px;
+}
+
+.btn-round-xs {
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  display: inline-block;
+  line-height: 25px !important;
+  text-align: center;
+}
+
+.btn-round-sm {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    display: inline-block;
+    line-height: 35px !important;
+    text-align: center;
+}
+
+.bg-primary-gradiant {
+  background: linear-gradient(135deg, #05f, #09f) !important;
 }

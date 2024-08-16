@@ -16,6 +16,7 @@ class Post(models.Model):
   title = models.CharField(max_length=50)
   description = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
+  comments_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateTimeField(auto_now_add=True)
   img = models.ImageField(upload_to='posts', blank=True, null=True)
 

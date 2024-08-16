@@ -1,55 +1,69 @@
 {% extends 'blog/_base.html' %}
 {% load static %}
 {%block content %}
-{% if not request.user.is_authenticated %}
-<style>
-  .navbar {
-    display: none;
-  }
-</style>
-<h1>FaceBlog</h1>
-{% for message in messages %}
-    <div class="message {{ message.tag }}">
-        <strong>{{ message }}</strong>
-    </div>
-{% endfor %}
-<form action="" method="post">
-  {% csrf_token %}
-    {{ login_form.as_p }}
-  <input type="submit" value="Log In">
-  <p>Forgot Password? <a href="{% url 'password_reset' %}">Click here</a></p>
-  <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
-</form>
-{% else%}
-<div class="container">
-  <h1>FaceBlog</h1>
+<div class="container mt-3">
   {% for post in posts %}
-  <li>Author: <a href="{% url 'external-user-profile' post.owner.username %}">{{post.owner}}</a></li>
-  <li>Title: {{post.title}} </li>
-  {% if post.img %}
-    <img src="{{post.img.url}}" alt="{{post.title}}" width="200px" height="200px">
-  {% else %}
-    <li>No Image Available</li>
-  {% endif %}
-  <li>Likes: {{ post.likes_count }}</li>
-  <li>{{post.posted_date|timesince}} ago</li>
-  <li>Description: {{post.description}}</li>
-  <form class="form-container" action="{% url 'post-like' post.pk%}" method="POST">
-    {% csrf_token %}
-    <button type="submit">
-      {% if post.id in liked %}
-        Unlike
-      {% else %}
-        Like
-      {% endif%}
-    </button>
-  </form>
-  <form class="form-container" action="{% url 'comments' post.id %}" method="GET">
-    {% csrf_token %}
-    <button type="submit">Comments</button>
-  </form>
-  <hr>
-{% endfor %}
+  <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+    <div class="card-body p-0 d-flex">
+      <figure class="avatar me-3">
+        {% if user.profile.profile_picture %}
+          <img src="{{ user.profile.profile_picture.url }}"
+            class="shadow-sm rounded-circle img-45"
+            alt="{{ user.username }} Profile Picture" 
+            width="26" height="26">
+        {% else %}
+          <img src="{% static 'blog/default.jpg' %}"
+            class="shadow-sm rounded-circle img-45"
+            alt="{{ user.username }}" 
+            width="26px" height="26px">
+        {% endif %}
+      </figure>
+      <h4 class="fw-700 text-grey-900 font-xssss mt-1">
+        <a class="text-dark" href="{% url 'external-user-profile' post.owner.username %}">
+          {{post.owner}}
+        </a>
+        <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+          {{ post.posted_date|timesince }} ago
+        </span>
+      </h4>
+    </div>
+
+    {% if post.img %}
+      <div class="card-body p-0 mb-3 rounded-3 overflow-hidden">
+        <img src="{{post.img.url}}" alt="{{post.title}}" class="float-right w-100">
+      </div>
+    {% endif %}
+    
+    <div class="card-body p-0 me-lg-5">
+        <p class="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">
+          {{post.description}}
+          <a href="#" class="fw-600 text-primary ms-2">See more</a>
+        </p>
+    </div>
+    
+    <div class="card-body d-flex p-0">
+      <a href="{% url 'post-like' post.pk%}" class="emoji-bttn d-flex align-items-center fw-600 
+        text-grey-900 text-dark lh-26 font-xssss me-2">
+        {% if post.id in liked %}
+          <i class="bi bi-hand-thumbs-up-fill text-white bg-primary-gradiant 
+          me-1 btn-round-sm font-lg"></i> 
+        {% else %}
+          <i class="bi bi-hand-thumbs-up text-white bg-primary-gradiant me-1 btn-round-sm font-lg"></i> 
+        {% endif%}
+        {{ post.likes_count }} Like
+      </a>
+      <a href="{% url 'comments' post.id %}" class="d-flex align-items-center fw-600 
+        text-grey-900 text-dark lh-26 font-xssss">
+        <i class="bi bi-chat text-dark text-grey-900 btn-round-sm font-lg"></i>
+        <span>{{ post.comments_count }}</span>
+      </a>
+      <a href="#" class="ms-auto d-flex align-items-center 
+        fw-600 text-grey-900 text-dark lh-26 font-xssss">
+        <i class="bi bi-share text-grey-900 text-dark btn-round-sm font-lg"></i>
+        <span>Share</span>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
 </div>
-{% endif %}
 {% endblock %}

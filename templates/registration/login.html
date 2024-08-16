@@ -35,8 +35,12 @@ FaceBlog log in or sign up
         <div class="mb-3">
           <input class="btn btn-success w-100" type="submit" value="Log In">
         </div>
-        <p class="text-center">Forgot Password? <a href="{% url 'password_reset' %}" class="text-decoration-none">Click here</a></p>
-        <p class="text-center">Don't have an account? <a href="{% url 'signup' %}" class="text-decoration-none">Sign up</a></p>
+        <p class="text-center">Forgot Password? 
+          <a href="{% url 'password_reset' %}">Click here</a>
+        </p>
+        <p class="text-center">Don't have an account? 
+          <a href="{% url 'signup' %}">Sign up</a>
+        </p>
       </form>
     </div>
   </div>

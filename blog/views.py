@@ -155,6 +155,8 @@ def comment_delete_function(request, post_id, comment_id):
   comment = get_object_or_404(Comment, post=post, id=comment_id)
   if request.method == 'POST':
     comment.delete()
+    post.comments_count = post.comments_count - 1
+    post.save()
     return redirect('comments', post_id)
   else:
     context = {'post': post, 'comment': comment}
@@ -202,6 +204,8 @@ def post_comments_list(request, post_id):
       comment = add_comment_form.save(commit=False)
       comment.user = request.user
       comment.post = post
+      post.comments_count = post.comments_count + 1
+      post.save()
       comment.save()
     return redirect('comments', post_id)
   else:
@@ -228,6 +232,8 @@ def add_comment_reply(request, post_id, comment_id):
       reply.user = request.user
       reply.post = post
       reply.parent_comment = comment
+      post.comments_count = post.comments_count + 1
+      post.save()
       reply.save()
     return redirect('comments', post_id)
   else:
