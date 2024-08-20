@@ -12,34 +12,40 @@
     <link rel="stylesheet" type="text/css" href="{% static 'blog/css/styles.css' %}">
   </head>
   <body>
-    <div class="modal fade" 
-      id="errorModal" 
-      tabindex="-1" 
-      aria-labelledby="errorModalLabel" 
-      aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="errorModalLabel">Error</h5>
-            <button type="button" 
-              class="btn-close" 
-              data-bs-dismiss="modal" 
-              aria-label="Close">
-            </button>
-          </div>
-          <div class="modal-body">
-            {% for message in messages %}
-              <div class="alert alert-danger">
-                <strong>{{ message }}</strong>
-              </div>
-            {% endfor %}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' and "You cannot search for '/'." in message.message or message.tags == 'error' and "You cannot search for nothing." in message.message %}
+                <div class="modal fade"
+                  id="errorModal" 
+                  tabindex="-1" 
+                  aria-labelledby="errorModalLabel" 
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                        <button type="button" 
+                          class="btn-close" 
+                          data-bs-dismiss="modal" 
+                          aria-label="Close">
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {% for message in messages %}
+                          <div class="alert alert-danger">
+                            <strong>{{ message }}</strong>
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            {% endif %}    
+        {% endfor %}
+    {% endif %}
     <header class="sticky-top">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container d-flex justify-content-between align-items-center">
@@ -130,7 +136,7 @@
                     <button 
                       class="nav-link border-0 bg-transparent d-flex align-items-center" 
                       type="submit">
-                      <i class="bi bi-box-arrow-left text-danger" style="font-size:20px;"></i>
+                      <i class="bi bi-box-arrow-left text-primary" style="font-size:20px;"></i>
                       <span class="ms-1">Log In</span>
                     </button>
                   </form>

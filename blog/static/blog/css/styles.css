@@ -80,3 +80,11 @@ span:hover {
 .bg-primary-gradiant {
   background: linear-gradient(135deg, #05f, #09f) !important;
 }
+
+.shadow-xss {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .05) !important;
+}
+
+.rounded-xxl {
+    border-radius: 15px !important;
+}

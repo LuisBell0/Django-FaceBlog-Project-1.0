@@ -39,7 +39,7 @@ def sign_up_function(request):
                 request,
                 "Please check your email to complete the registration, make sure to check your spam folder if you don't have our email in your inbox."
             )
-            return redirect("home")
+            return redirect("login")
         else:
             form.add_error(None, 'Username is already in used')
     return render(request, 'registration/signup.html', {'form': form})
@@ -67,7 +67,7 @@ def activate(request, uidb64, token):
         return redirect(reverse("login"))
     else:
         messages.error(request, "Activation link is invalid!")
-        return redirect(reverse("signup"))
+        return redirect(reverse("login"))
 
 
 class ResetPasswordView(PasswordResetView, SuccessMessageMixin):
