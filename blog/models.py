@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from PIL import Image
 import os
 
 # Create your models here.
@@ -46,6 +47,14 @@ class Post(models.Model):
         # Delete the old image file if it exists
         existing_post.delete_image_file()
     super().save(*args, **kwargs)
+    img = Image.open(self.img.path)
+
+    # Specify the format and compression quality
+    img_format = img.format  # Preserve original format (JPEG, PNG, etc.)
+    if img_format == 'JPEG':
+      img.save(self.img.path, format='JPEG', quality=70)  # Compress JPEG
+    elif img_format == 'PNG':
+      img.save(self.img.path, format='PNG', optimize=True)  # Compress PNG
 
 
 class LikePost(models.Model):
@@ -74,6 +83,18 @@ class Profile(models.Model):
 
   def __str__(self):
     return str(self.user)
+  
+  def save(self, *args, **kwargs):
+    super().save(*args, **kwargs)
+    if self.profile_picture:
+      img = Image.open(self.profile_picture.path)
+
+      # Specify the format and compression quality
+      img_format = img.format  # Preserve original format (JPEG, PNG, etc.)
+      if img_format == 'JPEG':
+        img.save(self.profile_picture.path, format='JPEG', quality=70)  # Compress JPEG
+      elif img_format == 'PNG':
+        img.save(self.profile_picture.path, format='PNG', optimize=True)  # Compress PNG
 
 
 class Comment(models.Model):
