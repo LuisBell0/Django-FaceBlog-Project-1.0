@@ -107,15 +107,12 @@ class PostCreateView(CreateView):
   # And save the date and time the post is being created
   def form_valid(self, form):
     form.instance.owner = self.request.user
-    form.instance.posted_hour_server = datetime.now().time()
 
     # Retrieve user timezone from request
     user_timezone = self.request.POST.get('timezone')
     if user_timezone:
-      # Use the user's timezone to set posted_hour_client
-      user_time = datetime.now(pytz.timezone(user_timezone)).time()
+      # Use the user's timezone to set posted_date
       user_date = datetime.now(pytz.timezone(user_timezone)).date()
-      form.instance.posted_hour_client = user_time
       form.instance.posted_date = user_date
 
     return super().form_valid(form)
