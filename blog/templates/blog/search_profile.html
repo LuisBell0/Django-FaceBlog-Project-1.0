@@ -1,15 +1,53 @@
 {% extends 'blog/_base.html' %}
+{% load static %}
 {% block content %}
+<div class="container">
     {% if search %}
-    	<h2>These are your matches for "{{ search }}"</h2>
-        <ul>
-        {% for profile in profiles %}
-            <a href="{% url 'external-user-profile' profile %}">{{ profile }}</a><br>
-        {% empty %}
-            No profiles found
-        {% endfor %}
-        </ul>
+        {% if profiles_found %}
+            <div class="d-flex align-items-center justify-content-center my-3">
+                <h2>These are your matches for "{{ search }}"</h2>
+            </div>
+            <div class="d-flex flex-column my-3">
+                {% for profile in profiles_found %}
+                <div class="d-flex p-2">
+                    <a class="text-dark" 
+                        href="{% url 'external-user-profile' profile %}">
+                        <div class="my-1 d-flex align-items-center">
+                            {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}"
+                                class="shadow-sm rounded-circle img-50 mr-3"
+                                alt="{{ user.username }} Profile Picture" 
+                                width="26" height="26">
+                            {% else %}
+                            <img src="{% static 'blog/default.jpg' %}"
+                                class="shadow-sm rounded-circle img-50 mr-3"
+                                alt="{{ user.username }}" 
+                                width="26px" height="26px">
+                            {% endif %}
+                            <div class="ml-3-c fw-700 font-xssss">
+                                <span>{{ profile }}</span>
+                                <span class="d-block text-grey-500">
+                                    {{ profile.user.first_name }} {{ profile.user.last_name}}
+                                    | {{ profile.get_followers_count }} Followers
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center w-h-96 
+                    border border-dark border-2 rounded-circle mt-5 mb-2">
+                     <i class="bi bi-search font-xxxl"></i>
+                </div>
+                <h3 class="text-center">No profiles found for <strong>"{{ search }}"</strong></h2>
+            </div>
+        {% endif %}
     {% else %}
-        <h2>You can't search for nothing</h2>
     {% endif %} 
+</div>
 {% endblock %}
+
+

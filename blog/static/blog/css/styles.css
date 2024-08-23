@@ -10,21 +10,26 @@ a {
   text-decoration: none;
 }
 
-span:hover {
-  color: #198754;
-}
-
 .img-45 {
   width: 45px;
   height: 45px;
 }
 
+.img-50 {
+  width: 50px;
+  height: 50px;
+}
+
+.w30 {
+  width: 30px !important;
+}
+
 .fw-500 {
-    font-weight: 500 !important;
+  font-weight: 500 !important;
 }
 
 .fw-600 {
-    font-weight: 600 !important;
+  font-weight: 600 !important;
 }
 
 .fw-700 {
@@ -32,31 +37,39 @@ span:hover {
 }
 
 .text-grey-500 {
-    color: #adb5bd !important;
+  color: #adb5bd !important;
 }
 
 .text-grey-900 {
   color: #212529 !important;
 }
 
-.font-xss {
-  font-size: 16px !important;
-}
-
 .font-xssss {
   font-size: 12px !important;
 }
 
+.font-xss {
+  font-size: 16px !important;
+}
+
+.font-xs {
+  font-size: 18px !important;
+}
+
 .font-lg {
-    font-size: 25px !important;
+  font-size: 25px !important;
+}
+
+.font-xxxl {
+  font-size: 40px !important;
 }
 
 .lh-3 {
-    line-height: 1.4;
+  line-height: 1.4;
 }
 
 .lh-26 {
-    line-height: 26px;
+  line-height: 26px;
 }
 
 .btn-round-xs {
@@ -69,22 +82,52 @@ span:hover {
 }
 
 .btn-round-sm {
-    width: 35px;
-    height: 35px;
-    border-radius: 35px;
-    display: inline-block;
-    line-height: 35px !important;
-    text-align: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 35px;
+  display: inline-block;
+  line-height: 35px !important;
+  text-align: center;
 }
 
 .bg-primary-gradiant {
   background: linear-gradient(135deg, #05f, #09f) !important;
 }
 
+.color-red {
+  color: red;
+}
+
+.bg-greylight {
+  background-color: #f5f5f5 !important;
+}
+
 .shadow-xss {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, .05) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .05) !important;
 }
 
 .rounded-xxl {
-    border-radius: 15px !important;
+  border-radius: 15px !important;
+}
+
+.w-h-96 {
+  width: 96px !important;
+  height: 96px !important;
+}
+
+.ml-3-c {
+  margin-left: 12px;
+}
+
+#previewContainer {
+  border: 2px dashed #ddd;
+  display: none;
+  overflow: hidden;
+}
+
+#closeButton {
+  font-size: 18px; /* Same as your original design */
+  line-height: 20px;
+  width: 25px; /* Control the size of the circle */
+  height: 25px;
 }

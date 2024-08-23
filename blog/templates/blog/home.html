@@ -2,6 +2,38 @@
 {% load static %}
 {%block content %}
 <div class="container mt-3">
+  <div class="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
+    <form action="{% url 'post-create'%}" method='POST' class="form-container">
+      <div class="card-body p-0">
+        {% csrf_token %}
+        <button type="submit" 
+          class=" font-xssss fw-600 text-grey-500 card-body p-0 d-flex 
+          align-items-center bg-transparent border-0">
+          <i class="btn-round-sm font-xs text-primary bi bi-pencil me-2 bg-greylight"></i>
+          Quick Text
+        </button>
+      </div>
+      <div class="card-body p-0 mt-3 position-relative">
+        <figure class="avatar position-absolute ms-2 mt-1 top-5">
+          {% if user.profile.profile_picture %}
+            <img src="{{ user.profile.profile_picture.url }}"
+              class="shadow-sm rounded-circle w30"
+              alt="{{ user.username }} Profile Picture" 
+              width="26" height="26">
+          {% else %}
+            <img src="{% static 'blog/default.jpg' %}"
+              class="shadow-sm rounded-circle w30"
+              alt="{{ user.username }}" 
+              width="26px" height="26px">
+          {% endif %}
+        </figure>
+        <textarea name="description"
+          class="h100 bor-0 w-100 rounded-xxl p-2 ps-5 font-xssss fw-500 border-light-md theme-dark-bg" 
+          cols="30" rows="10" placeholder="Anything New? Tell Everybody"></textarea>
+      </div>
+    </form>
+  </div>
+  
   {% for post in posts %}
   <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
     <div class="card-body p-0 d-flex">
@@ -30,14 +62,19 @@
 
     {% if post.img %}
       <div class="card-body p-0 mb-3 rounded-3 overflow-hidden">
-        <img src="{{post.img.url}}" alt="{{post.title}}" class="float-right w-100" style="max-height:700px;">
+        <img src="{{post.img.url}}" alt="{{post.owner}}" class="float-right w-100" style="max-height:700px;">
       </div>
     {% endif %}
     
     <div class="card-body p-0 me-lg-5">
-        <p class="fw-500 text-grey-500 lh-26 font-xssss w-100 mb-2">
+        <p class="fw-500 lh-26 font-xssss w-100 mb-2">
+          <a class="text-dark" href="{% url 'external-user-profile' post.owner.username %}">
+            <strong>
+              {{post.owner}}
+            </strong>
+          </a>
           {{post.description}}
-          <a href="#" class="fw-600 text-primary ms-2">See more</a>
+          <!-- <a href="#" class="fw-600 text-primary ms-2">See more</a> -->
         </p>
     </div>
     
@@ -45,10 +82,9 @@
       <a href="{% url 'post-like' post.pk%}" class="emoji-bttn d-flex align-items-center fw-600 
         text-grey-900 text-dark lh-26 font-xssss me-2">
         {% if post.id in liked %}
-          <i class="bi bi-hand-thumbs-up-fill text-white bg-primary-gradiant 
-          me-1 btn-round-sm font-lg"></i> 
+          <i class="bi bi-heart-fill color-red me-1 btn-round-sm font-lg"></i> 
         {% else %}
-          <i class="bi bi-hand-thumbs-up text-white bg-primary-gradiant me-1 btn-round-sm font-lg"></i> 
+          <i class="bi bi-heart text-black me-1 btn-round-sm font-lg"></i> 
         {% endif%}
         {{ post.likes_count }} Like
       </a>

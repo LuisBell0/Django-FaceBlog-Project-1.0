@@ -100,8 +100,8 @@ def dashboard(request):
 @method_decorator(profile_required, name='dispatch')
 class PostCreateView(CreateView):
   model = Post
-  fields = ['title', 'description', 'img']
-  success_url = reverse_lazy('dashboard')
+  fields = ['description', 'img']
+  success_url = reverse_lazy('home')
 
   # Override form_valid to link the post to the user
   # And save the date and time the post is being created
@@ -328,9 +328,9 @@ def ProfileUpdateFunction(request, pk):
 @login_required
 def search_profile(request):
   search_input = request.GET.get('q', '').strip()
-  profiles = Profile.objects.filter(user__username__startswith=search_input)
+  profiles_found = Profile.objects.filter(user__username__startswith=search_input)
   return render(request, 'blog/search_profile.html', {
-      'profiles': profiles,
+      'profiles_found': profiles_found,
       'search': search_input
   })
 

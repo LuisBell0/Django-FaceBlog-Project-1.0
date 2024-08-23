@@ -1,25 +1,101 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Create Post</title>
-  </head>
-  <body>
-    <h1>Create new Post</h1>
-    <form method="POST" action="{% url 'post-create' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{form.as_p}}
-      <input type="hidden" name="timezone" id="user-timezone" value="">
-      <button type="submit">Create Post</button>
-    </form>
-    <form action="{% url 'dashboard' %}" method="get">
-      {% csrf_token %}
-      <button type="submit">Cancel</button>
-    </form>
-    <script>
-      // Get the user's timezone
-      var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      // Set the value of the hidden input field
-      document.getElementById('user-timezone').value = userTimezone;
-    </script>
-  </body>
-</html>
+{% extends 'blog/_base.html' %}
+{% load static %}
+<title>{% block title %}FaceBlog | Create Post{% endblock %}</title>
+{% block content%}
+<div class="container">
+  <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 my-3">
+    <div class="card-body p-0 mb-3 d-flex justify-content-center">
+        <h2>Create New Post</h2>
+    </div>
+    <div class="card-body p-0 mb-3 rounded-3">
+      <form class="form-container" 
+        method="POST" 
+        action="{% url 'post-create' %}" 
+        enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="w-100 border border-dark border-rounded 
+          d-flex align-items-center justify-content-center" 
+          style="height:400px;">
+          <input type="file" 
+            class="form-control w-100 h-100 border-0" 
+            id="imageInput" 
+            accept="image/*">
+          <div id="previewContainer" 
+            class="align-items-center justify-content-center w-100 h-100 position-relative">
+            <img class="w-100 h-100 object-fit-contain" 
+              id="imagePreview" 
+              src="#" 
+              alt="Image Preview" 
+              name="img">
+            <button type="button" 
+              class="btn btn-danger btn-sm rounded-circle position-absolute 
+              d-flex align-items-center justify-content-center p-0 top-0 end-0 m-2" 
+              id="closeButton">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="p-0 my-2 me-lg-5 w-100">
+          <textarea type="text" 
+            class="form-control border-dark" 
+            name="description" 
+            placeholder="Description"></textarea>
+        </div>
+        <div class="card-body p-0 me-lg-5">
+          <input type="hidden" name="timezone" id="user-timezone" value="">
+          <button type="submit">Create Post</button>
+        </div>
+      </form>
+      <form action="{% url 'home' %}" method="get">
+        {% csrf_token %}
+        <button type="submit">Cancel</button>
+      </form>
+    </div>
+      
+      <script>
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const closeButton = document.getElementById('closeButton');
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'flex';
+                    closeButton.style.display = 'block';
+                    imageInput.style.display = 'none';
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                clearImage();
+            }
+        });
+
+        closeButton.addEventListener('click', function() {
+            clearImage();
+        });
+
+        function clearImage() {
+            imagePreview.src = '#';
+            previewContainer.style.display = 'none';
+            closeButton.style.display = 'none';
+            imageInput.value = ''; // Clear the file input
+            imageInput.style.display = 'block';
+        }
+        
+        // Get the user's timezone
+        var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        // Set the value of the hidden input field
+        document.getElementById('user-timezone').value = userTimezone;
+      </script>
+    </div>
+  </div>
+{% endblock %}
+
+

@@ -14,7 +14,6 @@ class Post(models.Model):
                             on_delete=models.CASCADE,
                             related_name="posts",
                             default=1)
-  title = models.CharField(max_length=50)
   description = models.TextField()
   likes_count = models.PositiveIntegerField(default=0)
   comments_count = models.PositiveIntegerField(default=0)
@@ -22,7 +21,7 @@ class Post(models.Model):
   img = models.ImageField(upload_to='posts', blank=True, null=True)
 
   def __str__(self):
-    return f'{self.title}'
+    return f'{self.description}'
 
   def delete(self, *args, **kwargs):
     # Delete the associated image file from the filesystem
@@ -47,14 +46,15 @@ class Post(models.Model):
         # Delete the old image file if it exists
         existing_post.delete_image_file()
     super().save(*args, **kwargs)
-    img = Image.open(self.img.path)
-
-    # Specify the format and compression quality
-    img_format = img.format  # Preserve original format (JPEG, PNG, etc.)
-    if img_format == 'JPEG':
-      img.save(self.img.path, format='JPEG', quality=70)  # Compress JPEG
-    elif img_format == 'PNG':
-      img.save(self.img.path, format='PNG', optimize=True)  # Compress PNG
+    if self.img:
+      img = Image.open(self.img.path)
+  
+      # Specify the format and compression quality
+      img_format = img.format  # Preserve original format (JPEG, PNG, etc.)
+      if img_format == 'JPEG':
+        img.save(self.img.path, format='JPEG', quality=70)  # Compress JPEG
+      elif img_format == 'PNG':
+        img.save(self.img.path, format='PNG', optimize=True)  # Compress PNG
 
 
 class LikePost(models.Model):
@@ -96,6 +96,12 @@ class Profile(models.Model):
       elif img_format == 'PNG':
         img.save(self.profile_picture.path, format='PNG', optimize=True)  # Compress PNG
 
+  def get_followers_count(self):
+    return self.followed_by.count() - 1
+  
+  def get_following_count(self):
+    return self.follows.count() - 1
+    
 
 class Comment(models.Model):
   text = models.TextField()
