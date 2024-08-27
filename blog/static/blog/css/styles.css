@@ -48,6 +48,10 @@ a {
   font-size: 12px !important;
 }
 
+.font-xsss {
+  font-size: 14px !important;
+}
+
 .font-xss {
   font-size: 16px !important;
 }
@@ -117,6 +121,10 @@ a {
 
 .ml-3-c {
   margin-left: 12px;
+}
+
+.ms-6 {
+  margin-left: 4rem !important;
 }
 
 #previewContainer {

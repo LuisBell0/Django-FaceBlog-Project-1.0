@@ -121,7 +121,7 @@ class PostCreateView(CreateView):
 @method_decorator(profile_required, name='dispatch')
 class PostUpdateView(UpdateView):
   model = Post
-  fields = ['title', 'description', 'img']
+  fields = ['description', 'img']
   success_url = reverse_lazy("dashboard")
   template_name = "blog/post_update_form.html"
 
