@@ -15,12 +15,12 @@ FaceBlog log in or sign up
                             {% csrf_token %}
                             <div class="form-outline mb-3">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for=first-name>First Name</label>
                                         <input type="text" id="first-name" name="first_name" 
                                             class="form-control" />
                                     </div>
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for="last-name">Last Name</label>
                                         <input type="text" id="last-name" name="last_name" 
                                             class="form-control" />
@@ -30,14 +30,14 @@ FaceBlog log in or sign up
                             
                             <div class="form-outline mb-3">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for="email">Email</label>
                                         <input type="email" id="email" name="email" class="form-control" />
                                         {% for error in form.email.errors %}
                                             <div><strong>{{ error }}</strong></div>
                                         {% endfor %}
                                     </div>
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for="username">Username</label>
                                         <input type="text" id="username" name="username" class="form-control" />
                                         {% for error in form.username.errors %}
@@ -49,14 +49,14 @@ FaceBlog log in or sign up
 
                             <div class="form-outline mb-3">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for="password1">Password</label>
                                         <input type="password" id="password1" name="password1" class="form-control"/>
                                         {% for error in form.password1.errors %}
                                             <div><strong>{{ error }}</strong></div>
                                         {% endfor %}
                                     </div>
-                                    <div class="col">
+                                    <div class="col-xs-12 col-md-6">
                                         <label class="form-label" for="password2">Confirm Password</label>
                                         <input type="password" id="password2" name="password2" class="form-control"/>
                                         {% for error in form.password2.errors %}

@@ -20,6 +20,10 @@ a {
   height: 50px;
 }
 
+.bottom-5 {
+  bottom: 5px;
+}
+
 .w30 {
   width: 30px !important;
 }
@@ -58,6 +62,14 @@ a {
 
 .font-xs {
   font-size: 18px !important;
+}
+
+.font-sm {
+  font-size: 20px !important;
+}
+
+.font-md {
+  font-size: 22px !important;
 }
 
 .font-lg {

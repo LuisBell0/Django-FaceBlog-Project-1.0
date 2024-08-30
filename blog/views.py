@@ -154,30 +154,7 @@ def comment_delete_function(request, post_id, comment_id):
     comment.delete()
     post.comments_count = post.comments_count - 1
     post.save()
-    return redirect('comments', post_id)
-  else:
-    context = {'post': post, 'comment': comment}
-    return render(request, 'blog/comment_delete_view.html', context)
-
-
-@profile_required
-@login_required
-def comment_update_function(request, post_id, comment_id):
-  post = get_object_or_404(Post, id=post_id)
-  comment = get_object_or_404(Comment, id=comment_id, post=post)
-  if request.method == 'POST':
-    comment_form = AddCommentForm(instance=comment, data=request.POST)
-    if comment_form.is_valid():
-      comment_form.save()
-    return redirect('comments', post_id)
-  else:
-    comment_form = AddCommentForm(instance=comment)
-    context = {
-        'comment': comment,
-        'comment_form': comment_form,
-        'post': post,
-    }
-    return render(request, 'blog/comment_update_view.html', context)
+  return redirect('comments', post_id)
 
 
 @profile_required
@@ -379,7 +356,7 @@ def follow_unfollow_profile(request, profile_id):
 def followers_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)
-  followers = profile.follows.exclude(pk=profile.id)
+  followers = profile.followed_by.exclude(pk=profile.id)
   context = {
     'user':user,
     'profile':profile,
@@ -393,7 +370,7 @@ def followers_list_view(request, user_username):
 def following_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)
-  following = profile.followed_by.exclude(pk=profile.id)
+  following = profile.follows.exclude(pk=profile.id)
   context = {
     'user':user,
     'profile':profile,
