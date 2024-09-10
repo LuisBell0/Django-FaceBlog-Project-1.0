@@ -154,10 +154,22 @@ a {
 }
 
 #closeButton {
-  font-size: 18px; /* Same as your original design */
+  font-size: 18px;
   line-height: 20px;
-  width: 25px; /* Control the size of the circle */
+  width: 25px;
   height: 25px;
+}
+
+.see-more-container {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.see-more-container.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
 }
 
 /* MEDIA QUERY */
@@ -176,16 +188,3 @@ a {
 }
 
 
-.see-more-container {
-  max-height: 1.5em;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.w-space-pwrap {
-  white-space: pre-wrap;
-}
-
-.see-more-container.expanded {
-  max-height: none;
-}

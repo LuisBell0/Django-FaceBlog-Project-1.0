@@ -72,11 +72,10 @@
               <span class="fw-600 d-none d-md-block">{{user.first_name}} {{user.last_name}}</span>
               {% if user.profile.bio%}
               <div class="see-more-container">
-                <span class="d-block w-space-pwrap">Bio: {{ user.profile.bio|linebreaksbr }}</span>
+                <span class="d-block text-description">Bio: {{ user.profile.bio|linebreaksbr }}</span>
               </div>
+              <span class="see-more-btn btn btn-link bg-trasnparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start mt-1 d-none">Show More</span>
               {% endif %}
-              <span class="btn btn-link bg-trasnparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start" 
-                id="see-more-btn">See More</span>
             </div>
           </div>
         </div>
