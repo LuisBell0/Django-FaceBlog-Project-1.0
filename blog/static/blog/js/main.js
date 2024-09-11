@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   const seeMoreBtns = document.querySelectorAll('.see-more-btn');
   const seeMoreContainers = document.querySelectorAll('.see-more-container');
-
   const charLimit = 225;
 
   seeMoreContainers.forEach((container, index) => {
