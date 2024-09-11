@@ -86,7 +86,7 @@ def dashboard(request):
     return redirect("profile-create")
   followers = user_profile.followed_by.exclude(pk=user_profile.pk)
   following = user_profile.follows.exclude(pk=user_profile.pk)
-  posts = Post.objects.filter(owner=request.user)
+  posts = Post.objects.filter(owner=request.user).order_by('-posted_date')
   liked_post = LikePost.objects.filter(user=request.user,
                                        post__in=posts).values_list('post_id', flat=True)
 

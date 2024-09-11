@@ -15,18 +15,16 @@
                         <div class="my-1 d-flex align-items-center">
                             {% if profile.profile_picture %}
                             <img src="{{ profile.profile_picture.url }}"
-                                class="shadow-sm rounded-circle img-50 mr-3"
-                                alt="{{ user.username }} Profile Picture" 
-                                width="26" height="26">
+                                class="shadow-sm rounded-circle img-60 mr-3"
+                                alt="{{ user.username }} Profile Picture">
                             {% else %}
                             <img src="{% static 'blog/default.jpg' %}"
-                                class="shadow-sm rounded-circle img-50 mr-3"
-                                alt="{{ user.username }}" 
-                                width="26px" height="26px">
+                                class="shadow-sm rounded-circle img-60 mr-3"
+                                alt="{{ user.username }}">
                             {% endif %}
                             <div class="ml-3-c fw-700 font-xssss">
-                                <span>{{ profile }}</span>
-                                <span class="d-block text-grey-500">
+                                <span class="font-xss">{{ profile }}</span>
+                                <span class="d-block font-xssss text-grey-500">
                                     {{ profile.user.first_name }} {{ profile.user.last_name}}
                                     | {{ profile.get_followers_count }} Followers
                                 </span>

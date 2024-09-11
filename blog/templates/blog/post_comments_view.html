@@ -143,9 +143,13 @@
                     - {{ comment.posted_date|timesince }} ago
                   </span>
                 </h4>
-                <span class="w-100 mb-1 text-wrap">
-                  {{ comment.text|linebreaksbr }}
+                <div class="see-more-container">
+                    <span class="w-100 mb-1 text-wrap text-description">{{ comment.text|linebreaksbr }}</span>
+                </div>
+                <span class="see-more-btn btn btn-link bg-transparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start font-xsss text-grey-500 d-none">
+                  Show More
                 </span>
+
                 
                 <div class="d-flex">
                   <form action="{% url 'reply' post.id comment.id%}" method="GET" 
@@ -212,9 +216,15 @@
                           - {{ reply.posted_date|timesince }} ago
                         </span>
                       </h4>
-                      <span class="w-100 mb-1 text-wrap">
-                        {{ reply.text|linebreaksbr }}
-                      </span>
+                      <div class="see-more-container">
+                        <span class="w-100 mb-1 text-wrap text-description">
+                            {{ reply.text|linebreaksbr }}
+                        </span>
+                      </div>
+                        <span class="see-more-btn btn btn-link bg-transparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start font-xsss text-grey-500  d-none">
+                            Show More
+                        </span>
+
 
                       <div class="d-flex">
                         {% if request.user == reply.user %}
