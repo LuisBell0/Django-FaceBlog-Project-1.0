@@ -1,7 +1,7 @@
 // FUNCTIONS
 
 // SEE MORE
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const seeMoreBtns = document.querySelectorAll('.see-more-btn');
   const seeMoreContainers = document.querySelectorAll('.see-more-container');
   const charLimit = 225;
@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isLongText || hasLineBreaks) {
       seeMoreBtns[index].classList.remove('d-none');
 
-      seeMoreBtns[index].addEventListener('click', function() {
+      seeMoreBtns[index].addEventListener('click', () => {
         if (container.classList.contains('expanded')) {
           container.classList.remove('expanded');
-          textDescription.innerHTML = truncatedText + '...';
+          textDescription.innerHTML = truncatedText;
           this.textContent = 'Show More';
         } else {
           container.classList.add('expanded');
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // GO BACK
 let goBackButton = document.getElementById('goBack');
 if(goBackButton) {
-  goBackButton.addEventListener('click', function () {
+  goBackButton.addEventListener('click', () => {
   if (document.referrer) {
     window.history.back();
   } else {
@@ -61,5 +61,8 @@ function ShowOrHideContainers(button, secondButton, showContainer, hideContainer
   });
 }
 
-ShowOrHideContainers(showPostsButton, showTextsButton,  postsContainer, textsContainer);
-ShowOrHideContainers(showTextsButton, showPostsButton, textsContainer, postsContainer);
+if (showPostsButton) {
+  ShowOrHideContainers(showPostsButton, showTextsButton, postsContainer, textsContainer);
+  ShowOrHideContainers(showTextsButton, showPostsButton, textsContainer, postsContainer);
+}
+

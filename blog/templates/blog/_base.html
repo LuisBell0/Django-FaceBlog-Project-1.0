@@ -36,7 +36,7 @@
                   <div class="modal-body">
                     {% for message in messages %}
                       <div class="alert alert-danger">
-                        <strong>{{ message }}</strong>
+                        <span class="fw-700">{{ message }}</span>
                       </div>
                     {% endfor %}
                   </div>
@@ -158,12 +158,12 @@
     {% block content %}
     {% endblock %}
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        var modalShown = false;
-        var hasMessages = "{{ messages|length|yesno:'true,false' }}";
+      document.addEventListener("DOMContentLoaded", () => {
+        let modalShown = false;
+        let hasMessages = "{{ messages|length|yesno:'true,false' }}";
 
         if (hasMessages === "true" && !modalShown) {
-          var myModal = new bootstrap.Modal(document.getElementById('errorModal'));
+          let myModal = new bootstrap.Modal(document.getElementById('errorModal'));
           myModal.show();
           modalShown = true;
         }
