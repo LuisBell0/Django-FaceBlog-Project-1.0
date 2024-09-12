@@ -58,6 +58,7 @@ def handle_search(request):
       return redirect(f'{reverse("search-profile")}?q={search_input}')
     return redirect(redirect_url)
 
+
 @profile_required
 def home(request):
   current_user = request.user
@@ -65,13 +66,13 @@ def home(request):
     current_user_profile = Profile.objects.filter(user=current_user)
     followed_users = current_user.profile.follows.all()
     all_users = followed_users | current_user_profile
-    posts = Post.objects.filter(owner__profile__in=all_users).order_by('-posted_date')
+    posts = Post.objects.filter(
+        owner__profile__in=all_users).order_by('-posted_date')
     liked_post = LikePost.objects.filter(user=request.user,
-                                         post__in=posts).values_list('post_id', flat=True)
+                                         post__in=posts).values_list('post_id',
+                                                                     flat=True)
 
-    context = {'posts': posts,
-               'liked': liked_post
-              }
+    context = {'posts': posts, 'liked': liked_post}
     return render(request, 'blog/home.html', context)
   else:
     return login_view(request)
@@ -87,13 +88,24 @@ def dashboard(request):
   followers = user_profile.followed_by.exclude(pk=user_profile.pk)
   following = user_profile.follows.exclude(pk=user_profile.pk)
   posts = Post.objects.filter(owner=request.user).order_by('-posted_date')
+  img_posts = Post.objects.filter(owner=request.user).exclude(img='').exclude(
+      img__isnull=True).order_by('-posted_date')
+  txt_posts = Post.objects.filter(
+      owner=request.user).filter(img__isnull=True).union(
+          Post.objects.filter(owner=request.user,
+                              img='')).order_by('-posted_date')
   liked_post = LikePost.objects.filter(user=request.user,
-                                       post__in=posts).values_list('post_id', flat=True)
+                                       post__in=posts).values_list('post_id',
+                                                                   flat=True)
 
-  context = {'posts': posts,
-             'liked': liked_post,
-             'followers': followers,
-             'following': following}
+  context = {
+      'posts': posts,
+      'img_posts': img_posts,
+      'txt_posts': txt_posts,
+      'liked': liked_post,
+      'followers': followers,
+      'following': following
+  }
   return render(request, 'blog/dashboard.html', context)
 
 
@@ -302,7 +314,8 @@ def ProfileUpdateFunction(request, pk):
 @login_required
 def search_profile(request):
   search_input = request.GET.get('q', '').strip()
-  profiles_found = Profile.objects.filter(user__username__startswith=search_input)
+  profiles_found = Profile.objects.filter(
+      user__username__startswith=search_input)
   return render(request, 'blog/search_profile.html', {
       'profiles_found': profiles_found,
       'search': search_input
@@ -322,20 +335,20 @@ def external_user_profile_view(request, user_username):
   if request.user.is_authenticated:
     is_follower = request.user.profile.follows.filter(id=profile.id).exists()
     liked_post = LikePost.objects.filter(user=request.user,
-       post__in=posts).values_list('post_id',
-                                   flat=True)
+                                         post__in=posts).values_list('post_id',
+                                                                     flat=True)
   else:
     is_follower = None
     liked_post = None
   context = {
-    'external_user': external_user,
-    'user_input': user_username,
-    'posts': posts,
-    'liked': liked_post,
-    'profile': profile,
-    'followers': followers,
-    'following': following,
-    'is_follower': is_follower
+      'external_user': external_user,
+      'user_input': user_username,
+      'posts': posts,
+      'liked': liked_post,
+      'profile': profile,
+      'followers': followers,
+      'following': following,
+      'is_follower': is_follower
   }
   return render(request, 'blog/external_user_profile.html', context)
 
@@ -357,11 +370,7 @@ def followers_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)
   followers = profile.followed_by.exclude(pk=profile.id)
-  context = {
-    'user':user,
-    'profile':profile,
-    'followers':followers
-  }
+  context = {'user': user, 'profile': profile, 'followers': followers}
   return render(request, 'blog/profile_followers_list.html', context)
 
 
@@ -371,9 +380,5 @@ def following_list_view(request, user_username):
   user = get_object_or_404(User, username=user_username)
   profile = get_object_or_404(Profile, user=user)
   following = profile.follows.exclude(pk=profile.id)
-  context = {
-    'user':user,
-    'profile':profile,
-    'following':following
-  }
+  context = {'user': user, 'profile': profile, 'following': following}
   return render(request, 'blog/profile_following_list.html', context)

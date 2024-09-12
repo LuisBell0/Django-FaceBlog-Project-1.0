@@ -44,3 +44,22 @@ if(goBackButton) {
   } 
   })
 }
+
+
+// SHOW POSTS OR TEXTS
+const showPostsButton = document.getElementById('showPosts');
+const postsContainer = document.getElementById('postsContainer');
+const showTextsButton = document.getElementById('showTexts');
+const textsContainer = document.getElementById('textsContainer');
+
+function ShowOrHideContainers(button, secondButton, showContainer, hideContainer) {
+  button.addEventListener('click', () => {
+    button.classList.add('border-bottom-dark')
+    secondButton.classList.remove('border-bottom-dark')
+    showContainer.style.setProperty('display', 'block', 'important');
+    hideContainer.style.setProperty('display', 'none', 'important');
+  });
+}
+
+ShowOrHideContainers(showPostsButton, showTextsButton,  postsContainer, textsContainer);
+ShowOrHideContainers(showTextsButton, showPostsButton, textsContainer, postsContainer);

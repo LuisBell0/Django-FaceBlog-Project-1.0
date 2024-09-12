@@ -65,6 +65,11 @@
           {{ post.posted_date|timesince }} ago
         </span>
       </h4>
+      {% if request.user == post.owner %}
+      <div class="w-100 d-flex justify-content-end">
+        <i class="bi bi-three-dots"></i>
+      </div>
+      {% endif %}
     </div>
     {% if post.img %}
       <div class="card-body p-0 mb-3 rounded-3 overflow-hidden">
@@ -102,9 +107,14 @@
   <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 my-3">
     <div class="d-flex align-items-center mb-3 mb-4 pb-2 border-bottom border-1 border-dark">
       <a type="button"
-        class="btn p-1 me-2 rounded-circle bg-greylight shadow-sm"
+        class="btn p-1 me-2 rounded-circle bg-greylight shadow-sm border-0"
         href="{% url 'home' %}">
-        <i class="bi bi-arrow-left"></i>
+        <i class="bi bi-house-door-fill"></i>
+      </a>
+      <a type="button"
+        class="btn p-1 me-2 rounded-circle bg-greylight shadow-sm border-0"
+        href="{% url 'dashboard' %}">
+        <i class="bi bi-person-fill"></i>
       </a>
       <h2 class="m-0">Comments</h2>
     </div>
