@@ -1,18 +1,123 @@
-<h1>Edit Profile</h1>
-<form action="" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{user_form}}
-  {{profile_form}}
-  <button type="submit">Save</button>
-</form>
-<form action="{% url 'dashboard' %}" method="get">
-  {% csrf_token %}
-  <button type="submit">Cancel</button>
-</form>
-{% if messages %}
-  <ul class="messages">
-  {% for message in messages %}
-    <li>{{ message }}</li>
-  {% endfor %}
-  </ul>
-{% endif %}
+{% extends 'blog/_base.html'%}
+{% load static %}
+{% load form_tags %}
+{% block title %}Faceblog | Edit Profile {% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card w-100 rounded-xxl shadow my-2 p-3 border-0">
+    <div class="card-body p-1">
+      <h2>Edit Profile</h2>
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="d-flex flex-column">
+        <div class="from-group m-1 d-flex justify-content-center dropdown">
+          <a href="#" data-bs-toggle="dropdown">
+            <figure class="avatar m-1">
+              {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}"
+                  id="profile_picture"
+                  class="shadow-sm rounded-circle"
+                  alt="{{ user.username }} Profile Picture"
+                  width="110" height="110">
+              {% else %}
+                <img src="{% static 'blog/default.jpg' %}"
+                  id="profile_picture"
+                  class="shadow-sm rounded-circle"
+                  alt="{{ user.username }}"
+                  width="110" height="110">
+              {% endif %}
+            </figure>
+          </a>
+          <div class="dropdown-menu p-0">
+            <div class="dropdown-item p-0">
+              <label for="profile_pic" class="text-primary p-2 w-100">Upload Picture</label>
+              <input id="profile_pic" name="profile_picture" type="file" class="d-none">
+            </div>
+            <hr class="m-0">
+            <div class="dropdown-item p-0">
+              <label class="text-danger p-2" for="profile_picture-clear">
+                <input type="checkbox" id="profile_picture-clear" name="profile_picture-clear">
+                Delete Profile Picture
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="from-group m-1">
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500" for="{{ user_form.first_name.id_for_label }}">First Name:</label>
+              {{ user_form.first_name|add_class:"form-control" }}
+              {% for error in user_form.first_name.errors %}
+                <div><strong>{{ error }}</strong></div>
+              {% endfor %}               
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500"">Last Name:</label>
+              {{ user_form.last_name|add_class:"form-control" }}
+              {% for error in user_form.last_name.errors %}
+                  <div><strong>{{ error }}</strong></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="from-group m-1">
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500"">Email:</label>
+              {{ user_form.email|add_class:"form-control" }}
+              {% for error in user_form.email.errors %}
+                  <div><strong>{{ error }}</strong></div>
+              {% endfor %}         
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500"">Username:</label>
+              {{ user_form.username|add_class:"form-control" }}
+              {% for error in user_form.username.errors %}
+                  <div><strong>{{ error }}</strong></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="from-group m-1">
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500">Gender:</label>
+              {{ profile_form.gender|add_class:"form-control" }}
+              {% for error in profile_form.gender.errors %}
+                  <div><strong>{{ error }}</strong></div>
+              {% endfor %}            
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <label class="fw-500"">Date Of Birth:</label>
+              {{ profile_form.date_of_birth|add_class:"form-control" }}
+              {% for error in profile_form.date_of_birth.errors %}
+                  <div><strong>{{ error }}</strong></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        
+        <div class="from-group m-1">
+          <label class="fw-500"">Bio:</label>
+          {{ profile_form.bio|add_class:"form-control" }}
+          {% for error in profile_form.bio.errors %}
+              <div><strong>{{ error }}</strong></div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="form-group my-3 d-flex align-items-center justify-content-between">
+        <div>
+          <button class="btn btn-success" type="submit">Save</button>
+          <a class="btn btn-outline-danger" href="{% url 'dashboard' %}">Cancel</a>       
+        </div>
+         <a href="" class="btn p-1 text-danger">Delete Account</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

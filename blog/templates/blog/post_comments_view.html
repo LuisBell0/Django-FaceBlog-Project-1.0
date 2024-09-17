@@ -1,10 +1,13 @@
 {% extends 'blog/_base.html' %}
 {% load static %}
 {% block content %}
+<!-- POST UPDATE -->
+{% include 'blog/post_update_form.html' %}
+<!-- END POST UPDATE -->
 <!-- MODAL -->
 {% include 'blog/modal_delete.html' %}
 <!-- ENDMODAL -->
-<div class="container mt-1">
+<div class="container mt-3Z">
 <!-- POST -->
   <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
     <div class="card-body p-0 d-flex">
@@ -38,10 +41,10 @@
             <i class="bi bi-three-dots text-dark font-sm"></i>
           </a>
           <ul class="dropdown-menu p-0">
-            <a class="btn w-100 text-start text-success"
-              href="{% url 'post-update' post.id %}">
+            <button class="btn w-100 text-start text-success"
+              id="postUpdateButton">
               Edit Post
-            </a>
+            </button>
             <hr class="m-0">
             <a class="btn w-100 text-start text-danger deletePost"
               data-bs-toggle="modal" 
@@ -62,9 +65,11 @@
           style="max-height:700px;">
       </div>
     {% endif %}
-    <div class="card-body p-0 me-lg-5">
+    
+    <div id="descriptionContainer" class="card-body p-0 me-lg-5">
       <span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'external-user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span>
     </div>
+    
     <div class="card-body d-flex p-0 align-items-center">
       <a href="{% url 'post-like' post.pk%}" class="fw-600 
         text-grey-900 text-dark lh-26 font-xssss">
@@ -129,8 +134,9 @@
                     - {{ comment.posted_date|timesince }} ago
                   </span>
                 </h4>
+                
                 <div class="see-more-container">
-                    <span class="w-100 mb-1 text-wrap text-description">{{ comment.text|linebreaksbr }}</span>
+                  <span class="w-100 mb-1 text-wrap text-description">{{ comment.text|linebreaksbr }}</span>
                 </div>
                 <span class="see-more-btn btn btn-link bg-transparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start font-xsss text-grey-500 d-none">
                   Show More
@@ -208,7 +214,6 @@
                         <span class="see-more-btn btn btn-link bg-transparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start font-xsss text-grey-500  d-none">
                             Show More
                         </span>
-
 
                       <div class="d-flex">
                         {% if request.user == reply.user %}

@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-
 // GO BACK
 let goBackButton = document.getElementById('goBack');
 if(goBackButton) {
@@ -44,7 +43,6 @@ if(goBackButton) {
   } 
   })
 }
-
 
 // SHOW POSTS OR TEXTS
 const showPostsButton = document.getElementById('showPosts');
@@ -66,3 +64,24 @@ if (showPostsButton) {
   ShowOrHideContainers(showTextsButton, showPostsButton, textsContainer, postsContainer);
 }
 
+// POST UPDATE
+const postUpdateButton = document.getElementById('postUpdateButton');
+const descriptionContainer = document.getElementById('descriptionContainer');
+const formTemplate = document.getElementById('postUpdateForm');
+const descriptionViewTemplate = document.getElementById('descriptionViewTemplate');
+
+postUpdateButton.addEventListener('click', () => {
+  const formClone = document.importNode(formTemplate.content, true);
+  descriptionContainer.innerHTML = '';
+  descriptionContainer.appendChild(formClone);
+
+  const cancelPostUpdateButton = descriptionContainer.querySelector('#cancelPostUpdateButton');
+
+  cancelPostUpdateButton.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    const descriptionClone = document.importNode(descriptionViewTemplate.content, true);
+    descriptionContainer.innerHTML = '';
+    descriptionContainer.appendChild(descriptionClone);
+  });
+});

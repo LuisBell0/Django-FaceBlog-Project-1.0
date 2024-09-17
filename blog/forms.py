@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import widgets
-from blog.models import Profile, Comment
+from blog.models import Profile, Comment, Post
 
 
 class SignUpForm(UserCreationForm):
@@ -28,6 +27,11 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = [
             'bio', 'gender', 'date_of_birth', 'profile_picture'
         ]
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={
+                'type': 'date',
+            })
+        }
 
 
 class LoginForm(forms.Form):
@@ -55,3 +59,9 @@ class AddCommentForm(forms.ModelForm):
         widget = {
             'text': forms.Textarea(attrs={'rows':4}),
         }
+
+
+class EditPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['description']

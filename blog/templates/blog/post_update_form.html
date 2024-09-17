@@ -1,10 +1,18 @@
-<h1>Edit Post</h1>
-<form action="" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.as_p}}
-  <button type="submit">Save</button>
-</form>
-<form action="{% url 'dashboard' %}" method="get">
-  {% csrf_token %}
-  <button type="submit">Cancel</button>
-</form>
+{% load form_tags %}
+<template id="postUpdateForm">
+  <form action="{% url 'post-update' post.id %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group m-1">
+      <label class="fw-500" for="{{ form.description.id_for_label }}">Description:</label>
+      {{ edit_post_form.description|add_class:"form-control"}}
+    </div>
+    <div class="form-group my-3 d-flex align-items-center justify-content-between">
+      <div>
+        <button class="btn btn-success" type="submit">Edit</button>
+        <button id="cancelPostUpdateButton" class="btn btn-outline-danger">Cancel</button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<template id="descriptionViewTemplate"><span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'external-user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span></template>

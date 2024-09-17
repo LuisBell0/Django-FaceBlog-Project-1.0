@@ -1,8 +1,8 @@
 {% extends 'blog/_base.html' %}
 {% load static %}
-{%block content %}
+{% block content %}
 <div class="container mt-3">
-  <div class="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
+  <div class="card w-100 shadow-xss rounded-xxl border-0 px-4 pt-4 pb-3 mb-3">
     <form action="{% url 'post-create'%}" method='POST' class="form-container">
       <div class="card-body p-0 d-flex flex-row justify-content-between">
         {% csrf_token %}

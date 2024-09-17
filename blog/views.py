@@ -9,7 +9,7 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
-from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm
+from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm, EditPostForm
 from .decorators import profile_required
 
 # Create your views here.
@@ -133,9 +133,17 @@ class PostCreateView(CreateView):
 @method_decorator(profile_required, name='dispatch')
 class PostUpdateView(UpdateView):
   model = Post
-  fields = ['description', 'img']
-  success_url = reverse_lazy("dashboard")
-  template_name = "blog/post_update_form.html"
+  fields = ['description']
+
+  def form_valid(self, form):
+    self.request.session['previous_url'] = self.request.META.get('HTTP_REFERER')
+    return super().form_valid(form)
+  
+  def get_success_url(self):
+    previous_url = self.request.session.get('previous_url')
+    if previous_url:
+        return previous_url
+    return reverse_lazy("dashboard")
 
 
 @method_decorator(profile_required, name='dispatch')
@@ -196,12 +204,14 @@ def post_comments_list(request, post_id):
     return redirect('comments', post_id)
   else:
     add_comment_form = AddCommentForm()
+    edit_post_form = EditPostForm(instance=post)
     context = {
-        'post': post,
-        'comments': comments,
-        'liked_post': liked_post,
-        'liked_comment': liked_comment,
-        'comment_form': add_comment_form,
+      'post': post,
+      'comments': comments,
+      'liked_post': liked_post,
+      'liked_comment': liked_comment,
+      'comment_form': add_comment_form,
+      'edit_post_form': edit_post_form,
     }
   return render(request, 'blog/post_comments_view.html', context)
 
