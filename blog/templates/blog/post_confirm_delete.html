@@ -5,7 +5,7 @@
   {% csrf_token %}
   <button type="submit">Delete</button>
 </form>
-<form action="{% url 'dashboard' %}" method='GET'>
+<form action="{% url 'user-profile' request.user %}" method='GET'>
   {%csrf_token%}
   <button type="submit">Cancel</button>
 </form>

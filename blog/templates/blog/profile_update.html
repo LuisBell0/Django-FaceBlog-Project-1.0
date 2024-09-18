@@ -113,7 +113,7 @@
       <div class="form-group my-3 d-flex align-items-center justify-content-between">
         <div>
           <button class="btn btn-success" type="submit">Save</button>
-          <a class="btn btn-outline-danger" href="{% url 'dashboard' %}">Cancel</a>       
+          <a class="btn btn-outline-danger" href="{% url 'user-profile' request.user %}">Cancel</a>       
         </div>
          <a href="" class="btn p-1 text-danger">Delete Account</a>
       </div>

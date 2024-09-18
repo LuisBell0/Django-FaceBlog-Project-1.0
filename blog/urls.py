@@ -3,7 +3,6 @@ from .views import *
 
 urlpatterns = [
     path('', home, name="home"),
-    path('dashboard/', dashboard, name="dashboard"),
     path('dashboard/create_post/',
          PostCreateView.as_view(),
          name="post-create"),
@@ -35,8 +34,8 @@ urlpatterns = [
          name='search-profile'),
     path('search/', handle_search, name='search'),
     path('<str:user_username>/',
-         external_user_profile_view,
-         name="external-user-profile"),
+         user_profile_view,
+         name="user-profile"),
     path('follow/unfollow/<str:profile_id>/',
          follow_unfollow_profile,
          name='follow-unfollow'),

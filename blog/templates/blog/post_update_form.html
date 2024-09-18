@@ -15,4 +15,4 @@
   </form>
 </template>
 
-<template id="descriptionViewTemplate"><span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'external-user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span></template>
+<template id="descriptionViewTemplate"><span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span></template>

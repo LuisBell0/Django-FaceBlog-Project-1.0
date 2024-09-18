@@ -11,7 +11,7 @@
                 {% for profile in profiles_found %}
                 <div class="d-flex p-2">
                     <a class="text-dark" 
-                        href="{% url 'external-user-profile' profile %}">
+                        href="{% url 'user-profile' profile %}">
                         <div class="my-1 d-flex align-items-center">
                             {% if profile.profile_picture %}
                             <img src="{{ profile.profile_picture.url }}"

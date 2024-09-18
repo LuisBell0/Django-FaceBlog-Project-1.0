@@ -90,9 +90,9 @@
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link d-flex align-items-center" 
-                    href="{% url 'dashboard' %}">
-                    {% if user.profile.profile_picture %}
-                      <img src="{{ user.profile.profile_picture.url }}"
+                    href="{% url 'user-profile' request.user %}">
+                    {% if request.user.profile.profile_picture %}
+                      <img src="{{ request.user.profile.profile_picture.url }}"
                         class="rounded img-fluid"
                         alt="{{ user.username }} Profile Picture" 
                         width="26" height="26">
@@ -102,7 +102,7 @@
                         alt="{{ user.username }}" 
                         width="26px" height="26px">
                     {% endif %}
-                    <span class="ms-1">{{ user.username }}</span>
+                    <span class="ms-1">{{ request.user.username }}</span>
                   </a>
                 </li>
                 <li class="nav-item dropdown">
