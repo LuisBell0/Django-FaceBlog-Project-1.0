@@ -315,26 +315,6 @@ def follow_unfollow_profile(request, profile_id):
 
 
 @profile_required
-@login_required
-def followers_list_view(request, user_username):
-  user = get_object_or_404(User, username=user_username)
-  profile = get_object_or_404(Profile, user=user)
-  followers = profile.followed_by.exclude(pk=profile.id)
-  context = {'user': user, 'profile': profile, 'followers': followers}
-  return render(request, 'blog/profile_followers_list.html', context)
-
-
-@profile_required
-@login_required
-def following_list_view(request, user_username):
-  user = get_object_or_404(User, username=user_username)
-  profile = get_object_or_404(Profile, user=user)
-  following = profile.follows.exclude(pk=profile.id)
-  context = {'user': user, 'profile': profile, 'following': following}
-  return render(request, 'blog/profile_following_list.html', context)
-
-
-@profile_required
 def user_profile_view(request, user_username):
   try:
     search_user = User.objects.get(username=user_username)

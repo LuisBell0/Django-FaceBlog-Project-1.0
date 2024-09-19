@@ -52,8 +52,8 @@ const textsContainer = document.getElementById('textsContainer');
 
 function ShowOrHideContainers(button, secondButton, showContainer, hideContainer) {
   button.addEventListener('click', () => {
-    button.classList.add('border-bottom-dark')
-    secondButton.classList.remove('border-bottom-dark')
+    button.classList.add('border-bottom-1', 'border-dark')
+    secondButton.classList.remove('border-bottom-1', 'border-dark')
     showContainer.style.setProperty('display', 'block', 'important');
     hideContainer.style.setProperty('display', 'none', 'important');
   });
@@ -70,18 +70,20 @@ const descriptionContainer = document.getElementById('descriptionContainer');
 const formTemplate = document.getElementById('postUpdateForm');
 const descriptionViewTemplate = document.getElementById('descriptionViewTemplate');
 
-postUpdateButton.addEventListener('click', () => {
-  const formClone = document.importNode(formTemplate.content, true);
-  descriptionContainer.innerHTML = '';
-  descriptionContainer.appendChild(formClone);
-
-  const cancelPostUpdateButton = descriptionContainer.querySelector('#cancelPostUpdateButton');
-
-  cancelPostUpdateButton.addEventListener('click', (event) => {
-    event.preventDefault();
-
-    const descriptionClone = document.importNode(descriptionViewTemplate.content, true);
+if (postUpdateButton) {
+  postUpdateButton.addEventListener('click', () => {
+    const formClone = document.importNode(formTemplate.content, true);
     descriptionContainer.innerHTML = '';
-    descriptionContainer.appendChild(descriptionClone);
+    descriptionContainer.appendChild(formClone);
+  
+    const cancelPostUpdateButton = descriptionContainer.querySelector('#cancelPostUpdateButton');
+  
+    cancelPostUpdateButton.addEventListener('click', (event) => {
+      event.preventDefault();
+  
+      const descriptionClone = document.importNode(descriptionViewTemplate.content, true);
+      descriptionContainer.innerHTML = '';
+      descriptionContainer.appendChild(descriptionClone);
+    });
   });
-});
+}

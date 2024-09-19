@@ -93,23 +93,23 @@
                     href="{% url 'user-profile' request.user %}">
                     {% if request.user.profile.profile_picture %}
                       <img src="{{ request.user.profile.profile_picture.url }}"
-                        class="rounded img-fluid"
+                        class="rounded-circle"
                         alt="{{ user.username }} Profile Picture" 
                         width="26" height="26">
                     {% else %}
                       <img src="{% static 'blog/default.jpg' %}"
-                        class="rounded-circle img-fluid"
+                        class="rounded-circle"
                         alt="{{ user.username }}" 
                         width="26px" height="26px">
                     {% endif %}
-                    <span class="ms-1">{{ request.user.username }}</span>
+                    <span class="ms-1 text-wrap">{{ request.user.username }}</span>
                   </a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle d-flex align-items-center" 
                     href="#" role="button" data-bs-toggle="dropdown" 
                     aria-expanded="false">
-                    <i class="bi bi-bell text-success" style="font-size:20px;"></i>
+                    <i class="bi bi-bell text-success font-sm"></i>
                     <span class="ms-1">Notifications</span>
                   </a>
                   <ul class="dropdown-menu">
@@ -120,8 +120,8 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link d-flex align-items-center" href="{% url 'post-create' %}">
-                    <i class="bi bi-plus-circle text-success" style="font-size:20px;"></i>
-                    <span class="ms-1">New Post</span>
+                    <i class="bi bi-plus-circle text-success font-sm"></i>
+                    <span class="ms-1 text-nowrap">New Post</span>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -130,8 +130,8 @@
                     <button 
                       class="nav-link border-0 bg-transparent d-flex align-items-center" 
                       type="submit">
-                      <i class="bi bi-box-arrow-right text-danger" style="font-size:20px;"></i>
-                      <span class="ms-1">Log Out</span>
+                      <i class="bi bi-box-arrow-right text-danger font-sm"></i>
+                      <span class="ms-1 text-nowrap">Log Out</span>
                     </button>
                   </form>
                 </li>
@@ -142,7 +142,7 @@
                     <button 
                       class="nav-link border-0 bg-transparent d-flex align-items-center" 
                       type="submit">
-                      <i class="bi bi-box-arrow-left text-primary" style="font-size:20px;"></i>
+                      <i class="bi bi-box-arrow-left text-primary font-sm"></i>
                       <span class="ms-1">Log In</span>
                     </button>
                   </form>
@@ -163,8 +163,8 @@
         let hasMessages = "{{ messages|length|yesno:'true,false' }}";
 
         if (hasMessages === "true" && !modalShown) {
-          let myModal = new bootstrap.Modal(document.getElementById('errorModal'));
-          myModal.show();
+          let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+          errorModal.show();
           modalShown = true;
         }
       });

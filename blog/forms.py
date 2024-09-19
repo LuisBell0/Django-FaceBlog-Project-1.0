@@ -6,7 +6,7 @@ from blog.models import Profile, Comment, Post
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254)
-    username = forms.CharField(max_length=10)
+    username = forms.CharField(max_length=12)
 
     class Meta:
         model = User

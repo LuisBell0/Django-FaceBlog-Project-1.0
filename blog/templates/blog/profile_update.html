@@ -31,7 +31,7 @@
           </a>
           <div class="dropdown-menu p-0">
             <div class="dropdown-item p-0">
-              <label for="profile_pic" class="text-primary p-2 w-100">Upload Picture</label>
+              <label for="profile_pic" class="text-success p-2 w-100">Upload Picture</label>
               <input id="profile_pic" name="profile_picture" type="file" class="d-none">
             </div>
             <hr class="m-0">
@@ -54,7 +54,7 @@
               {% endfor %}               
             </div>
             <div class="col-xs-12 col-md-6">
-              <label class="fw-500"">Last Name:</label>
+              <label class="fw-500">Last Name:</label>
               {{ user_form.last_name|add_class:"form-control" }}
               {% for error in user_form.last_name.errors %}
                   <div><strong>{{ error }}</strong></div>
@@ -66,14 +66,14 @@
         <div class="from-group m-1">
           <div class="row">
             <div class="col-xs-12 col-md-6">
-              <label class="fw-500"">Email:</label>
+              <label class="fw-500">Email:</label>
               {{ user_form.email|add_class:"form-control" }}
               {% for error in user_form.email.errors %}
                   <div><strong>{{ error }}</strong></div>
               {% endfor %}         
             </div>
             <div class="col-xs-12 col-md-6">
-              <label class="fw-500"">Username:</label>
+              <label class="fw-500">Username:</label>
               {{ user_form.username|add_class:"form-control" }}
               {% for error in user_form.username.errors %}
                   <div><strong>{{ error }}</strong></div>
@@ -92,7 +92,7 @@
               {% endfor %}            
             </div>
             <div class="col-xs-12 col-md-6">
-              <label class="fw-500"">Date Of Birth:</label>
+              <label class="fw-500">Date Of Birth:</label>
               {{ profile_form.date_of_birth|add_class:"form-control" }}
               {% for error in profile_form.date_of_birth.errors %}
                   <div><strong>{{ error }}</strong></div>
@@ -102,7 +102,7 @@
         </div>
         
         <div class="from-group m-1">
-          <label class="fw-500"">Bio:</label>
+          <label class="fw-500">Bio:</label>
           {{ profile_form.bio|add_class:"form-control" }}
           {% for error in profile_form.bio.errors %}
               <div><strong>{{ error }}</strong></div>

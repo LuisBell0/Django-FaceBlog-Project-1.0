@@ -77,8 +77,8 @@ class Profile(models.Model):
   profile_picture = models.ImageField(upload_to="profile_pictures/",
                                       blank=True,null=True)
   bio = models.TextField(max_length=255, blank=True, null=True)
-  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, null=True)
-  date_of_birth = models.DateField(null=True)
+  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True, null=True)
+  date_of_birth = models.DateField(blank=True, null=True)
   date_joined = models.DateField(blank=True, null=True)
 
   def __str__(self):

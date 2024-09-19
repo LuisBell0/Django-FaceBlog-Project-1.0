@@ -1,7 +1,0 @@
-{% extends 'blog/_base.html' %}
-{% block content %}
-<h2><strong>{{user.username}}'s Followers:</strong></h2>
-{% for follower in followers %}
-  <a href="{% url 'user-profile' follower %}">{{follower}}</a>
-{% endfor %}
-{% endblock %}

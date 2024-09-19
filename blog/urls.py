@@ -39,10 +39,4 @@ urlpatterns = [
     path('follow/unfollow/<str:profile_id>/',
          follow_unfollow_profile,
          name='follow-unfollow'),
-    path('<str:user_username>/followers/',
-         followers_list_view,
-         name='profile-followers'),
-    path('<str:user_username>/following/',
-         following_list_view,
-         name='profile-following'),
 ]

@@ -2,10 +2,6 @@ body {
   background-color: #f7fffb;
 }
 
-.form-control-margin {
-  margin-bottom: 5px;
-}
-
 a {
   text-decoration: none;
 }
@@ -27,7 +23,6 @@ a {
 
 .border-bottom-dark {
   border-bottom: 1px solid #343a40;
-  border-radius: 0;
 }
 
 .border-bottom-dark:hover,
@@ -154,8 +149,9 @@ a {
   height: 96px !important;
 }
 
-.ml-3-c {
-  margin-left: 12px;
+.w-h-100 {
+  width: 100px !important;
+  height: 100px !important;
 }
 
 .ms-6 {

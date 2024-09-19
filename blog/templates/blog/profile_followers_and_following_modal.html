@@ -1,0 +1,90 @@
+{% load static %}
+<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header pb-0 d-flex flex-column">
+        <div class="w-100 mb-2 d-flex align-items-center justify-content-between">
+          {% if search_user.profile.profile_picture %}
+            <img src="{{ search_user.profile.profile_picture.url }}"
+              class="shadow-sm rounded-circle img-45"
+              alt="{{ search_user.username }} Profile Picture">
+            {% else %}
+            <img src="{% static 'blog/default.jpg' %}"
+              class="shadow-sm rounded-circle img-45"
+              alt="{{ search_user.username }}">
+          {% endif %}
+          <span class="modal-title fs-5 font-xl fw-600" id="followersModalLabel">{{ search_user.username }}</span>
+          <button type="button" class="btn-close m-0 font-md" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="w-100 my-1">
+          <div class="d-flex flex-row align-items-center justify-content-around">
+            <button id="followersButton" class="btn p-1 font-md rounded-0 border-top-0 border-end-0 border-start-0 border-bottom-1 border-dark">Followers</button>
+            <span class="font-md">|</span>
+            <button id="followingButton" class="btn p-1 font-md rounded-0 border-top-0 border-end-0 border-start-0">Following</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div id="followersContainer">
+          {% for follower in followers %}
+            <div class="d-flex flex-column my-1">
+              <div class="d-flex p-1">
+                  <a class="text-dark" 
+                      href="{% url 'user-profile' follower %}">
+                    <div class="my-1 d-flex align-items-center">
+                        {% if follower.profile_picture %}
+                        <img src="{{ follower.profile_picture.url }}"
+                            class="shadow-sm rounded-circle img-60 mr-3"
+                            alt="{{ follower.user.username }} Profile Picture">
+                        {% else %}
+                        <img src="{% static 'blog/default.jpg' %}"
+                            class="shadow-sm rounded-circle img-60 mr-3"
+                            alt="{{ follower.user.username }}">
+                        {% endif %}
+                        <div class="ms-3 fw-700 font-xssss">
+                            <span class="font-xss">{{ follower }}</span>
+                            <span class="d-block font-xssss text-grey-500">
+                                {{ follower.user.first_name }} {{ follower.user.last_name}}
+                            </span>
+                        </div>
+                    </div>
+                  </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="followingContainer" class="d-none">
+          {% for follower in following %}
+            <div class="d-flex flex-column my-1">
+              <div class="d-flex p-1">
+                  <a class="text-dark" 
+                      href="{% url 'user-profile' follower %}">
+                    <div class="my-1 d-flex align-items-center">
+                        {% if follower.profile_picture %}
+                        <img src="{{ follower.profile_picture.url }}"
+                            class="shadow-sm rounded-circle img-60 mr-3"
+                            alt="{{ follower.user.username }} Profile Picture">
+                        {% else %}
+                        <img src="{% static 'blog/default.jpg' %}"
+                            class="shadow-sm rounded-circle img-60 mr-3"
+                            alt="{{ follower.user.username }}">
+                        {% endif %}
+                        <div class="ms-3 fw-700 font-xssss">
+                            <span class="font-xss">{{ follower }}</span>
+                            <span class="d-block font-xssss text-grey-500">
+                                {{ follower.user.first_name }} {{ follower.user.last_name}}
+                            </span>
+                        </div>
+                    </div>
+                  </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

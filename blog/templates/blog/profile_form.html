@@ -1,6 +1,55 @@
-<h2>Create Your Profile</h2>
-<form action="{% url 'profile-create' %}" method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Create</button>
-</form>
+{% extends 'blog/_base.html' %}
+{% load form_tags %}
+{% block content %}
+<div class="container">
+  <div class="card w-100 shadow rounded border-0 my-4 py-2 px-3">
+    <div class="card-body">
+      <h2 class="mb-1">Set Up Your Profile</h2>
+    </div>
+    <div class="card-body">
+      <form action="{% url 'profile-create' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="d-flex flex-column">
+          <div class="my-1">
+            <label for="profile_pic" class="fw-500">Profile Picture</label>
+            <input type="file" name="profile_picture" class="form-control">
+            {% for error in form.profile_picture.errors %}
+                <div><strong>{{ error }}</strong></div>
+            {% endfor %}
+          </div>
+
+          <div class="from-group my-1">
+            <div class="row">
+              <div class="col-xs-12 col-md-6">
+                <label for="gender" class="fw-500">Gender:</label>
+                {{ form.gender|add_class:"form-control" }}
+                {% for error in form.gender.errors %}
+                    <div><strong>{{ error }}</strong></div>
+                {% endfor %}            
+              </div>
+              <div class="col-xs-12 col-md-6">
+                <label for="dob" class="fw-500">Date Of Birth:</label>
+                <input type="date" name="date_of_birth" accept="image/*" id="dob" class="form-control">
+                {% for error in form.date_of_birth.errors %}
+                    <div><strong>{{ error }}</strong></div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+          <div class="my-1">
+            <label for="bio" class="fw-500">Bio:</label>
+            <textarea name="bio" cols="30" rows="10" class="form-control"></textarea>
+            {% for error in form.bio.errors %}
+                <div><strong>{{ error }}</strong></div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="my-1">
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>          
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
