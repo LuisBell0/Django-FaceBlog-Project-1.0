@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (container.classList.contains('expanded')) {
           container.classList.remove('expanded');
           textDescription.innerHTML = truncatedText;
-          this.textContent = 'Show More';
+          seeMoreBtns[index].textContent = 'Show More';
         } else {
           container.classList.add('expanded');
           textDescription.innerHTML = fullText;
-          this.textContent = 'Show Less';
+          seeMoreBtns[index].textContent = 'Show Less';
         }
       });
     }

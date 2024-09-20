@@ -9,29 +9,36 @@
             </div>
             <div class="d-flex flex-column my-3">
                 {% for profile in profiles_found %}
-                <div class="d-flex p-2">
-                    <a class="text-dark" 
-                        href="{% url 'user-profile' profile %}">
-                        <div class="my-1 d-flex align-items-center">
-                            {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}"
-                                class="shadow-sm rounded-circle img-60 mr-3"
-                                alt="{{ user.username }} Profile Picture">
-                            {% else %}
-                            <img src="{% static 'blog/default.jpg' %}"
-                                class="shadow-sm rounded-circle img-60 mr-3"
-                                alt="{{ user.username }}">
-                            {% endif %}
-                            <div class="ms-3 fw-700 font-xssss">
-                                <span class="font-xss">{{ profile }}</span>
-                                <span class="d-block font-xssss text-grey-500">
-                                    {{ profile.user.first_name }} {{ profile.user.last_name}}
-                                    | {{ profile.get_followers_count }} Followers
-                                </span>
+                    <div class="d-flex p-2">
+                        <a class="text-dark" 
+                            href="{% url 'user-profile' profile %}">
+                            <div class="my-1 d-flex align-items-center">
+                                {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}"
+                                    class="shadow-sm rounded-circle img-60 mr-3"
+                                    alt="{{ user.username }} Profile Picture">
+                                {% else %}
+                                <img src="{% static 'blog/default.jpg' %}"
+                                    class="shadow-sm rounded-circle img-60 mr-3"
+                                    alt="{{ user.username }}">
+                                {% endif %}
+                                <div class="ms-3 fw-700 font-xssss">
+                                    <span class="font-xss">{{ profile }}</span>
+                                    <span class="d-block font-xssss text-grey-500">
+                                        {% if profile.user.first_name or profile.user.last_name%}
+                                            {{ profile.user.first_name }} {{ profile.user.last_name}} | 
+                                        {% endif %}
+                                        {{ profile.get_followers_count }}
+                                        {% if profile.get_followers_count == 1 %}
+                                            Follower
+                                        {% else %}
+                                            Followers
+                                        {% endif %}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
