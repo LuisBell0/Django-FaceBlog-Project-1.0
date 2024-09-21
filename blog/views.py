@@ -141,7 +141,9 @@ class ProfileCreateView(CreateView):
 def comment_delete_function(request, post_id, comment_id):
   post = get_object_or_404(Post, id=post_id)
   comment = get_object_or_404(Comment, post=post, id=comment_id)
+  replies = Comment.objects.filter(post=post, parent_comment=comment).count()
   if request.method == 'POST':
+    post.comments_count -= replies
     comment.delete()
     post.comments_count = post.comments_count - 1
     post.save()
@@ -203,14 +205,6 @@ def add_comment_reply(request, post_id, comment_id):
       post.save()
       reply.save()
     return redirect('comments', post_id)
-  else:
-    reply_form = AddCommentForm()
-    context = {
-        'post': post,
-        'comment': comment,
-        'reply_form': reply_form,
-    }
-  return render(request, 'blog/add_reply_form.html', context)
 
 
 @profile_required

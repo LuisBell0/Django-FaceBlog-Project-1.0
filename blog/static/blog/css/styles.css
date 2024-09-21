@@ -21,15 +21,6 @@ a {
   height: 60px;
 }
 
-.border-bottom-dark {
-  border-bottom: 1px solid #343a40;
-}
-
-.border-bottom-dark:hover,
-.border-bottom-dark:focus {
-  border-bottom: 1px solid #343a40;
-}
-
 .bottom-5 {
   bottom: 5px;
 }

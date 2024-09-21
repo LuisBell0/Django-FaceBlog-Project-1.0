@@ -50,21 +50,28 @@ const postsContainer = document.getElementById('postsContainer');
 const showTextsButton = document.getElementById('showTexts');
 const textsContainer = document.getElementById('textsContainer');
 
-function ShowOrHideContainers(button, secondButton, showContainer, hideContainer) {
-  button.addEventListener('click', () => {
-    button.classList.add('border-bottom-1', 'border-dark')
-    secondButton.classList.remove('border-bottom-1', 'border-dark')
+function ShowOrHideContainers(button, showContainer, hideContainer) {
+  button.addEventListener('click', () =>  {
     showContainer.style.setProperty('display', 'block', 'important');
     hideContainer.style.setProperty('display', 'none', 'important');
   });
 }
 
-if (showPostsButton) {
-  ShowOrHideContainers(showPostsButton, showTextsButton, postsContainer, textsContainer);
-  ShowOrHideContainers(showTextsButton, showPostsButton, textsContainer, postsContainer);
+function AlternateBodersForTwoButtons(button, secondButton) {
+  button.addEventListener('click', () => {
+    button.classList.add('border-bottom-1', 'border-dark')
+    secondButton.classList.remove('border-bottom-1', 'border-dark')
+  });
 }
 
-// POST UPDATE
+if (showPostsButton) {
+  ShowOrHideContainers(showPostsButton, postsContainer, textsContainer);
+  ShowOrHideContainers(showTextsButton, textsContainer, postsContainer);
+  AlternateBodersForTwoButtons(showPostsButton, showTextsButton);
+  AlternateBodersForTwoButtons(showTextsButton, showPostsButton);
+}
+
+// SHOW POST UPDATE
 const postUpdateButton = document.getElementById('postUpdateButton');
 const descriptionContainer = document.getElementById('descriptionContainer');
 const formTemplate = document.getElementById('postUpdateForm');
