@@ -12,9 +12,13 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import get_user_model, login
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.shortcuts import HttpResponseRedirect
 
 
 def sign_up_function(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("home"))
+        
     form = SignUpForm()
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -64,10 +68,10 @@ def activate(request, uidb64, token):
               backend='django.contrib.auth.backends.ModelBackend')
         messages.success(
             request, "Your account has been activated!. You can now login.")
-        return redirect(reverse("login"))
+        return redirect(reverse("new_login"))
     else:
         messages.error(request, "Activation link is invalid!")
-        return redirect(reverse("login"))
+        return redirect(reverse("new_login"))
 
 
 class ResetPasswordView(PasswordResetView, SuccessMessageMixin):

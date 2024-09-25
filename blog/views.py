@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from .models import Post, Profile, LikePost, Comment, LikeComment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -11,11 +11,17 @@ from datetime import datetime
 import pytz
 from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm, EditPostForm
 from .decorators import profile_required
+from django.http import HttpResponseForbidden
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 
 
 def login_view(request):
+  if request.user.is_authenticated:
+    return HttpResponseRedirect(reverse("home"))
+
+  print(request.user.is_authenticated)
   if request.method == 'POST':
     form = LoginForm(data=request.POST)
     if form.is_valid():
@@ -38,11 +44,6 @@ def login_view(request):
   else:
     form = LoginForm()
   return render(request, 'registration/login.html', {'login_form': form})
-
-
-def logout_view(request):
-  logout(request)
-  return HttpResponseRedirect(reverse("new_login"))
 
 
 def handle_search(request):
@@ -135,6 +136,12 @@ class ProfileCreateView(CreateView):
     self.object.follows.add(self.object)
     return response
 
+
+@method_decorator([login_required, profile_required], name='dispatch')
+class UserDeleteView(DeleteView):
+  model = User
+  success_url = reverse_lazy('login')
+    
 
 @profile_required
 @login_required

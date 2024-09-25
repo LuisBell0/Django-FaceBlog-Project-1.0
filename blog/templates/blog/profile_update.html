@@ -3,17 +3,20 @@
 {% load form_tags %}
 {% block title %}Faceblog | Edit Profile {% endblock %}
 {% block content %}
+<!-- DELETE MODAL -->
+{% include 'blog/modal_delete.html' %}
+<!-- END MODAL -->
 <div class="container">
-  <div class="card w-100 rounded-xxl shadow my-2 p-3 border-0">
+  <div class="card w-100 rounded-xxl shadow my-4 p-3 border-0">
     <div class="card-body p-1">
       <h2>Edit Profile</h2>
     </div>
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="d-flex flex-column">
-        <div class="from-group m-1 d-flex justify-content-center dropdown">
+        <div class="from-group mb-3 d-flex justify-content-center dropdown">
           <a href="#" data-bs-toggle="dropdown">
-            <figure class="avatar m-1">
+            <figure class="avatar m-1 position-relative">
               {% if user.profile.profile_picture %}
                 <img src="{{ user.profile.profile_picture.url }}"
                   id="profile_picture"
@@ -27,6 +30,7 @@
                   alt="{{ user.username }}"
                   width="110" height="110">
               {% endif %}
+              <i class="bi bi-arrow-down font-sm position-absolute bottom-0"></i>
             </figure>
           </a>
           <div class="dropdown-menu p-0">
@@ -110,14 +114,37 @@
         </div>
       </div>
       
-      <div class="form-group my-3 d-flex align-items-center justify-content-between">
-        <div>
+      <div class="form-group my-3 d-flex flex-column flex-sm-row align-items-center justify-content-between">
+        <div class="my-1">
           <button class="btn btn-success" type="submit">Save</button>
           <a class="btn btn-outline-danger" href="{% url 'user-profile' request.user %}">Cancel</a>       
         </div>
-         <a href="" class="btn p-1 text-danger">Delete Account</a>
+        <div class="my-1">
+          <a href="{% url 'password_reset' %}" class="btn p-1 text-primary border-0"">Reset Password</a>
+          <a data-bs-toggle="modal"
+            data-bs-target="#deleteModal"
+            class="btn p-1 text-danger border-0"
+            data-user-id="{{ request.user.id }}">Delete Account</a>
+        </div>
       </div>
     </form>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Function to update the delete link in the modal
+    let deleteModal = document.getElementById('deleteModal');
+
+    deleteModal.addEventListener('show.bs.modal', (event) => {
+      const deleteText = document.getElementById('deleteText');
+      let triggerElement = event.relatedTarget;
+      let userId = triggerElement.getAttribute('data-user-id');
+      deleteText.textContent = 'Are you sure that you want to delete your account?(Everything related to your profile will be deleted).';
+
+      // Update the modal's delete link with the comment ID
+      let deleteForm = deleteModal.querySelector('#delete-form');
+      deleteForm.action = "{% url 'user-delete' 0 %}".replace('/0/', '/' + userId + '/');
+    });
+  });
+</script>
 {% endblock %}
