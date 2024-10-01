@@ -80,9 +80,10 @@
               <div class="d-md-none mt-2">
                 <form action="{% url 'follow-unfollow' profile.id %}" method="POST">
                   {% csrf_token %}
-                  <button class="btn py-1 px-5 bg-greylight rounded" type="submit">
+                  <button class="btn d-flex align-items-center py-1 px-5 bg-greylight rounded" type="submit">
                     {% if is_follower %}
-                      Unfollow
+                      Following
+                      <i class="bi bi-check-lg font-sm"></i>
                     {% else %}
                       Follow
                     {% endif %}
@@ -99,9 +100,10 @@
               {% else %}
               <form action="{% url 'follow-unfollow' profile.id %}" method="POST">
                 {% csrf_token %}
-                <button class="btn py-1 px-2 bg-greylight rounded" type="submit">
+                <button class="btn d-flex align-items-center py-1 px-2 bg-greylight rounded" type="submit">
                   {% if is_follower %}
-                    Unfollow
+                    Following
+                    <i class="bi bi-check-lg font-sm"></i>
                   {% else %}
                     Follow
                   {% endif %}
@@ -199,11 +201,6 @@
                         <i class="bi bi-three-dots text-dark font-sm"></i>
                       </a>
                       <ul class="dropdown-menu p-0">
-                        <a class="btn w-100 text-start text-success"
-                          href="{% url 'post-update' post.id %}">
-                          Edit Post
-                        </a>
-                        <hr class="m-0">
                         <a class="btn w-100 text-start text-danger deletePost"
                           data-bs-toggle="modal" 
                           data-bs-target="#deleteModal"

@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'blog/css/styles.css' %}">
   </head>
   <body>
-    
     {% if messages %}
       {% for message in messages %}
           {% if message.tags == 'error' and "You cannot search for '/'." in message.message or message.tags == 'error' and "You cannot search for nothing." in message.message %}
@@ -105,18 +104,12 @@
                     <span class="ms-1 text-wrap">{{ request.user.username }}</span>
                   </a>
                 </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle d-flex align-items-center" 
-                    href="#" role="button" data-bs-toggle="dropdown" 
-                    aria-expanded="false">
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center" 
+                    href="#" role="button">
                     <i class="bi bi-bell text-success font-sm"></i>
                     <span class="ms-1">Notifications</span>
                   </a>
-                  <ul class="dropdown-menu">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ul>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link d-flex align-items-center" href="{% url 'post-create' %}">
@@ -124,17 +117,29 @@
                     <span class="ms-1 text-nowrap">New Post</span>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <form class="nav-form" action="{% url 'logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button 
-                      class="nav-link border-0 bg-transparent d-flex align-items-center" 
-                      type="submit">
-                      <i class="bi bi-box-arrow-right text-danger font-sm"></i>
-                      <span class="ms-1 text-nowrap">Log Out</span>
-                    </button>
-                  </form>
-                </li>
+
+              <li class="d-lg-none nav-item">
+                <button class="nav-link border-0 bg-transparent d-flex align-items-center" 
+                  type="submit" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#reportProblemModal">
+                  <i class="bi bi-exclamation-square text-danger font-sm"></i>
+                  <span class="ms-1 text-nowrap">Report a Problem</span>
+                </button>
+              </li>
+              
+              <li class="nav-item">
+                <form class="nav-form" action="{% url 'logout' %}" method="POST">
+                  {% csrf_token %}
+                  <button 
+                    class="nav-link border-0 bg-transparent d-flex align-items-center" 
+                    type="submit">
+                    <i class="bi bi-box-arrow-right text-danger font-sm"></i>
+                    <span class="ms-1 text-nowrap">Log Out</span>
+                  </button>
+                </form>
+              </li>
+              
               {% else %}
                 <li class="nav-item d-flex align-items-center">
                   <form class="nav-form" action="{% url 'new_login' %}" method="POST">

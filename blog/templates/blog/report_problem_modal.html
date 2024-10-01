@@ -1,0 +1,32 @@
+<div class="modal fade"
+  id="reportProblemModal" 
+  tabindex="-1" 
+  aria-labelledby="reportProblemModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportProblemModalLabel">Report a problem</h5>
+        <button type="button" 
+          class="btn-close" 
+          data-bs-dismiss="modal" 
+          aria-label="Close">
+        </button>
+      </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="d-flex flex-column">
+            <span class="font-sm ">Tell us about your problem:</span>
+            <textarea name="text" id="text" cols="30" rows="6"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-start">
+          <button type="button"
+            class="btn btn-success">
+            Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

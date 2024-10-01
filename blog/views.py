@@ -64,16 +64,21 @@ def handle_search(request):
 def home(request):
   current_user = request.user
   if current_user.is_authenticated:
-    current_user_profile = Profile.objects.filter(user=current_user)
+    current_user_profile = Profile.objects.get(user=current_user)
     followed_users = current_user.profile.follows.all()
-    all_users = followed_users | current_user_profile
+    all_users = followed_users | Profile.objects.filter(user=current_user)
     posts = Post.objects.filter(
         owner__profile__in=all_users).order_by('-posted_date')
     liked_post = LikePost.objects.filter(user=request.user,
                                          post__in=posts).values_list('post_id',
                                                                      flat=True)
+    random_profiles = Profile.objects.exclude(
+        pk__in=current_user_profile.follows.values_list('pk', flat=True)
+    ).order_by('?')[:4]
 
-    context = {'posts': posts, 'liked': liked_post}
+    context = {'posts': posts,
+               'liked': liked_post,
+               'random_profiles': random_profiles}
     return render(request, 'blog/home.html', context)
   else:
     return login_view(request)
