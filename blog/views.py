@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
+from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Post, Profile, LikePost, Comment, LikeComment
+from .models import Post, Profile, LikePost, Comment, LikeComment, ReportProblem
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -9,10 +10,10 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import datetime
 import pytz
-from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm, EditPostForm
+from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm, EditPostForm, ReportProblemForm
 from .decorators import profile_required
-from django.http import HttpResponseForbidden
-from django.views.decorators.http import require_POST
+from django.core.mail import EmailMessage
+from django.utils import timezone
 
 # Create your views here.
 
@@ -75,10 +76,12 @@ def home(request):
     random_profiles = Profile.objects.exclude(
         pk__in=current_user_profile.follows.values_list('pk', flat=True)
     ).order_by('?')[:4]
+    report_problem_form = ReportProblemForm()
 
     context = {'posts': posts,
                'liked': liked_post,
-               'random_profiles': random_profiles}
+               'random_profiles': random_profiles,
+               'report_problem_form': ReportProblemForm,}
     return render(request, 'blog/home.html', context)
   else:
     return login_view(request)
@@ -358,3 +361,28 @@ def user_profile_view(request, user_username):
     'is_follower': is_follower,
   }
   return render(request, 'blog/user_profile.html', context)
+
+
+def report_problem(request, user_username):
+  if request.method == 'POST':
+    report_problem_form = ReportProblemForm(request.POST)
+
+    if report_problem_form.is_valid():
+      time_limit = timezone.now() - timezone.timedelta(days=1)
+      report_count = ReportProblem.objects.filter(user=request.user, submitted_at__gte=time_limit).count()
+
+      if report_count >= 3:
+        messages.error(request, "You can only submit 3 reports in a 24-hour period.")
+        return redirect('home')
+
+      problem_description = report_problem_form.cleaned_data['problem_description']
+      report = ReportProblem(user=request.user, description=problem_description)
+      report.save()
+
+      subject = f'FaceBlog problem report from {user_username}'
+      message = f'Problem description:\n{problem_description}\n\n'
+      email = EmailMessage(subject, message, to=['eadluisbello2023@gmail.com'])
+      email.send()
+
+      messages.success(request, 'Your report has been submitted. Thank you for help us improve FaceBlog!')
+      return HttpResponseRedirect(reverse('home'))

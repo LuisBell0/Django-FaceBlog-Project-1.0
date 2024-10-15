@@ -94,3 +94,13 @@ if (postUpdateButton) {
     });
   });
 }
+
+// Timeout for Report Message
+document.addEventListener("DOMContentLoaded", function() {
+    const reportMessageContainer = document.getElementById('reportMessageContainer')
+    if (reportMessageContainer) {
+        setTimeout(function() {
+          reportMessageContainer.style.display = 'none';
+        }, 5000);
+    }
+});

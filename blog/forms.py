@@ -65,3 +65,9 @@ class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['description']
+
+
+class ReportProblemForm(forms.Form):
+    problem_description = forms.CharField(widget=forms.Textarea(
+        attrs={'rows': 4,
+              'style': 'max-height: 500px;'}))

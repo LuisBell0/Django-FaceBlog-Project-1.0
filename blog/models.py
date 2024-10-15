@@ -128,3 +128,12 @@ class LikeComment(models.Model):
 
   def __str__(self):
     return f'{self.user} | {self.comment}'
+
+
+class ReportProblem(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  description = models.TextField()
+  submitted_at = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+      return f'Report by {self.user} on {self.submitted_at}'

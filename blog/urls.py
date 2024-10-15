@@ -38,4 +38,5 @@ urlpatterns = [
     path('delete_account/user/<int:pk>/',
          UserDeleteView.as_view(),
          name='user-delete'),
+    path('report_problem/<str:user_username>/', report_problem, name="report-problem")
 ]

@@ -129,7 +129,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'home'
 
@@ -146,7 +146,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # Email address used for sending emails
-EMAIL_HOST_USER = 'eadluisbello2023@gmail.com'  # Replace with your email address
+EMAIL_HOST_USER = 'eadluisbello2023@gmail.com'
 
 EMAIL_HOST_PASSWORD = 'pjjolaajescikagu'
 

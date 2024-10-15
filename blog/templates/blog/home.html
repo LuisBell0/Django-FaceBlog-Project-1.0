@@ -7,6 +7,13 @@
 <div class="container">
   <div class="d-flex flex-row p-1">
     <div class="col-12 col-lg-8 mx-lg-2">
+      {% if messages %}
+          {% for message in messages %}
+              <div id="reportMessageContainer" class="w-100 shadow-xss rounded-xxl border-0 alert alert-warning p-3 my-1">
+                <span class="font-md text-wrap">{{ message }}</span>
+              </div>
+          {% endfor %}
+      {% endif %}
       <div class="card w-100 shadow-xss rounded-xxl border-0 px-4 pt-4 pb-3 my-3">
         <form action="{% url 'post-create'%}" method='POST' class="form-container">
           <div class="card-body p-0 d-flex flex-row justify-content-between">
@@ -17,7 +24,7 @@
               Quick Text
             </span>
             <button type="submit"
-              class="btn p-1">
+              class="btn border-0 p-1">
               <i class="bi bi-send-fill btn-round-sm font-md text-success"></i>
             </button>
           </div>
@@ -37,10 +44,10 @@
             </figure>
             <textarea name="description"
               class="h100 bor-0 w-100 rounded-xxl p-2 ps-5 font-xssss fw-500 border-light-md theme-dark-bg" 
-                cols="30" rows="10" placeholder="Anything New? Tell Everybody"></textarea>
-            </div>
-          </form>
-        </div>
+                cols="30" rows="10" placeholder="Anything New? Tell Everybody" style="max-height: 300px; min-height:50px;"></textarea>
+          </div>
+        </form>
+      </div>
     
         {% if posts %}
           {% for post in posts %}

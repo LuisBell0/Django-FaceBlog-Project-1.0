@@ -1,3 +1,4 @@
+{% load form_tags %}
 <div class="modal fade"
   id="reportProblemModal" 
   tabindex="-1" 
@@ -13,18 +14,19 @@
           aria-label="Close">
         </button>
       </div>
-      <form action="" method="POST">
+      <form action="{% url 'report-problem' request.user %}" method="POST">
         {% csrf_token %}
         <div class="modal-body">
           <div class="d-flex flex-column">
             <span class="font-sm ">Tell us about your problem:</span>
-            <textarea name="text" id="text" cols="30" rows="6"></textarea>
+            {{ report_problem_form.problem_description|add_class:"form-control" }}
           </div>
         </div>
         <div class="modal-footer justify-content-start">
-          <button type="button"
+          <button type="submit"
             class="btn btn-success">
-            Send</button>
+            Send
+          </button>
         </div>
       </form>
     </div>
