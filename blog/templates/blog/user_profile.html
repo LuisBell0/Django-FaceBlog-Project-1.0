@@ -142,7 +142,7 @@
                 <div class="ratio ratio-1x1">
                   <a href="{% url 'comments' post.id %}">
                     {% if post.img %}
-                      <img class="img-fluid w-100 h-100" src="{{ post.img.url }}" alt="{{ post.title }}" style="object-fit: cover;">
+                      <img class="img-fluid w-100 h-100" src="{{ post.img.url }}" alt="{{ post.title }}">
                     {% else %}
                       <div class="d-flex justify-content-center align-items-center h-100">
                         <span>No Image Available</span>

@@ -8,6 +8,13 @@
       <h2>Create New Post</h2>
     </div>
     <div class="card-body p-0 mb-3 rounded-3">
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
       <form class="form-container" 
         method="POST" 
         action="{% url 'post-create' %}" 
@@ -45,6 +52,13 @@
             name="description" 
             placeholder="Description" style='max-height:250px;'></textarea>
         </div>
+        {% if form.description.errors %}
+          {% for error in form.description.errors %}
+            <div class="">
+              <span>{{ error }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
         <div class="card-body p-0 me-lg-5">
           <input type="hidden" name="timezone" id="user-timezone" value="">
           <button class="btn btn-success" type="submit">Create Post</button>

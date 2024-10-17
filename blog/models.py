@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from PIL import Image
 import os
 
@@ -14,7 +15,7 @@ class Post(models.Model):
                             on_delete=models.CASCADE,
                             related_name="posts",
                             default=1)
-  description = models.TextField()
+  description = models.TextField(blank=True)
   likes_count = models.PositiveIntegerField(default=0)
   comments_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateTimeField(auto_now_add=True)
@@ -22,6 +23,11 @@ class Post(models.Model):
 
   def __str__(self):
     return f'{self.description}'
+
+  def clean(self):
+    # Custom validation to ensure either description or img is provided
+    if not self.description and not self.img:
+        raise ValidationError('You must provide either a description or an image.')
 
   def delete(self, *args, **kwargs):
     # Delete the associated image file from the filesystem

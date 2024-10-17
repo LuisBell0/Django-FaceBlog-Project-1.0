@@ -84,7 +84,8 @@
                     style="max-height:550px;">
                 </div>
               {% endif %}
-              
+
+              {% if post.description %}
               <div class="card-body p-0 me-lg-5 d-flex flex-column">
                 <div class="see-more-container">
                   <!-- DO NOT MODIFY OR INDENT THIS PART OF THE CODE -->
@@ -95,6 +96,7 @@
                   Show More
                 </span>
               </div>
+              {% endif %}
               
               <div class="card-body d-flex p-0">
                 <a href="{% url 'post-like' post.pk%}" class="d-flex align-items-center fw-600 

@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect, reverse, redirect
-from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Post, Profile, LikePost, Comment, LikeComment, ReportProblem
@@ -22,7 +21,6 @@ def login_view(request):
   if request.user.is_authenticated:
     return HttpResponseRedirect(reverse("home"))
 
-  print(request.user.is_authenticated)
   if request.method == 'POST':
     form = LoginForm(data=request.POST)
     if form.is_valid():

@@ -65,10 +65,12 @@
           style="max-height:700px;">
       </div>
     {% endif %}
-    
+
+    {% if post.description %}
     <div id="descriptionContainer" class="card-body p-0 me-lg-5">
       <span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span>
     </div>
+    {% endif %}
     
     <div class="card-body d-flex p-0 align-items-center">
       <a href="{% url 'post-like' post.pk%}" class="fw-600 
