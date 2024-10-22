@@ -21,6 +21,10 @@ a {
   height: 60px;
 }
 
+.img-cover {
+  object-fit: cover;
+}
+
 .bottom-5 {
   bottom: 5px;
 }
@@ -189,4 +193,8 @@ a {
   }
 }
 
-
+@media (min-width: 992px) {
+  .comments-container {
+    min-height: 600px;
+  }
+}

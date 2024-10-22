@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from PIL import Image
+from PIL import Image, ImageOps
 import os
 
 # Create your models here.
@@ -43,24 +43,19 @@ class Post(models.Model):
         os.remove(self.img.path)
 
   def save(self, *args, **kwargs):
-    # Check if the post object is being updated
-    if self.pk is not None:
-      # Retrieve the existing post object from the database
-      existing_post = Post.objects.get(pk=self.pk)
-      # Check if the image has been changed
-      if existing_post.img != self.img:
-        # Delete the old image file if it exists
-        existing_post.delete_image_file()
     super().save(*args, **kwargs)
+
     if self.img:
       img = Image.open(self.img.path)
-  
-      # Specify the format and compression quality
-      img_format = img.format  # Preserve original format (JPEG, PNG, etc.)
-      if img_format == 'JPEG':
-        img.save(self.img.path, format='JPEG', quality=70)  # Compress JPEG
-      elif img_format == 'PNG':
-        img.save(self.img.path, format='PNG', optimize=True)  # Compress PNG
+
+      # Correct orientation based on EXIF data
+      img = ImageOps.exif_transpose(img)
+
+      # Save the image with appropriate compression
+      if img.format == 'JPEG':
+          img.save(self.img.path, format='JPEG', quality=70)  # Compress JPEG
+      elif img.format == 'PNG':
+          img.save(self.img.path, format='PNG', optimize=True)  # Compress PNG
 
 
 class LikePost(models.Model):

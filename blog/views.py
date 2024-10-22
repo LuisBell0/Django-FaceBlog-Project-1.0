@@ -326,6 +326,8 @@ def user_profile_view(request, user_username):
   try:
     search_user = User.objects.get(username=user_username)
     profile = Profile.objects.get(user=search_user)
+  except User.DoesNotExist:
+    return redirect("login")
   except Profile.DoesNotExist:
     return redirect("profile-create")
   followers = profile.followed_by.exclude(pk=profile.pk)

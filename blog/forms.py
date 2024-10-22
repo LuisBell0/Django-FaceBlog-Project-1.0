@@ -65,6 +65,15 @@ class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['description']
+        widgets = {
+            'description': forms.Textarea(
+                attrs={
+                    'style': 'resize:none; max-height:200px;',
+                    'rows': 3,
+                }
+            ),
+        }
+        
 
 
 class ReportProblemForm(forms.Form):
