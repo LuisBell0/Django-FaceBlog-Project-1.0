@@ -178,6 +178,11 @@ a {
   overflow: visible;
 }
 
+.bg-hover-grey:hover {
+    background-color: #ececec;
+    transition: background-color 0.2s ease;
+}
+
 /* MEDIA QUERY */
 
 @media (min-width: 768px) {

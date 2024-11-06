@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from .models import LikePost, LikeComment, Post, Profile, Comment, ReportProblem
+from .models import LikePost, LikeComment, Post, Profile, Comment, ReportProblem, Notification
 # Register your models here.
 
 class CommentAdmin(admin.ModelAdmin):
@@ -18,4 +18,4 @@ admin.site.register(LikePost)
 admin.site.register(LikeComment)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(ReportProblem)
-
+admin.site.register(Notification)

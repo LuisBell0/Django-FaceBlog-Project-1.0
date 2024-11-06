@@ -138,3 +138,39 @@ class ReportProblem(models.Model):
 
   def __str__(self):
       return f'Report by {self.user} on {self.submitted_at}'
+
+class Notification(models.Model):
+  NOTIFICATION_TYPES = (
+    ('like_comment', 'like_comment'),
+    ('like_post', 'like_post'),
+    ('comment_post', 'comment_post'),
+    ('comment_reply', 'comment_reply'),
+    ('follow', 'follow'),
+  )
+  message = models.CharField(max_length=255)
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver', blank=True, null=True)
+  sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender', blank=True, null=True)
+  created_at = models.DateTimeField(auto_now_add=True)
+  is_read = models.BooleanField(default=False)
+  type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, blank=True, null=True)
+
+  def __str__(self):
+    return f'{self.sender} | {self.type} | {self.created_at}'
+
+  @staticmethod
+  def send_notification(sender, receiver, notification_type):
+    if sender != receiver:
+      notification = Notification.objects.create(sender=sender, receiver=receiver, type=notification_type)
+
+      if notification.type == 'like_comment':
+        notification.message = "liked your comment"
+      elif notification.type == 'like_post':
+        notification.message = "liked your post"
+      elif notification.type == 'comment_post':
+        notification.message = "commented on your post"
+      elif notification.type == 'comment_reply':
+        notification.message = "replied to your comment"
+      elif notification.type == 'follow':
+        notification.message = "started following you"
+
+      notification.save()

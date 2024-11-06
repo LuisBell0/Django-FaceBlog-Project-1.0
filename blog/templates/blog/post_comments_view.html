@@ -1,5 +1,6 @@
 {% extends 'blog/_base.html' %}
 {% load static %}
+{% load form_tags %}
 {% block content %}
 <!-- POST UPDATE -->
 {% include 'blog/post_update_form.html' %}
@@ -31,7 +32,7 @@
               {{post.owner}}
             </a>
             <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500 text-nowrap">
-              {{ post.posted_date|timesince }} ago
+              {{ post.posted_date|time_filter }}
             </span>
           </h4>
           {% if request.user == post.owner %}
@@ -136,7 +137,7 @@
                         {{comment.user.username}}
                       </a>
                       <span class="font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                        - {{ comment.posted_date|timesince }} ago
+                        - {{ comment.posted_date|time_filter }}
                       </span>
                     </span>
                     
@@ -208,7 +209,7 @@
                               {{reply.user.username}}
                             </a>
                             <span class="font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                              - {{ reply.posted_date|timesince }} ago
+                              - {{ reply.posted_date|time_filter }}
                             </span>
                           </h4>
                           <div class="see-more-container">

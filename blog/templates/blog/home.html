@@ -1,5 +1,6 @@
 {% extends 'blog/_base.html' %}
 {% load static %}
+{% load form_tags %}
 {% block content %}
 <!-- REPORT PROBLEM MODAL -->
 {% include 'blog/report_problem_modal.html' %}
@@ -134,7 +135,7 @@
                     {{post.owner}}
                   </a>
                   <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                    {{ post.posted_date|timesince }} ago
+                    {{ post.posted_date|time_filter }}
                   </span>
                 </h4>
               </div>
@@ -201,12 +202,46 @@
         <div class="border-1 border-bottom pb-1 text-center">
           <span class="fw-700">Notifications</span>
         </div>
-        <div class="d-flex flex-column mt-3 mb-2 mx-3">
-          <span class="font-sm p-2 text-center">No new notifications</span>
-        </div>
+        {% if notifications %}
+          {% for notification in notifications %}
+            <div class="p-2">
+              <div class="d-flex flex-column">
+                <a href="#" class="text-dark bg-hover-grey rounded">
+                    <div class="d-flex align-items-center p-1 my-1">
+                      <figure class="m-0 me-2">
+                        {% if notification.sender.profile.profile_picture %}
+                          <img src="{{ notification.sender.profile.profile_picture.url }}"
+                            class="shadow-sm rounded-circle img-45"
+                            alt="{{ notification.sender }} Profile Picture" 
+                            width="26" height="26">
+                        {% else %}
+                          <img src="{% static 'blog/default.jpg' %}"
+                            class="shadow-sm rounded-circle img-45"
+                            alt="{{ notification.sender }}" 
+                            width="26px" height="26px">
+                        {% endif %}
+                      </figure>
+                      <div class="font-xsss text-wrap">
+                        <span class="text-dark fw-600">{{ notification.sender }} </span>
+                        <span class="">{{ notification.message }}.</span>
+                        <span class="text-grey-500">{{ notification.created_at|time_filter }}</span>
+                      </div>
+                    </div>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex flex-column mt-3 mb-2 mx-3">
+            <span class="font-sm p-2 text-center">No new notifications</span>
+          </div>
+        {% endif %}
       </div>
       
     </div>
   </div>
 </div>
+<script type="module">
+    
+</script>
 {% endblock %}
