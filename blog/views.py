@@ -75,7 +75,7 @@ def home(request):
         pk__in=current_user_profile.follows.values_list('pk', flat=True)
     ).order_by('?')[:4]
     report_problem_form = ReportProblemForm()
-    notifications = Notification.objects.filter(receiver=current_user, is_read=False)
+    notifications = Notification.objects.filter(receiver=current_user, is_read=False).order_by('-created_at')
 
     context = {'posts': posts,
                'liked': liked_post,
@@ -394,3 +394,35 @@ def report_problem(request, user_username):
 
       messages.success(request, 'Your report has been submitted. Thank you for help us improve FaceBlog!')
       return HttpResponseRedirect(reverse('home'))
+
+
+@profile_required
+@login_required()
+def notifications_view(request):
+  notifications = Notification.objects.filter(receiver=request.user).order_by('-created_at')
+  not_read_notifications = Notification.objects.filter(receiver=request.user, is_read=False)
+  context = {
+    'notifications': notifications,
+    'not_read_notifications': not_read_notifications,
+  }
+  return render(request, 'blog/notifications_view.html', context)
+
+
+@profile_required
+@login_required()
+def mark_as_read(request, notification_id):
+  notification = get_object_or_404(Notification, id=notification_id)
+  if not notification.is_read:
+    notification.is_read = True
+    notification.save()
+  return redirect('notifications')
+
+
+@profile_required
+@login_required()
+def mark_all_as_read(request):
+  notifications = Notification.objects.filter(receiver=request.user)
+  for notification in notifications:
+    notification.is_read = True
+    notification.save()
+  return redirect('notifications')

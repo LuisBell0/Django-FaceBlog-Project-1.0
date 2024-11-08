@@ -157,6 +157,10 @@ class Notification(models.Model):
   def __str__(self):
     return f'{self.sender} | {self.type} | {self.created_at}'
 
+  def save(self, *args, **kwargs):
+      super().save(*args, **kwargs)
+      self.cleanup_notifications()
+
   @staticmethod
   def send_notification(sender, receiver, notification_type):
     if sender != receiver:
@@ -174,3 +178,15 @@ class Notification(models.Model):
         notification.message = "started following you"
 
       notification.save()
+
+  @classmethod
+  def cleanup_notifications(cls):
+    max_notifications = 100
+    total_count = cls.objects.count()
+    if total_count > max_notifications:
+      excess_count = total_count - max_notifications
+      # Fetch the IDs of the oldest notifications to be deleted
+      old_notifications = cls.objects.order_by('created_at')[:excess_count].values_list('id', flat=True)
+      # Delete the notifications using the fetched IDs
+      cls.objects.filter(id__in=list(old_notifications)).delete()
+

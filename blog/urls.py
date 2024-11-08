@@ -38,5 +38,8 @@ urlpatterns = [
     path('delete_account/user/<int:pk>/',
          UserDeleteView.as_view(),
          name='user-delete'),
-    path('report_problem/<str:user_username>/', report_problem, name="report-problem")
+    path('report_problem/<str:user_username>/', report_problem, name="report-problem"),
+    path('notifications/list/', notifications_view, name='notifications'),
+    path('notification/<int:notification_id>/', mark_as_read, name='mark-notification-read'),
+    path('notification/mark_read/', mark_all_as_read, name='mark-all-read'),
 ]

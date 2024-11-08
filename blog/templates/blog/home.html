@@ -199,15 +199,15 @@
     <div class="d-none d-lg-block col-3 ms-2">
       
       <div class="card w-100 shadow-xss rounded-xxl border-0 py-3 my-3">
-        <div class="border-1 border-bottom pb-1 text-center">
+        <div class="border-1 border-bottom mb-1 pb-1 text-center">
           <span class="fw-700">Notifications</span>
         </div>
         {% if notifications %}
           {% for notification in notifications %}
-            <div class="p-2">
+            <div class="mx-1">
               <div class="d-flex flex-column">
-                <a href="#" class="text-dark bg-hover-grey rounded">
-                    <div class="d-flex align-items-center p-1 my-1">
+                <a href="{% url 'mark-notification-read' notification.id %}" class="text-dark bg-hover-grey rounded">
+                    <div class="d-flex align-items-center p-2">
                       <figure class="m-0 me-2">
                         {% if notification.sender.profile.profile_picture %}
                           <img src="{{ notification.sender.profile.profile_picture.url }}"

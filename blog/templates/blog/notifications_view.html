@@ -1,0 +1,68 @@
+{% extends 'blog/_base.html' %}
+{% load static %}
+{% load form_tags %}
+{% block content %}
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="card shadow-xss rounded-xxl border-0 my-3 p-3">
+                    <div class="d-flex justify-content-between align-items-center p-1 m-1">
+                        <div class="d-flex align-items-center">
+                           <span class="font-lg fw-700">Notifications</span>
+                            <span class="font-xssss fw-600 bg-success text-white rounded-3 ms-2 p-2 mt-0">{{ not_read_notifications.count }}</span>
+                        </div>
+                        <div class="">
+                            <a href="{% url 'mark-all-read' %}" class="text-dark me-2" title="Mark All As Read">
+                                <span class="font-sm">
+                                     <i class="bi bi-check-square"></i>
+                                </span>
+                            </a>
+                            <a tabindex="0" class="font-sm text-dark popover-dismiss" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="bottom" data-bs-content="After 100 notifications, the oldest notification will delete automatically">
+                                <i class="bi bi-exclamation-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="my-2">
+                        {% if notifications %}
+                            {% for notification in notifications %}
+                                <div class="mx-2">
+                                    <div class="d-flex flex-column">
+                                        <a href="{% url 'mark-notification-read' notification.id %}" class="text-dark {% if notification.is_read %} bg-greylight {% else %} bg-hover-grey {% endif %}">
+                                            <div class="d-flex align-items-center p-2">
+                                                <figure class="m-0 me-2">
+                                                    {% if notification.sender.profile.profile_picture %}
+                                                        <img src="{{ notification.sender.profile.profile_picture.url }}"
+                                                             class="shadow-sm rounded-circle img-50"
+                                                             alt="{{ notification.sender }} Profile Picture">
+                                                    {% else %}
+                                                        <img src="{% static 'blog/default.jpg' %}"
+                                                             class="shadow-sm rounded-circle img-50"
+                                                             alt="{{ notification.sender }} Profile Picture">
+                                                    {% endif %}
+                                                </figure>
+                                                <div class="text-wrap">
+                                                    <span class="font-xs fw-600">{{ notification.sender }} </span>
+                                                    <span class="font-xss">{{ notification.message }}</span>
+                                                    <span class="font-xss text-grey-500">{{ notification.created_at|time_filter }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center p-2">
+                                <span class="font-lg"> No New Notifications</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const popover = new bootstrap.Popover('.popover-dismiss', {
+          trigger: 'focus'
+        })
+    </script>
+{% endblock %}
