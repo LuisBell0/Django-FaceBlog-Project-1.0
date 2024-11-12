@@ -28,22 +28,45 @@
                                 <div class="mx-2">
                                     <div class="d-flex flex-column">
                                         <a href="{% url 'mark-notification-read' notification.id %}" class="text-dark {% if notification.is_read %} bg-greylight {% else %} bg-hover-grey {% endif %}">
-                                            <div class="d-flex align-items-center p-2">
-                                                <figure class="m-0 me-2">
-                                                    {% if notification.sender.profile.profile_picture %}
-                                                        <img src="{{ notification.sender.profile.profile_picture.url }}"
-                                                             class="shadow-sm rounded-circle img-50"
-                                                             alt="{{ notification.sender }} Profile Picture">
-                                                    {% else %}
-                                                        <img src="{% static 'blog/default.jpg' %}"
-                                                             class="shadow-sm rounded-circle img-50"
-                                                             alt="{{ notification.sender }} Profile Picture">
-                                                    {% endif %}
-                                                </figure>
-                                                <div class="text-wrap">
-                                                    <span class="font-xs fw-600">{{ notification.sender }} </span>
-                                                    <span class="font-xss">{{ notification.message }}</span>
-                                                    <span class="font-xss text-grey-500">{{ notification.created_at|time_filter }}</span>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center p-2">
+                                                    <figure class="m-0 me-2">
+                                                        {% if notification.sender.profile.profile_picture %}
+                                                            <img src="{{ notification.sender.profile.profile_picture.url }}"
+                                                                 class="shadow-sm rounded-circle img-50"
+                                                                 alt="{{ notification.sender }} Profile Picture">
+                                                        {% else %}
+                                                            <img src="{% static 'blog/default.jpg' %}"
+                                                                 class="shadow-sm rounded-circle img-50"
+                                                                 alt="{{ notification.sender }} Profile Picture">
+                                                        {% endif %}
+                                                    </figure>
+                                                    <div class="text-wrap">
+                                                        <span class="font-xs fw-600">{{ notification.sender }} </span>
+                                                        <span class="font-xss">{{ notification.message }}</span>
+                                                        <span class="font-xss text-grey-500">{{ notification.created_at|time_filter }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    <figure class="m-0 me-2">
+                                                        {% if notification.type == 'like_post' or notification.type == 'comment_post' %}
+                                                            {% if notification.content_object.img %}
+                                                                <img src="{{ notification.content_object.img.url }}"
+                                                                     class="shadow-sm rounded img-50"
+                                                                     alt="{{ notification.sender }} Profile Picture">
+                                                            {% elif notification.content_object.post.img %}
+                                                               <img src="{{ notification.content_object.post.img.url }}"
+                                                                     class="shadow-sm rounded img-50"
+                                                                     alt="{{ notification.sender }} Profile Picture">
+                                                            {% endif %}
+                                                        {% elif notification.type == 'follow' %}
+                                                            {% if notification.content_object.profile_picture %}
+                                                                <img src="{{ notification.content_object.profile_picture.url }}"
+                                                                     class="shadow-sm rounded img-50"
+                                                                     alt="{{ notification.sender }} Profile Picture">
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </figure>
                                                 </div>
                                             </div>
                                         </a>
@@ -60,7 +83,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script type="module">
         const popover = new bootstrap.Popover('.popover-dismiss', {
           trigger: 'focus'
         })

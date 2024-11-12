@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from PIL import Image, ImageOps
 import os
@@ -153,6 +155,9 @@ class Notification(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   is_read = models.BooleanField(default=False)
   type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, blank=True, null=True)
+  content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+  object_id = models.PositiveIntegerField(null=True, blank=True)
+  content_object = GenericForeignKey('content_type', 'object_id')
 
   def __str__(self):
     return f'{self.sender} | {self.type} | {self.created_at}'
@@ -162,9 +167,9 @@ class Notification(models.Model):
       self.cleanup_notifications()
 
   @staticmethod
-  def send_notification(sender, receiver, notification_type):
+  def send_notification(sender, receiver, content_type, object_id, notification_type):
     if sender != receiver:
-      notification = Notification.objects.create(sender=sender, receiver=receiver, type=notification_type)
+      notification = Notification.objects.create(sender=sender, receiver=receiver, content_type=content_type, object_id=object_id, type=notification_type)
 
       if notification.type == 'like_comment':
         notification.message = "liked your comment"
@@ -185,8 +190,6 @@ class Notification(models.Model):
     total_count = cls.objects.count()
     if total_count > max_notifications:
       excess_count = total_count - max_notifications
-      # Fetch the IDs of the oldest notifications to be deleted
       old_notifications = cls.objects.order_by('created_at')[:excess_count].values_list('id', flat=True)
-      # Delete the notifications using the fetched IDs
       cls.objects.filter(id__in=list(old_notifications)).delete()
 

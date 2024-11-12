@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Post, Profile, LikePost, Comment, LikeComment, ReportProblem, Notification
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, UpdateView
@@ -190,7 +191,8 @@ def post_comments_list(request, post_id):
       post.comments_count = post.comments_count + 1
       post.save()
       comment.save()
-      Notification.send_notification(sender=request.user, receiver=post.owner, notification_type='comment_post')
+      content_type = ContentType.objects.get_for_model(Comment)
+      Notification.send_notification(sender=request.user, receiver=post.owner, content_type=content_type, object_id=comment.id, notification_type='comment_post')
     return redirect('comments', post_id)
   else:
     add_comment_form = AddCommentForm()
@@ -221,7 +223,8 @@ def add_comment_reply(request, post_id, comment_id):
       post.comments_count = post.comments_count + 1
       post.save()
       reply.save()
-      Notification.send_notification(sender=request.user, receiver=comment.user, notification_type='comment_reply')
+      content_type = ContentType.objects.get_for_model(Comment)
+      Notification.send_notification(sender=request.user, receiver=comment.user,content_type=content_type, object_id=comment.id, notification_type='comment_reply')
     return redirect('comments', post_id)
 
 
@@ -233,7 +236,8 @@ def like_post_view(request, pk):
   if not liked_post:
     liked_post = LikePost.objects.create(post=post, user=request.user)
     post.likes_count = post.likes_count + 1
-    Notification.send_notification(sender=request.user, receiver=post.owner, notification_type='like_post')
+    content_type = ContentType.objects.get_for_model(post)
+    Notification.send_notification(sender=request.user, receiver=post.owner, content_type=content_type, object_id=post.id, notification_type='like_post')
   else:
     liked_post.delete()
     post.likes_count = post.likes_count - 1
@@ -251,7 +255,8 @@ def like_comment_view(request, comment_id):
     liked_comment = LikeComment.objects.create(comment=comment,
                                                user=request.user)
     comment.likes_count = comment.likes_count + 1
-    Notification.send_notification(sender=request.user, receiver=comment.user, notification_type='like_comment')
+    content_type = ContentType.objects.get_for_model(comment)
+    Notification.send_notification(sender=request.user, receiver=comment.user, content_type=content_type, object_id=comment.id, notification_type='like_comment')
   else:
     liked_comment.delete()
     comment.likes_count = comment.likes_count - 1
@@ -325,7 +330,8 @@ def follow_unfollow_profile(request, profile_id):
     request.user.profile.follows.remove(profile)
   else:
     request.user.profile.follows.add(profile)
-    Notification.send_notification(sender=request.user, receiver=profile.user, notification_type='follow')
+    content_type = ContentType.objects.get_for_model(profile)
+    Notification.send_notification(sender=request.user, receiver=profile.user, content_type=content_type, object_id=profile.id, notification_type='follow')
   return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -399,6 +405,7 @@ def report_problem(request, user_username):
 @profile_required
 @login_required()
 def notifications_view(request):
+
   notifications = Notification.objects.filter(receiver=request.user).order_by('-created_at')
   not_read_notifications = Notification.objects.filter(receiver=request.user, is_read=False)
   context = {
