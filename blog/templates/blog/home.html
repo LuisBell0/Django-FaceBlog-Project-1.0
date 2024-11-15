@@ -44,7 +44,7 @@
                     </div>
                   </div>
                 </a>
-                <div class="">
+                <div>
                   <form action="{% url 'follow-unfollow' profile.id %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn border-0 p-1">
@@ -165,22 +165,13 @@
               <div class="card-body d-flex p-0 my-1">
                 <a href="{% url 'post-like' post.pk%}" class="d-flex align-items-center fw-600 
                   text-grey-900 lh-26 font-xssss me-2">
-                  {% if post.id in liked %}
-                    <i class="bi bi-heart-fill color-red me-1 btn-round-sm font-lg"></i> 
-                  {% else %}
-                    <i class="bi bi-heart text-black me-1 btn-round-sm font-lg"></i> 
-                  {% endif%}
+                    <i class="{% if post.id in liked %} bi bi-heart-fill color-red {% else %} bi bi-heart text-black {% endif%} text-start btn-round-sm font-lg"></i>
                   <span class="text-center">{{ post.likes_count }} Like</span>
                 </a>
                 <a href="{% url 'comments' post.id %}" class="d-flex align-items-center fw-600 
                   text-grey-900 lh-26 font-xssss">
                   <i class="bi bi-chat text-dark text-grey-900 btn-round-sm font-lg"></i>
                   <span class="text-center">{{ post.comments_count }} Comments</span>
-                </a>
-                <a href="#" class="ms-auto d-flex align-items-center 
-                  fw-600 text-grey-900 lh-26 font-xssss">
-                  <i class="bi bi-share text-grey-900 text-dark btn-round-sm font-lg"></i>
-                  <span>Share</span>
                 </a>
               </div>
             </div>
@@ -223,7 +214,7 @@
                       </figure>
                       <div class="font-xsss text-wrap">
                         <span class="text-dark fw-600">{{ notification.sender }} </span>
-                        <span class="">{{ notification.message }}.</span>
+                        <span>{{ notification.message }}.</span>
                         <span class="text-grey-500">{{ notification.created_at|time_filter }}</span>
                       </div>
                     </div>
@@ -241,7 +232,4 @@
     </div>
   </div>
 </div>
-<script type="module">
-    
-</script>
 {% endblock %}

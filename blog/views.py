@@ -14,6 +14,7 @@ from .forms import ProfileUpdateForm, UserUpdateForm, LoginForm, AddCommentForm,
 from .decorators import profile_required
 from django.core.mail import EmailMessage
 from django.utils import timezone
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -377,6 +378,8 @@ def user_profile_view(request, user_username):
   return render(request, 'blog/user_profile.html', context)
 
 
+@profile_required
+@login_required()
 def report_problem(request, user_username):
   if request.method == 'POST':
     report_problem_form = ReportProblemForm(request.POST)
@@ -422,7 +425,7 @@ def mark_as_read(request, notification_id):
   if not notification.is_read:
     notification.is_read = True
     notification.save()
-  return redirect('notifications')
+  return JsonResponse({'status': 'success'})
 
 
 @profile_required

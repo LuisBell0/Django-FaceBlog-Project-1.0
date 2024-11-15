@@ -183,6 +183,16 @@ a {
     transition: background-color 0.2s ease;
 }
 
+#descriptionContainer {
+  max-height: 70px;
+  overflow-y: auto;
+}
+
+.commentNotification {
+  max-height: 50px;
+  overflow-y: hidden;
+}
+
 /* MEDIA QUERY */
 
 @media (min-width: 768px) {

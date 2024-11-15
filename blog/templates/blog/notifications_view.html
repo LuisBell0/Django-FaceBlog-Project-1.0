@@ -11,7 +11,7 @@
                            <span class="font-lg fw-700">Notifications</span>
                             <span class="font-xssss fw-600 bg-success text-white rounded-3 ms-2 p-2 mt-0">{{ not_read_notifications.count }}</span>
                         </div>
-                        <div class="">
+                        <div>
                             <a href="{% url 'mark-all-read' %}" class="text-dark me-2" title="Mark All As Read">
                                 <span class="font-sm">
                                      <i class="bi bi-check-square"></i>
@@ -27,7 +27,14 @@
                             {% for notification in notifications %}
                                 <div class="mx-2">
                                     <div class="d-flex flex-column">
-                                        <a href="{% url 'mark-notification-read' notification.id %}" class="text-dark {% if notification.is_read %} bg-greylight {% else %} bg-hover-grey {% endif %}">
+                                        <a {% if notification.type == 'follow' %}
+                                               href= "{% url 'user-profile' notification.sender.profile %}"
+                                           {% elif notification.type == 'comment_post' or notification.type == 'comment_reply' %}
+                                               href= "{% url 'comments' notification.content_object.post.pk %}"
+                                           {% else %}
+                                               href= "{% url 'comments' notification.content_object.pk %}"
+                                           {% endif %}
+                                          class="notification-link text-dark {% if notification.is_read %} bg-greylight {% else %} bg-hover-grey {% endif %}" data-notification-id="{{ notification.pk }}">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center p-2">
                                                     <figure class="m-0 me-2">
@@ -41,13 +48,16 @@
                                                                  alt="{{ notification.sender }} Profile Picture">
                                                         {% endif %}
                                                     </figure>
-                                                    <div class="text-wrap">
+                                                    <div class="text-wrap commentNotification">
                                                         <span class="font-xs fw-600">{{ notification.sender }} </span>
                                                         <span class="font-xss">{{ notification.message }}</span>
+                                                        {% if notification.type == 'comment_post' %}
+                                                            <span>- "{{ notification.content_object.text }}"</span>
+                                                        {% endif %}
                                                         <span class="font-xss text-grey-500">{{ notification.created_at|time_filter }}</span>
                                                     </div>
                                                 </div>
-                                                <div class="">
+                                                <div>
                                                     <figure class="m-0 me-2">
                                                         {% if notification.type == 'like_post' or notification.type == 'comment_post' %}
                                                             {% if notification.content_object.img %}
@@ -55,13 +65,7 @@
                                                                      class="shadow-sm rounded img-50"
                                                                      alt="{{ notification.sender }} Profile Picture">
                                                             {% elif notification.content_object.post.img %}
-                                                               <img src="{{ notification.content_object.post.img.url }}"
-                                                                     class="shadow-sm rounded img-50"
-                                                                     alt="{{ notification.sender }} Profile Picture">
-                                                            {% endif %}
-                                                        {% elif notification.type == 'follow' %}
-                                                            {% if notification.content_object.profile_picture %}
-                                                                <img src="{{ notification.content_object.profile_picture.url }}"
+                                                                <img src="{{ notification.content_object.post.img.url }}"
                                                                      class="shadow-sm rounded img-50"
                                                                      alt="{{ notification.sender }} Profile Picture">
                                                             {% endif %}
@@ -87,5 +91,28 @@
         const popover = new bootstrap.Popover('.popover-dismiss', {
           trigger: 'focus'
         })
+        document.querySelectorAll('.notification-link').forEach(link => {
+        link.addEventListener('click', function (event) {
+            const notificationId = this.dataset.notificationId;
+
+            // Make a POST request to mark the notification as read
+            fetch(`/notification/${notificationId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ is_read: true })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Notification marked as read.');
+                } else {
+                    console.error('Failed to mark notification as read.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
     </script>
 {% endblock %}

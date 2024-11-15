@@ -76,11 +76,7 @@
         <div class="card-body d-flex p-0 align-items-center my-1" id="likeContainer">
           <a href="{% url 'post-like' post.pk%}" class="fw-600 
             text-grey-900 text-dark lh-26 font-xssss">
-            {% if post.id in liked_post %}
-              <i class="bi bi-heart-fill color-red me-1 btn-round-sm font-lg"></i> 
-            {% else %}
-              <i class="bi bi-heart text-black me-1 btn-round-sm font-lg"></i> 
-            {% endif%}
+            <i class="{% if post.id in liked_post %} bi bi-heart-fill color-red {% else %} bi bi-heart text-black {% endif%} text-start btn-round-sm font-lg"></i>
           </a>
           <span class="font-xssss">{{ post.likes_count }} Like</span>
         </div>
@@ -173,11 +169,7 @@
                     <a href="{% url 'comment-like' comment.id %}" 
                       class="d-flex align-items-center fw-600 
                       text-grey-900 lh-26 font-xssss">
-                      {% if comment.id in liked_comment %}
-                        <i class="bi bi-heart-fill color-red btn-round-sm font-lg"></i> 
-                      {% else %}
-                        <i class="bi bi-heart text-black btn-round-sm font-lg"></i> 
-                      {% endif%}
+                        <i class="{% if comment.id in liked_comment %} bi bi-heart-fill color-red {% else %} bi bi-heart text-black {% endif%} btn-round-sm font-lg"></i>
                     </a>
                     <span class="font-xssss">{{ comment.likes_count }}</span>
                   </div>

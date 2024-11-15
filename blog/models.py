@@ -107,7 +107,7 @@ class Profile(models.Model):
     
 
 class Comment(models.Model):
-  text = models.TextField()
+  text = models.TextField(max_length=255)
   likes_count = models.PositiveIntegerField(default=0)
   posted_date = models.DateTimeField(auto_now_add=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
