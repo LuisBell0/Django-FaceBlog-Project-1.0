@@ -15,6 +15,7 @@ from .decorators import profile_required
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -70,6 +71,9 @@ def home(request):
     all_users = followed_users | Profile.objects.filter(user=current_user)
     posts = Post.objects.filter(
         owner__profile__in=all_users).order_by('-posted_date')
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('page')
+    posts_paginator = paginator.get_page(page)
     liked_post = LikePost.objects.filter(user=request.user,
                                          post__in=posts).values_list('post_id',
                                                                      flat=True)
@@ -79,7 +83,7 @@ def home(request):
     report_problem_form = ReportProblemForm()
     notifications = Notification.objects.filter(receiver=current_user, is_read=False).order_by('-created_at')
 
-    context = {'posts': posts,
+    context = {'posts': posts_paginator,
                'liked': liked_post,
                'random_profiles': random_profiles,
                'report_problem_form': ReportProblemForm,

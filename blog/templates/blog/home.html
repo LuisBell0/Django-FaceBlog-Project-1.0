@@ -182,10 +182,22 @@
               <div class="w-100 d-flex flex-column justify-content-center align-items-center">
                 <span class="font-xl">No Posts</span>
                 <span class="font-xs text-grey-500">Start following people to see their post</span>
-              </div>p-3
+              </div>
             </div>
           </div>
         {% endif %}
+        <nav aria-label="">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+            {% if posts.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">previous</a></li>
+            {% endif %}
+            {% if posts.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">next</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="?page={{ posts.paginator.num_pages }}">last &raquo;</a></li>
+          </ul>
+        </nav>
     </div>
     <div class="d-none d-lg-block col-3 ms-2">
       
