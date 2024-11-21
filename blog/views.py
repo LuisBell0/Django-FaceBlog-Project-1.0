@@ -48,6 +48,8 @@ def login_view(request):
   return render(request, 'registration/login.html', {'login_form': form})
 
 
+@profile_required
+@login_required()
 def handle_search(request):
   search_input = request.POST.get('search-profile', '').strip()
   redirect_url = request.POST.get('redirect_url', f'user-profile/{request.user}')
@@ -63,35 +65,33 @@ def handle_search(request):
 
 
 @profile_required
+@login_required()
 def home(request):
   current_user = request.user
-  if current_user.is_authenticated:
-    current_user_profile = Profile.objects.get(user=current_user)
-    followed_users = current_user.profile.follows.all()
-    all_users = followed_users | Profile.objects.filter(user=current_user)
-    posts = Post.objects.filter(
-        owner__profile__in=all_users).order_by('-posted_date')
-    paginator = Paginator(posts, 5)
-    page = request.GET.get('page')
-    posts_paginator = paginator.get_page(page)
-    liked_post = LikePost.objects.filter(user=request.user,
-                                         post__in=posts).values_list('post_id',
-                                                                     flat=True)
-    random_profiles = Profile.objects.exclude(
-        pk__in=current_user_profile.follows.values_list('pk', flat=True)
-    ).order_by('?')[:4]
-    report_problem_form = ReportProblemForm()
-    notifications = Notification.objects.filter(receiver=current_user, is_read=False).order_by('-created_at')
+  current_user_profile = Profile.objects.get(user=current_user)
+  followed_users = current_user.profile.follows.all()
+  all_users = followed_users | Profile.objects.filter(user=current_user)
+  posts = Post.objects.filter(
+      owner__profile__in=all_users).order_by('-posted_date')
+  paginator = Paginator(posts, 5)
+  page = request.GET.get('page')
+  posts_paginator = paginator.get_page(page)
+  liked_post = LikePost.objects.filter(user=current_user,
+                                       post__in=posts).values_list('post_id',
+                                                                   flat=True)
+  random_profiles = Profile.objects.exclude(
+      pk__in=current_user_profile.follows.values_list('pk', flat=True)
+  ).order_by('?')[:4]
+  report_problem_form = ReportProblemForm()
+  notifications = Notification.objects.filter(receiver=current_user, is_read=False).order_by('-created_at')
 
-    context = {'posts': posts_paginator,
-               'liked': liked_post,
-               'random_profiles': random_profiles,
-               'report_problem_form': ReportProblemForm,
-               'notifications': notifications,
-               }
-    return render(request, 'blog/home.html', context)
-  else:
-    return login_view(request)
+  context = {'posts': posts_paginator,
+             'liked': liked_post,
+             'random_profiles': random_profiles,
+             'report_problem_form': ReportProblemForm,
+             'notifications': notifications,
+             }
+  return render(request, 'blog/home.html', context)
 
 
 @method_decorator(profile_required, name='dispatch')
