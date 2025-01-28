@@ -3,6 +3,7 @@ from django.contrib.auth.backends import ModelBackend
 
 UserModel = get_user_model()
 
+
 class EmailOrUsernameModelBackend(ModelBackend):
     """
     This authentication backend allows users to log in using either their username or email address.

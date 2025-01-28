@@ -26,7 +26,7 @@ urlpatterns = [
     path('create_profile/', ProfileCreateView.as_view(),
          name='profile-create'),
     path('dashboard/edit_profile/<int:pk>/',
-         ProfileUpdateFunction,
+         profile_update_function,
          name="profile-update"),
     path('accounts/login/', login_view, name='new_login'),
     path('search/profile/', search_profile, name='search-profile'),

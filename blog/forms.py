@@ -20,7 +20,8 @@ class UserUpdateForm(forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'email', 'username'
         ]
-        
+
+
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -39,14 +40,14 @@ class LoginForm(forms.Form):
         label='Username or Email',
         max_length=254,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Username or Email', 
+            'placeholder': 'Username or Email',
             'class': 'form-control form-control-margin'
         })
     )
     password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Password', 
+            'placeholder': 'Password',
             'class': 'form-control form-control-margin'
         })
     )
@@ -57,7 +58,7 @@ class AddCommentForm(forms.ModelForm):
         model = Comment
         fields = ['text']
         widget = {
-            'text': forms.Textarea(attrs={'rows':4}),
+            'text': forms.Textarea(attrs={'rows': 4}),
         }
 
 
@@ -73,10 +74,9 @@ class EditPostForm(forms.ModelForm):
                 }
             ),
         }
-        
 
 
 class ReportProblemForm(forms.Form):
     problem_description = forms.CharField(widget=forms.Textarea(
         attrs={'rows': 4,
-              'style': 'max-height: 500px;'}))
+               'style': 'max-height: 500px;'}))

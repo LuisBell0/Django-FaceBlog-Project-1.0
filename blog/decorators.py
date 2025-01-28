@@ -2,6 +2,7 @@ from functools import wraps
 from django.shortcuts import redirect
 from .models import Profile
 
+
 def profile_required(func):
   @wraps(func)
   def wrapper(request, *args, **kwargs):

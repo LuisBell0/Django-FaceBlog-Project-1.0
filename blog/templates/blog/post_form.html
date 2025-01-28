@@ -113,7 +113,7 @@
   }
 
   // Get the user's timezone
-  var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   // Set the value of the hidden input field
   document.getElementById('user-timezone').value = userTimezone;
 </script>
