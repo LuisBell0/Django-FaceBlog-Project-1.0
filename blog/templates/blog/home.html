@@ -189,13 +189,13 @@
         <nav aria-label="">
           <ul class="pagination justify-content-center align-items-center">
             {% if posts.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-              <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">{{ posts.previous_page_number }}</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page=1">First</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.previous_page_number }}">{{ posts.previous_page_number }}</a></li>
             {% endif %}
-            <span class="page-link text-dark">Page {{posts.number}} of {{posts.paginator.num_pages}}</span>
+            <span class="page-link text-dark rounded">Page {{posts.number}} of {{posts.paginator.num_pages}}</span>
             {% if posts.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">{{ posts.next_page_number }}</a></li>
-              <li class="page-item"><a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.next_page_number }}">{{ posts.next_page_number }}</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a></li>
             {% endif %}
           </ul>
         </nav>
