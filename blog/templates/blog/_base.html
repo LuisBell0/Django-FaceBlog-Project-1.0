@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}FaceBlog{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AR:wght@100..400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/styles.css' %}">
+  </head>
+  <body>
+    {% if messages %}
+      {% for message in messages %}
+          {% if message.tags == 'error' and "You cannot search for '/'." in message.message or message.tags == 'error' and "You cannot search for nothing." in message.message %}
+            <div class="modal fade"
+              id="errorModal" 
+              tabindex="-1" 
+              aria-labelledby="errorModalLabel" 
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" 
+                      class="btn-close" 
+                      data-bs-dismiss="modal" 
+                      aria-label="Close">
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    {% for message in messages %}
+                      <div class="alert alert-danger">
+                        <span class="fw-700">{{ message }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" 
+                      id="goBack"
+                      class="btn btn-secondary" 
+                      data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}    
+      {% endfor %}
+    {% endif %}
+    <header class="sticky-top">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container d-flex justify-content-between align-items-center">
+          <div class="navbar-header col-9 col-sm-8 col-md-8 col-lg-6 d-flex flex-row">
+            <a class="navbar-brand" href="{% url 'home' %}">FaceBlog</a>
+            <form class="w-75" action="{% url 'search' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="redirect_url" value="{{ request.path }}">
+              <div class="input-group">
+                <input class="form-control"
+                  type="text"
+                  placeholder="Search for Profiles"
+                  name="search-profile"
+                  aria-label="Search">
+                <button class="btn" type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" 
+                    width="22" height="22" fill="currentColor" 
+                    class="bi bi-search" 
+                    viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+          <button class="navbar-toggler shadow-none ms-auto"
+            type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarText"
+            aria-controls="navbarText"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+              {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center" 
+                    href="{% url 'user-profile' request.user %}">
+                    {% if request.user.profile.profile_picture %}
+                      <img src="{{ request.user.profile.profile_picture.url }}"
+                        class="rounded-circle"
+                        alt="{{ user.username }} Profile Picture" 
+                        width="26" height="26">
+                    {% else %}
+                      <img src="{% static 'blog/default.jpg' %}"
+                        class="rounded-circle"
+                        alt="{{ user.username }}" 
+                        width="26px" height="26px">
+                    {% endif %}
+                    <span class="ms-1 text-wrap">{{ request.user.username }}</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center" 
+                    href="{% url 'notifications' %}" role="button">
+                    <i class="bi bi-bell text-success font-sm"></i>
+                    <span class="ms-1">Notifications</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center" href="{% url 'post-create' %}">
+                    <i class="bi bi-plus-circle text-success font-sm"></i>
+                    <span class="ms-1 text-nowrap">New Post</span>
+                  </a>
+                </li>
+
+              <li class="d-lg-none nav-item">
+                <button class="nav-link border-0 bg-transparent d-flex align-items-center" 
+                  type="submit" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#reportProblemModal">
+                  <i class="bi bi-exclamation-square text-danger font-sm"></i>
+                  <span class="ms-1 text-nowrap">Report a Problem</span>
+                </button>
+              </li>
+              
+              <li class="nav-item">
+                <form class="nav-form" action="{% url 'logout' %}" method="POST">
+                  {% csrf_token %}
+                  <button 
+                    class="nav-link border-0 bg-transparent d-flex align-items-center" 
+                    type="submit">
+                    <i class="bi bi-box-arrow-right text-danger font-sm"></i>
+                    <span class="ms-1 text-nowrap">Log Out</span>
+                  </button>
+                </form>
+              </li>
+              
+              {% else %}
+                <li class="nav-item d-flex align-items-center">
+                  <form class="nav-form" action="{% url 'new_login' %}" method="POST">
+                    {% csrf_token %}
+                    <button 
+                      class="nav-link border-0 bg-transparent d-flex align-items-center" 
+                      type="submit">
+                      <i class="bi bi-box-arrow-left text-primary font-sm"></i>
+                      <span class="ms-1">Log In</span>
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    {% block content %}
+    {% endblock %}
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let modalShown = false;
+        let hasMessages = "{{ messages|length|yesno:'true,false' }}";
+
+        if (hasMessages === "true" && !modalShown) {
+          let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+          errorModal.show();
+          modalShown = true;
+        }
+      });
+    </script>
+    <script type="module" src="{% static 'blog/js/main.js' %}"></script>
+  </body>
+</html>

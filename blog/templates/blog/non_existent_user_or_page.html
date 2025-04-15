@@ -1,0 +1,8 @@
+{% extends 'blog/_base.html' %}
+{% load static %}
+{%block content %}
+    <div class="d-flex flex-column align-items-center justify-content-center mx-5 my-5">
+        <h3 class="text-center">Sorry, this page isn't available.</h3>
+        <h5>The link you followed may be broken, or the page may have been removed. <a class="no-underline"href="{% url 'home' %}">Go back to FaceBlog.</a></h5>
+    </div>
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends 'blog/_base.html' %}
+{% load static %}
+{% load form_tags %}
+{% block content %}
+<!-- REPORT PROBLEM MODAL -->
+{% include 'blog/report_problem_modal.html' %}
+<!-- ENDMODAL -->
+<div class="container">
+  <div class="d-flex flex-row justify-content-center justify-content-lg-between p-1">
+    <div class="d-none d-lg-block col-3 me-2">
+      <div class="card w-100 shadow-xss rounded-xxl border-0 py-3 my-3">
+        <div class="border-1 border-bottom pb-1 text-center">
+          <span class="fw-700">Discover New People</span>
+        </div>
+        <div class="d-flex flex-column mt-3 mb-2 mx-3">
+          {% if random_profiles %}
+            {% for profile in random_profiles %}
+              <div class="d-flex justify-content-between align-items-center p-2">
+                <a class="text-dark" 
+                  href="{% url 'user-profile' profile %}">
+                  <div class="my-1 d-flex align-items-center ">
+                    {% if profile.profile_picture %}
+                      <img src="{{ profile.profile_picture.url }}"
+                        class="shadow-sm rounded-circle img-45 mr-3 img-fluid"
+                        alt="{{ user.username }} Profile Picture">
+                    {% else %}
+                      <img src="{% static 'blog/default.jpg' %}"
+                        class="shadow-sm rounded-circle img-45 mr-3 img-fluid"
+                        alt="{{ user.username }}">
+                    {% endif %}
+                    <div class="ms-3 fw-700 font-xssss">
+                      <span class="font-xsss">{{ profile }}</span>
+                      <span class="d-block font-xssss text-grey-500">
+                        {% if profile.user.first_name or profile.user.last_name%}
+                          {{ profile.user.first_name }} {{ profile.user.last_name}} | 
+                        {% endif %}
+                        {{ profile.get_followers_count }}
+                        {% if profile.get_followers_count == 1 %}
+                          Follower
+                        {% else %}
+                          Followers
+                        {% endif %}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+                <div>
+                  <form action="{% url 'follow-unfollow' profile.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn border-0 p-1">
+                      <i class="bi bi-person-add font-lg"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <span class="font-md text-center">No new profiles</span>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="card w-100 shadow-xss rounded-xxl border-0 p-2 my-3">
+        <button class="btn border-0 fw-600 d-flex justify-content-center" 
+          data-bs-toggle="modal" 
+          data-bs-target="#reportProblemModal">
+          <i class="bi bi-exclamation-square font-xs"></i>
+          <span class="ms-1">Report a Problem</span>
+        </button>
+      </div>
+      
+    </div>
+    <div class="col-12 col-sm-9 col-lg-5">
+      {% if messages %}
+          {% for message in messages %}
+              <div id="reportMessageContainer" class="w-100 shadow-xss rounded-xxl border-0 alert alert-warning p-3 my-1">
+                <span class="font-md text-wrap">{{ message }}</span>
+              </div>
+          {% endfor %}
+      {% endif %}
+      <div class="card w-100 shadow-xss rounded-xxl border-0 px-4 pt-4 pb-3 my-3">
+        <form action="{% url 'post-create'%}" method='POST' class="form-container">
+          <div class="card-body p-0 d-flex flex-row justify-content-between">
+            {% csrf_token %}
+            <span class=" font-xssss fw-600 text-grey-500 p-0 d-flex 
+              align-items-center bg-transparent border-0">
+              <i class="bi bi-pencil btn-round-sm font-sm text-success me-2 bg-greylight"></i>
+              Quick Text
+            </span>
+            <button type="submit"
+              class="btn border-0 p-1">
+              <i class="bi bi-send-fill btn-round-sm font-md text-success"></i>
+            </button>
+          </div>
+          <div class="card-body p-0 mt-3 position-relative">
+            <figure class="avatar position-absolute ms-2 mt-1 top-5">
+              {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}"
+                  class="shadow-sm rounded-circle w30 img-fluid"
+                  alt="{{ user.username }} Profile Picture" 
+                  width="26" height="26">
+              {% else %}
+                <img src="{% static 'blog/default.jpg' %}"
+                  class="shadow-sm rounded-circle w30 img-fluid"
+                  alt="{{ user.username }}" 
+                  width="26px" height="26px">
+              {% endif %}
+            </figure>
+            <textarea name="description"
+              class="h100 bor-0 w-100 rounded-xxl p-2 ps-5 font-xssss fw-500 border-light-md theme-dark-bg" 
+                cols="30" rows="10" placeholder="Anything New? Tell Everybody" style="max-height: 300px; min-height:50px;"></textarea>
+          </div>
+        </form>
+      </div>
+    
+        {% if posts %}
+          {% for post in posts %}
+            <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+              <div class="card-body p-0 d-flex">
+                <figure class="avatar me-3">
+                  {% if post.owner.profile.profile_picture %}
+                    <img src="{{ post.owner.profile.profile_picture.url }}"
+                      class="shadow-sm rounded-circle img-45 img-fluid"
+                      alt="{{ user.username }} Profile Picture" 
+                      width="26" height="26">
+                  {% else %}
+                    <img src="{% static 'blog/default.jpg' %}"
+                      class="shadow-sm rounded-circle img-45 img-fluid"
+                      alt="{{ user.username }}" 
+                      width="26px" height="26px">
+                  {% endif %}
+                </figure>
+                <h4 class="fw-700 text-grey-900 font-xsss mt-1">
+                  <a class="text-dark" href="{% url 'user-profile' post.owner.username %}">
+                    {{post.owner}}
+                  </a>
+                  <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                    {{ post.posted_date|time_filter }}
+                  </span>
+                </h4>
+              </div>
+          
+              {% if post.img %}
+                <div class="card-body p-0 mb-3 rounded-3 overflow-hidden">
+                  <img src="{{post.img.url}}" 
+                    alt="{{post.owner}}" 
+                    class="w-100 img-fluid" 
+                    style="max-height:600px;">
+                </div>
+              {% endif %}
+
+              {% if post.description %}
+              <div class="card-body p-0 me-lg-5 d-flex flex-column">
+                <div class="see-more-container">
+                  <!-- DO NOT MODIFY OR INDENT THIS PART OF THE CODE -->
+                  <span class="font-xss mb-2 text-description"><a class="text-dark fw-700 me-1" href="{% url 'user-profile' post.owner.username %}">{{ post.owner }}</a>{{post.description|linebreaksbr }}</span>
+                  <!--  -->
+                </div>
+                <span class="see-more-btn btn btn-link bg-transparent border-0 cursor-pointer text-primary p-0 text-decoration-none text-start text-grey-500 d-none">
+                  Show More
+                </span>
+              </div>
+              {% endif %}
+              
+              <div class="card-body d-flex p-0 my-1">
+                <a href="{% url 'post-like' post.pk%}" class="d-flex align-items-center fw-600 
+                  text-grey-900 lh-26 font-xssss me-2">
+                    <i class="{% if post.id in liked %} bi bi-heart-fill color-red {% else %} bi bi-heart text-black {% endif%} text-start btn-round-sm font-lg"></i>
+                  <span class="text-center">{{ post.likes_count }} Like</span>
+                </a>
+                <a href="{% url 'comments' post.id %}" class="d-flex align-items-center fw-600 
+                  text-grey-900 lh-26 font-xssss">
+                  <i class="bi bi-chat text-dark text-grey-900 btn-round-sm font-lg"></i>
+                  <span class="text-center">{{ post.comments_count }} Comments</span>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+            <div class="card-body p-0 d-flex">
+              <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+                <span class="font-xl">No Posts</span>
+                <span class="font-xs text-grey-500">Start following people to see their post</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <nav aria-label="">
+          <ul class="pagination justify-content-center align-items-center">
+            {% if posts.has_previous %}
+              <li class="page-item rounded"><a class="page-link" href="?page=1">First</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.previous_page_number }}">{{ posts.previous_page_number }}</a></li>
+            {% endif %}
+            <span class="page-link text-dark rounded">Page {{posts.number}} of {{posts.paginator.num_pages}}</span>
+            {% if posts.has_next %}
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.next_page_number }}">{{ posts.next_page_number }}</a></li>
+              <li class="page-item rounded"><a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+    </div>
+    <div class="d-none d-lg-block col-3 ms-2">
+      
+      <div class="card w-100 shadow-xss rounded-xxl border-0 py-3 my-3">
+        <div class="border-1 border-bottom mb-1 pb-1 text-center">
+          <span class="fw-700">Notifications</span>
+        </div>
+        {% if notifications %}
+          {% for notification in notifications %}
+            <div class="mx-1">
+              <div class="d-flex flex-column">
+                <a href="{% url 'mark-notification-read' notification.id %}" class="text-dark bg-hover-grey rounded">
+                    <div class="d-flex align-items-center p-2">
+                      <figure class="m-0 me-2">
+                        {% if notification.sender.profile.profile_picture %}
+                          <img src="{{ notification.sender.profile.profile_picture.url }}"
+                            class="shadow-sm rounded-circle img-45"
+                            alt="{{ notification.sender }} Profile Picture" 
+                            width="26" height="26">
+                        {% else %}
+                          <img src="{% static 'blog/default.jpg' %}"
+                            class="shadow-sm rounded-circle img-45"
+                            alt="{{ notification.sender }}" 
+                            width="26px" height="26px">
+                        {% endif %}
+                      </figure>
+                      <div class="font-xsss text-wrap">
+                        <span class="text-dark fw-600">{{ notification.sender }} </span>
+                        <span>{{ notification.message }}.</span>
+                        <span class="text-grey-500">{{ notification.created_at|time_filter }}</span>
+                      </div>
+                    </div>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex flex-column mt-3 mb-2 mx-3">
+            <span class="font-sm p-2 text-center">No new notifications</span>
+          </div>
+        {% endif %}
+      </div>
+      
+    </div>
+  </div>
+</div>
+{% endblock %}

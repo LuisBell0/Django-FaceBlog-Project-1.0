@@ -1,0 +1,58 @@
+{% extends 'blog/_base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    {% if search %}
+        {% if profiles_found %}
+            <div class="d-flex align-items-center justify-content-center my-3">
+                <h2>These are your matches for "{{ search }}"</h2>
+            </div>
+            <div class="d-flex flex-column my-3">
+                {% for profile in profiles_found %}
+                    <div class="d-flex p-2">
+                        <a class="text-dark" 
+                            href="{% url 'user-profile' profile %}">
+                            <div class="my-1 d-flex align-items-center">
+                                {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}"
+                                    class="shadow-sm rounded-circle img-60 mr-3"
+                                    alt="{{ user.username }} Profile Picture">
+                                {% else %}
+                                <img src="{% static 'blog/default.jpg' %}"
+                                    class="shadow-sm rounded-circle img-60 mr-3"
+                                    alt="{{ user.username }}">
+                                {% endif %}
+                                <div class="ms-3 fw-700 font-xssss">
+                                    <span class="font-xss">{{ profile }}</span>
+                                    <span class="d-block font-xssss text-grey-500">
+                                        {% if profile.user.first_name or profile.user.last_name%}
+                                            {{ profile.user.first_name }} {{ profile.user.last_name}} | 
+                                        {% endif %}
+                                        {{ profile.get_followers_count }}
+                                        {% if profile.get_followers_count == 1 %}
+                                            Follower
+                                        {% else %}
+                                            Followers
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center w-h-96 
+                    border border-dark border-2 rounded-circle mt-5 mb-2">
+                     <i class="bi bi-search font-xxxl"></i>
+                </div>
+                <h3 class="text-center">No profiles found for <strong>"{{ search }}"</strong></h3>
+            </div>
+        {% endif %}
+    {% else %}
+    {% endif %} 
+</div>
+{% endblock %}
+
+
